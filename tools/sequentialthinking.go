@@ -179,7 +179,9 @@ You should:
 8. Verify the hypothesis based on the Chain of Thought steps
 9. Repeat the process until satisfied with the solution
 10. Provide a single, ideally correct answer as the final output
-11. Only set next_thought_needed to false when truly done and a satisfactory answer is reached`),
+11. Only set next_thought_needed to false when truly done and a satisfactory answer is reached
+12. Use another tool in the middle of the process to collect more information if needed, but have to back to finish the process
+13. Branching is a very good way to explore alternative approaches, sub-steps, etc. Use it liberally`),
 		mcp.WithString("thought", mcp.Required(), mcp.Description("Your current thinking step")),
 		mcp.WithBoolean("nextThoughtNeeded", mcp.Required(), mcp.Description("Whether another thought step is needed")),
 		mcp.WithNumber("thoughtNumber", mcp.Required(), mcp.Description("Current thought number")),
