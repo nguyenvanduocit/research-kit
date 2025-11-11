@@ -416,7 +416,7 @@ def check_tool(tool: str, tracker: StepTracker = None) -> bool:
         True if tool is found, False otherwise
     """
     # Special handling for Claude CLI after `claude migrate-installer`
-    # See: https://github.com/firegroup/research-kit/issues/123
+    # See: https://github.com/nguyenvanduocit/research-kit/issues/123
     # The migrate-installer command REMOVES the original executable from PATH
     # and creates an alias at ~/.claude/local/claude instead
     # This path should be prioritized over other claude executables in PATH
@@ -558,9 +558,49 @@ def merge_json_files(existing_path: Path, new_content: dict, verbose: bool = Fal
 
     return merged
 
+def _get_github_config() -> Tuple[str, str]:
+    """
+    Get GitHub repository configuration from pyproject.toml.
+    Falls back to default values if pyproject.toml is not found.
+
+    Returns:
+        Tuple of (repo_owner, repo_name)
+    """
+    # Try to read from pyproject.toml in package directory
+    try:
+        package_dir = Path(__file__).parent.parent.parent
+        pyproject_path = package_dir / "pyproject.toml"
+
+        if pyproject_path.exists():
+            with open(pyproject_path, "rb") as f:
+                try:
+                    import tomllib
+                except ImportError:
+                    import tomli as tomllib
+                data = tomllib.load(f)
+
+            # Check tool.research-kit section first
+            if "tool" in data and "research-kit" in data["tool"]:
+                config = data["tool"]["research-kit"]
+                owner = config.get("github_owner", "nguyenvanduocit")
+                repo = config.get("github_repo", "research-kit")
+                return owner, repo
+
+            # Fallback: parse from project.urls.Repository
+            if "project" in data and "urls" in data["project"]:
+                repo_url = data["project"]["urls"].get("Repository", "")
+                if "github.com/" in repo_url:
+                    parts = repo_url.rstrip("/").split("github.com/")[-1].split("/")
+                    if len(parts) >= 2:
+                        return parts[0], parts[1]
+    except Exception:
+        pass
+
+    # Default fallback
+    return "nguyenvanduocit", "research-kit"
+
 def download_template_from_github(ai_assistant: str, download_dir: Path, *, script_type: str = "sh", verbose: bool = True, show_progress: bool = True, client: httpx.Client = None, debug: bool = False, github_token: str = None) -> Tuple[Path, dict]:
-    repo_owner = "firegroup"
-    repo_name = "research-kit"
+    repo_owner, repo_name = _get_github_config()
     if client is None:
         client = httpx.Client(verify=ssl_context)
 

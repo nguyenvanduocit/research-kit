@@ -59,8 +59,8 @@ Our research and experimentation focus on:
 
 ## Contributing
 
-Please see our [Contributing Guide](https://github.com/firegroup/research-kit/blob/main/CONTRIBUTING.md) for information on how to contribute to this project.
+Please see our [Contributing Guide](https://github.com/nguyenvanduocit/research-kit/blob/main/CONTRIBUTING.md) for information on how to contribute to this project.
 
 ## Support
 
-For support, please check our [Support Guide](https://github.com/firegroup/research-kit/blob/main/SUPPORT.md) or open an issue on GitHub.
+For support, please check our [Support Guide](https://github.com/nguyenvanduocit/research-kit/blob/main/SUPPORT.md) or open an issue on GitHub.

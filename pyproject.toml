@@ -15,6 +15,16 @@ dependencies = [
 [project.scripts]
 research = "research_cli:main"
 
+[project.urls]
+Homepage = "https://github.com/nguyenvanduocit/research-kit"
+Repository = "https://github.com/nguyenvanduocit/research-kit"
+Issues = "https://github.com/nguyenvanduocit/research-kit/issues"
+Documentation = "https://github.com/nguyenvanduocit/research-kit/blob/main/README.md"
+
+[tool.research-kit]
+github_owner = "nguyenvanduocit"
+github_repo = "research-kit"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
