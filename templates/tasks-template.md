@@ -6,11 +6,11 @@ description: "Task list template for feature implementation"
 # Tasks: [FEATURE NAME]
 
 **Input**: Design documents from `/research/[###-feature-name]/`
-**Prerequisites**: methodology.md (required), definition.md (required for user stories), research.md, data-model.md, contracts/
+**Prerequisites**: methodology.md (required), definition.md (required for research scope)
 
-**Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
+**Note**: This tasks template is adapted from software development workflows. For research projects, tasks typically focus on data collection, analysis, and writing rather than implementation.
 
-**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
+**Organization**: Tasks are grouped by research phase to enable systematic progression through the research workflow.
 
 ## Format: `[ID] [P?] [Story] Description`
 
@@ -28,18 +28,18 @@ description: "Task list template for feature implementation"
 <!-- 
   ============================================================================
   IMPORTANT: The tasks below are SAMPLE TASKS for illustration purposes only.
-  
-  The /speckit.tasks command MUST replace these with actual tasks based on:
-  - User stories from definition.md (with their priorities P1, P2, P3...)
-  - Feature requirements from methodology.md
-  - Entities from data-model.md
-  - Endpoints from contracts/
-  
-  Tasks MUST be organized by user story so each story can be:
-  - Implemented independently
-  - Tested independently
-  - Delivered as an MVP increment
-  
+
+  The /researchkit.tasks command MUST replace these with actual tasks based on:
+  - Research questions from definition.md
+  - Methodology from methodology.md
+  - Data collection requirements
+  - Analysis approaches
+
+  Tasks MUST be organized by research phase so each phase can be:
+  - Conducted systematically
+  - Validated independently
+  - Progressed incrementally
+
   DO NOT keep these sample tasks in the generated tasks.md file.
   ============================================================================
 -->

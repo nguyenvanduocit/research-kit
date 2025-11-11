@@ -1,14 +1,14 @@
 # Quick Start Guide
 
-This guide will help you get started with Spec-Driven Development using Spec Kit.
+This guide will help you get started with Systematic Research Development using Research Kit.
 
-> NEW: All automation scripts now provide both Bash (`.sh`) and PowerShell (`.ps1`) variants. The `specify` CLI auto-selects based on OS unless you pass `--script sh|ps`.
+> NEW: All automation scripts now provide both Bash (`.sh`) and PowerShell (`.ps1`) variants. The `research` CLI auto-selects based on OS unless you pass `--script sh|ps`.
 
-## The 4-Step Process
+## The Research Workflow
 
-### 1. Install Specify
+### 1. Install Research Kit
 
-Initialize your project depending on the coding agent you're using:
+Initialize your project depending on the AI assistant you're using:
 
 ```bash
 uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init <PROJECT_NAME>
@@ -21,103 +21,255 @@ uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init
 uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init <PROJECT_NAME> --script sh  # Force POSIX shell
 ```
 
-### 2. Create the Spec
+### 2. Define Your Research
 
-Use the `/researchkit.research` command to describe what you want to build. Focus on the **what** and **why**, not the tech stack.
-
-```bash
-/researchkit.research Build an application that can help me organize my photos in separate photo albums. Albums are grouped by date and can be re-organized by dragging and dropping on the main page. Albums are never in other nested albums. Within each album, photos are previewed in a tile-like interface.
-```
-
-### 3. Create a Technical Implementation Plan
-
-Use the `/researchkit.plan` command to provide your tech stack and architecture choices.
+Use the `/researchkit.define` command to describe your research topic and questions. Focus on the **what** and **why**, not the methodology yet.
 
 ```bash
-/researchkit.plan The application uses Vite with minimal number of libraries. Use vanilla HTML, CSS, and JavaScript as much as possible. Images are not uploaded anywhere and metadata is stored in a local SQLite database.
+/researchkit.define Research the impact of large language models on academic research workflows. Specifically investigate how AI assistants affect research productivity, quality, and reproducibility. Examine both benefits (faster literature review, better organization) and risks (over-reliance, bias amplification, citation errors).
 ```
 
-### 4. Break Down and Implement
+### 3. Design Your Methodology
 
-Use `/researchkit.tasks` to create an actionable task list, then ask your agent to implement the feature.
+Use the `/researchkit.methodology` command to plan your research approach, data sources, and analysis methods.
 
-## Detailed Example: Building Taskify
-
-Here's a complete example of building a team productivity platform:
-
-### Step 1: Define Requirements with `/researchkit.research`
-
-```text
-Develop Taskify, a team productivity platform. It should allow users to create projects, add team members,
-assign tasks, comment and move tasks between boards in Kanban style. In this initial phase for this feature,
-let's call it "Create Taskify," let's have multiple users but the users will be declared ahead of time, predefined.
-I want five users in two different categories, one product manager and four engineers. Let's create three
-different sample projects. Let's have the standard Kanban columns for the status of each task, such as "To Do,"
-"In Progress," "In Review," and "Done." There will be no login for this application as this is just the very
-first testing thing to ensure that our basic features are set up. For each task in the UI for a task card,
-you should be able to change the current status of the task between the different columns in the Kanban work board.
-You should be able to leave an unlimited number of comments for a particular card. You should be able to, from that task
-card, assign one of the valid users. When you first launch Taskify, it's going to give you a list of the five users to pick
-from. There will be no password required. When you click on a user, you go into the main view, which displays the list of
-projects. When you click on a project, you open the Kanban board for that project. You're going to see the columns.
-You'll be able to drag and drop cards back and forth between different columns. You will see any cards that are
-assigned to you, the currently logged in user, in a different color from all the other ones, so you can quickly
-see yours. You can edit any comments that you make, but you can't edit comments that other people made. You can
-delete any comments that you made, but you can't delete comments anybody else made.
+```bash
+/researchkit.methodology This will be a mixed-methods study combining systematic literature review with qualitative interviews. For the literature review, search academic databases (ACM Digital Library, arXiv, Google Scholar) for papers published 2020-2025 on AI in research. For qualitative data, conduct semi-structured interviews with 10-15 researchers who use AI assistants. Use thematic analysis for interview data and narrative synthesis for literature findings.
 ```
 
-### Step 2: Refine the Specification
+### 4. Execute Research and Analyze Data
 
-After the initial specification is created, clarify any missing requirements:
+The research process now follows four distinct phases:
+
+1. **Execute** (`/researchkit.execute`) - Collect data according to your methodology
+2. **Analyze** (`/researchkit.analyze`) - Process and analyze the collected data
+3. **Synthesize** (`/researchkit.synthesize`) - Draw conclusions from your findings
+4. **Publish** (`/researchkit.publish`) - Create publication-ready outputs
+
+## Detailed Example: Investigating AI Safety Research Trends
+
+Here's a complete example of conducting a literature review research project:
+
+### Step 1: Define Research Topic with `/researchkit.define`
 
 ```text
-For each sample project or project that you create there should be a variable number of tasks between 5 and 15
-tasks for each one randomly distributed into different states of completion. Make sure that there's at least
-one task in each stage of completion.
+Conduct a systematic literature review on AI safety research trends from 2018-2025.
+The research aims to:
+1. Identify major themes and research areas within AI safety
+2. Track how focus areas have evolved over time
+3. Identify gaps in current research
+4. Recommend future research directions
+
+Research questions:
+- What are the primary research themes in AI safety literature?
+- How has the distribution of research focus changed from 2018 to 2025?
+- Which safety concerns receive the most/least attention?
+- What methodological approaches dominate the field?
+- What gaps exist in current research coverage?
+
+This research will inform research prioritization and funding decisions for an AI safety institute.
 ```
 
-Also validate the specification checklist:
+### Step 2: Refine the Research Definition
+
+After the initial definition is created, use `/researchkit.clarify` to address any underspecified areas:
 
 ```text
-Read the review and acceptance checklist, and check off each item in the checklist if the feature spec meets the criteria. Leave it empty if it does not.
+For data sources, prioritize:
+- arXiv (cs.AI, cs.LG, cs.CY with "safety" keywords)
+- ACM Digital Library
+- NeurIPS, ICML, ICLR proceedings (safety workshops)
+- AI safety-specific venues (AI Safety conference, SafeAI workshop)
+- Key research organizations (CHAI, MIRI, DeepMind Safety Team, Anthropic)
+
+Inclusion criteria:
+- Published 2018-2025
+- Focuses on AI safety, alignment, robustness, or interpretability
+- Peer-reviewed or from reputable organizations
+- English language
+
+Exclusion criteria:
+- General machine learning papers without safety focus
+- Opinion pieces without empirical analysis or theoretical contribution
+- Duplicate publications
 ```
 
-### Step 3: Generate Technical Plan with `/researchkit.plan`
-
-Be specific about your tech stack and technical requirements:
+Also validate the research definition checklist:
 
 ```text
-We are going to generate this using .NET Aspire, using Postgres as the database. The frontend should use
-Blazor server with drag-and-drop task boards, real-time updates. There should be a REST API created with a projects API,
-tasks API, and a notifications API.
+Read the review and acceptance checklist in the research definition, and check off each item if the research definition meets the criteria. Leave it empty if it does not.
 ```
 
-### Step 4: Validate and Implement
+### Step 3: Design Methodology with `/researchkit.methodology`
 
-Have your AI agent audit the implementation plan:
+Be specific about your research design, data collection approach, and analysis methods:
 
 ```text
-Now I want you to go and audit the implementation plan and the implementation detail files.
-Read through it with an eye on determining whether or not there is a sequence of tasks that you need
-to be doing that are obvious from reading this. Because I don't know if there's enough here.
+Research Design: Systematic literature review following PRISMA guidelines (adapted for computer science)
+
+Search Strategy:
+- Primary databases: arXiv, ACM DL, Google Scholar, Semantic Scholar
+- Search terms: ("AI safety" OR "machine learning safety" OR "AI alignment" OR "AI robustness" OR "AI interpretability" OR "AI explainability") AND ("2018"[year] OR "2019"[year] OR ... "2025"[year])
+- Citation tracking: Forward and backward citations from seminal works (Amodei et al. 2016, etc.)
+
+Screening Process:
+- Phase 1: Title screening (2000 expected results → ~800 after title screening)
+- Phase 2: Abstract screening (~800 → ~300 after abstract review)
+- Phase 3: Full-text review (~300 → ~150 final inclusion)
+
+Data Extraction:
+- Bibliographic info (authors, year, venue, citations)
+- Research theme (categorize using preliminary taxonomy)
+- Methodology (theoretical, empirical, survey, etc.)
+- AI system type (language models, robotics, autonomous systems, general)
+- Safety aspect (alignment, robustness, interpretability, fairness, privacy, etc.)
+
+Analysis Approach:
+- Thematic analysis to identify major research themes
+- Temporal analysis to track trend evolution (2-year buckets: 2018-2019, 2020-2021, 2022-2023, 2024-2025)
+- Network analysis of citation patterns
+- Gap analysis using framework synthesis
+
+Tools:
+- Zotero for reference management
+- Python + pandas for quantitative analysis
+- R + ggplot2 for visualization
+- NVivo for qualitative coding (if needed)
 ```
 
-Finally, implement the solution:
+### Step 4: Validate and Conduct Research
+
+Have your AI assistant review the methodology:
 
 ```text
-implement research/002-market-analysis/methodology.md
+Review the methodology document and verify that:
+1. The search strategy is comprehensive and reproducible
+2. Inclusion/exclusion criteria are clear and objective
+3. The screening process follows best practices
+4. Data extraction captures all relevant dimensions
+5. Analysis approach is appropriate for the research questions
+6. Timeline is realistic
+
+Flag any gaps or concerns.
+```
+
+Then begin the research with the new four-phase process:
+
+### Step 5: Execute Data Collection with `/researchkit.execute`
+
+```text
+Begin data collection according to research/001-ai-safety-trends/methodology.md.
+Start with the database searches, document all results in the execution log, and proceed with screening phase 1.
+Track all data collection progress and maintain quality metrics.
+```
+
+### Step 6: Analyze Data with `/researchkit.analyze`
+
+```text
+Analyze the collected papers using the planned approach:
+- Apply thematic analysis to identify major research themes
+- Conduct temporal analysis to track trend evolution
+- Perform network analysis of citation patterns
+- Generate statistical summaries and visualizations
+Document all analysis decisions and create reproducible analysis scripts.
+```
+
+### Step 7: Synthesize Findings with `/researchkit.synthesize`
+
+```text
+Synthesize the analysis results to answer the research questions:
+- Connect findings to each research question
+- Identify emergent themes across the data
+- Build theoretical contributions
+- Develop practical recommendations
+- Assess confidence levels and acknowledge limitations
+```
+
+### Step 8: Prepare Publication with `/researchkit.publish`
+
+```text
+Create a research report suitable for the AI safety institute:
+- Executive summary with key findings
+- Comprehensive methodology documentation
+- Visual representations of trends
+- Evidence-based recommendations for future research priorities
+- Properly formatted citations and bibliography
 ```
 
 ## Key Principles
 
-- **Be explicit** about what you're building and why
-- **Don't focus on tech stack** during specification phase
-- **Iterate and refine** your specifications before implementation
-- **Validate** the plan before coding begins
-- **Let the AI agent handle** the implementation details
+- **Be explicit** about your research questions and scope
+- **Don't jump to methodology** during research definition phase
+- **Iterate and refine** your research design before data collection
+- **Validate** the methodology before investing time in data collection
+- **Let the AI assistant help** with systematic execution, but maintain oversight
+
+## Common Research Workflows
+
+### Literature Review
+1. `/researchkit.define` → Define research questions and scope
+2. `/researchkit.methodology` → Design search strategy and analysis approach
+3. `/researchkit.execute` → Conduct searches, screening, and data collection
+4. `/researchkit.analyze` → Analyze papers and extract themes
+5. `/researchkit.synthesize` → Synthesize findings and draw conclusions
+6. `/researchkit.publish` → Prepare literature review paper or report
+
+### Empirical Research (Interviews, Surveys, Experiments)
+1. `/researchkit.define` → Define research questions and hypotheses
+2. `/researchkit.methodology` → Design study, instruments, and analysis plan
+3. Ethics review (if required) → Obtain IRB approval
+4. `/researchkit.execute` → Collect data (interviews, surveys, experiments)
+5. `/researchkit.analyze` → Process and analyze collected data
+6. `/researchkit.synthesize` → Interpret findings and connect to literature
+7. `/researchkit.publish` → Write research paper
+
+### Market Research
+1. `/researchkit.define` → Define market questions and scope
+2. `/researchkit.methodology` → Plan data sources and analysis approach
+3. `/researchkit.execute` → Gather market data from sources
+4. `/researchkit.analyze` → Analyze market trends and patterns
+5. `/researchkit.synthesize` → Draw insights and identify opportunities
+6. `/researchkit.publish` → Create market report or presentation
+
+### Technical Research
+1. `/researchkit.define` → Define technical questions (e.g., "Which framework is best for X?")
+2. `/researchkit.methodology` → Plan evaluation criteria and comparison approach
+3. `/researchkit.execute` → Run benchmarks and collect performance data
+4. `/researchkit.analyze` → Evaluate options systematically
+5. `/researchkit.synthesize` → Compare findings and make recommendations
+6. `/researchkit.publish` → Document decision rationale and findings
 
 ## Next Steps
 
-- Read the complete methodology for in-depth guidance
-- Check out more examples in the repository
-- Explore the source code on GitHub
+- Read the [complete SRD methodology guide](../research-driven.md) for in-depth guidance
+- Review the [refactoring documentation](../REFACTORING.md) to understand how Research Kit differs from Spec Kit
+- Explore the repository structure and templates
+- Join the community and contribute!
+
+## Tips for Success
+
+1. **Start small**: Begin with a focused research question, not a massive project
+2. **Use the checklist**: The research definition includes a checklist—use it to validate completeness
+3. **Iterate**: Don't expect perfection on the first pass; refine your definition and methodology
+4. **Document everything**: The AI assistant helps, but you should review and approve all research decisions
+5. **Maintain rigor**: The templates guide you through best practices—follow them
+6. **Ask for clarification**: Use `/researchkit.clarify` liberally to address gaps
+7. **Version control**: Commit research artifacts regularly; use branches for different research topics
+
+## Common Pitfalls to Avoid
+
+- ❌ Skipping the methodology phase and jumping straight to analysis
+- ❌ Defining research questions that are too broad or vague
+- ❌ Not validating the research design before data collection
+- ❌ Collecting data without clear analysis plan
+- ❌ Confusing exploratory research with confirmatory research
+- ❌ Over-relying on AI without critical oversight
+- ❌ Ignoring ethical considerations and bias
+
+## Getting Help
+
+If you get stuck:
+1. Check the comprehensive review document (`COMPREHENSIVE-REVIEW.md`)
+2. Review the research-driven methodology guide
+3. Open an issue on GitHub
+4. Check existing issues for similar questions

@@ -1,5 +1,8 @@
 ---
-description: Execute research tasks and compile final research report
+description: Execute research methodology and collect data
+scripts:
+  sh: scripts/bash/setup-execution.sh
+  ps: scripts/powershell/setup-execution.ps1
 ---
 
 ## User Input
@@ -10,131 +13,145 @@ $ARGUMENTS
 
 ## Outline
 
-This command guides the systematic execution of research tasks and compilation of the final report. Run this **after** `/research.tasks`.
+This command guides the systematic execution of the research methodology to collect data and generate raw results. Run this **after** `/research.methodology`.
 
-1. **Load task list** from `research/###-topic-name/tasks.md`
+1. **Load research context**:
+   - Research definition from `research/###-topic-name/definition.md`
+   - Methodology from `research/###-topic-name/methodology.md`
+   - Existing execution log if present
 
-2. **Load research definition** from `research/###-topic-name/definition.md`
+2. **Initialize execution tracking**:
+   - Create/update `research/###-topic-name/execution.md`
+   - Set up data collection directories:
+     - `research/###-topic-name/data/raw/` - raw collected data
+     - `research/###-topic-name/data/processed/` - cleaned/formatted data
+     - `research/###-topic-name/logs/` - execution logs
+     - `research/###-topic-name/notebooks/` - analysis notebooks
 
-3. **Load methodology** from `research/###-topic-name/methodology.md`
+3. **Execute data collection plan** (from methodology):
 
-4. **Execute research tasks systematically**:
+   **For each data source**:
+   - Review collection requirements
+   - Execute collection procedure
+   - Validate data quality immediately
+   - Store raw data with metadata
+   - Document any deviations from plan
+   - Log collection timestamp and parameters
 
-   **For each task**:
-   - Review task description and dependencies
-   - Execute the task following methodology
-   - Document findings/progress
-   - Update relevant files (literature-review.md, data-sources.md, findings.md, etc.)
-   - Check off task when complete
-   - Move to next task
+4. **Conduct experiments/studies** (if applicable):
 
-   **Task Execution Guidelines**:
-   - Follow research principles for quality and ethics
-   - Document sources immediately in references.bib
-   - Note any deviations from methodology
-   - Flag unexpected findings or issues
-   - Maintain organized notes throughout
+   **For each experiment**:
+   - Set up experimental conditions
+   - Execute experimental protocol
+   - Record observations systematically
+   - Capture unexpected findings
+   - Document environmental factors
+   - Store results with full context
 
-5. **Continuous documentation**:
-   - Update `literature-review.md` as sources are reviewed
-   - Update `data-sources.md` as data is collected
-   - Update `findings.md` as analysis progresses
+5. **Perform literature collection**:
+   - Search academic databases
+   - Download relevant papers
+   - Extract key information
+   - Build citation database
+   - Create literature matrix
    - Update `references.bib` continuously
-   - Keep notes on methodology adjustments
 
-6. **Quality checkpoints** (throughout execution):
-   - Verify sources meet credibility criteria
-   - Ensure citations are properly formatted
-   - Check alignment with research questions
-   - Validate findings against research principles
-   - Document limitations encountered
+6. **Quality control during execution**:
+   - Verify data completeness
+   - Check for collection errors
+   - Validate against methodology requirements
+   - Ensure ethical compliance
+   - Monitor resource usage
+   - Track time expenditure
 
-7. **Compile final research report** (`research/###-topic-name/report.md`):
+7. **Document execution progress**:
 
-   **Report Structure**:
+   Update `execution.md` with:
    ```markdown
-   # Research Report: [TOPIC]
+   # Research Execution Log
 
-   ## Executive Summary
-   [1-2 page overview: research question, approach, key findings, conclusions]
+   ## Execution Overview
+   - Start Date: [DATE]
+   - Status: [In Progress/Complete]
+   - Completion: [X/Y tasks]
 
-   ## Research Question & Objectives
-   [Restate from definition with any refinements]
+   ## Data Collection Progress
 
-   ## Methodology
-   [How research was conducted - can reference methodology.md]
+   ### Source 1: [NAME]
+   - Status: [Collected/Pending/Failed]
+   - Records Collected: [N]
+   - Quality Score: [1-10]
+   - Issues: [Any problems]
+   - Location: `data/raw/[filename]`
 
-   ## Literature Review
-   [Synthesized from literature-review.md]
+   ## Experiment Execution
 
-   ## Findings
-   [Organized by theme/question - from findings.md]
-   - Finding 1: [Evidence + sources]
-   - Finding 2: [Evidence + sources]
-   - ...
+   ### Experiment 1: [NAME]
+   - Date: [DATE]
+   - Conditions: [Details]
+   - Observations: [Key findings]
+   - Data Location: `data/raw/exp1/`
+   - Deviations: [Any protocol changes]
 
-   ## Analysis & Discussion
-   [Interpretation of findings, patterns, implications]
+   ## Literature Collection
+   - Papers Reviewed: [N]
+   - Papers Included: [N]
+   - Search Queries Used: [List]
+   - Databases Searched: [List]
 
-   ## Conclusions
-   [Direct answers to research questions]
+   ## Execution Issues & Resolutions
 
-   ## Recommendations
-   [If applicable - actionable recommendations based on findings]
-
-   ## Limitations
-   [Acknowledged constraints and their impact]
-
-   ## Future Research
-   [Suggested areas for further investigation]
-
-   ## References
-   [Generated from references.bib - properly formatted]
-
-   ## Appendices
-   [Supporting materials - raw data, detailed tables, etc.]
+   ## Next Steps
    ```
 
-8. **Final validation** against research principles:
-   - Source quality standards met
-   - Methodology rigor maintained
-   - Ethics & bias addressed
-   - Citation standards followed
-   - Analysis quality verified
-   - Report completeness confirmed
+8. **Generate execution artifacts**:
+   - Data collection scripts (`scripts/collect_*.py`)
+   - Data validation reports (`logs/validation_*.log`)
+   - Execution timeline (`logs/timeline.md`)
+   - Resource usage report
+   - Issue tracking log
 
-9. **Generate completion report**:
-   - Research questions answered (Y/N for each)
-   - Objectives achieved (% completion)
-   - Number of sources cited
-   - Key findings summary
-   - Limitations encountered
-   - Quality score (self-assessment against principles)
+9. **Prepare for analysis phase**:
+   - Organize raw data by type
+   - Create data inventory
+   - Document data formats
+   - Generate data dictionary
+   - Prepare analysis environment
+   - Create initial notebooks
 
-10. **Output summary**:
-    - All tasks completed
-    - Final report location
-    - Report page count/word count
-    - Number of sources cited
-    - Key findings (bullet points)
-    - Quality assessment
-    - Suggested next steps (peer review, publication, presentation, etc.)
+10. **Output execution summary**:
+    - Total data points collected
+    - Experiments completed
+    - Literature items gathered
+    - Execution time elapsed
+    - Issues encountered and resolved
+    - Data quality assessment
+    - Readiness for analysis phase
 
-**Report Quality Criteria**:
-- Executive summary is clear and standalone
-- All research questions explicitly answered
-- Claims supported by cited sources
-- Methodology transparent and reproducible
-- Limitations honestly acknowledged
-- Conclusions justified by findings
-- References properly formatted and complete
-- Writing is clear, concise, professional
+**Execution Principles**:
+- Follow methodology exactly unless justified deviation
+- Document everything as it happens
+- Maintain data integrity and provenance
+- Store raw data separately from processed
+- Keep detailed logs for reproducibility
+- Flag unexpected findings immediately
+- Ensure continuous quality control
 
-**Common Pitfalls to Avoid**:
-- Citing sources without reading them
-- Cherry-picking data to support predetermined conclusions
-- Ignoring contradictory evidence
-- Overgeneralizing from limited data
-- Failing to acknowledge limitations
-- Weak causal claims from correlational data
-- Missing or improperly formatted citations
+**Common Execution Challenges**:
+- Data source unavailability → Document and find alternatives
+- Protocol deviations → Record reasons and impacts
+- Quality issues → Flag for analysis phase consideration
+- Resource constraints → Prioritize critical data
+- Time overruns → Focus on primary research questions
+- Technical failures → Maintain backup procedures
+
+**Data Organization Standards**:
+- Use consistent naming conventions
+- Include metadata with all data files
+- Maintain version control for scripts
+- Create README files in data directories
+- Use standard formats (CSV, JSON, etc.)
+- Implement data validation checks
+- Ensure backup of all raw data
+
+This phase focuses purely on EXECUTING the research plan and COLLECTING data, not analyzing or interpreting results. Analysis comes in the next phase.

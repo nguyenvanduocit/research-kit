@@ -1,6 +1,6 @@
 # Local Development Guide
 
-This guide shows how to iterate on the `specify` CLI locally without publishing a release or committing to `main` first.
+This guide shows how to iterate on the `research` CLI locally without publishing a release or committing to `main` first.
 
 > Scripts now have both Bash (`.sh`) and PowerShell (`.ps1`) variants. The CLI auto-selects based on OS unless you pass `--script sh|ps`.
 
@@ -8,7 +8,7 @@ This guide shows how to iterate on the `specify` CLI locally without publishing 
 
 ```bash
 git clone https://github.com/nguyenvanduocit/research-kit.git
-cd spec-kit
+cd research-kit
 # Work on a feature branch
 git checkout -b your-feature-branch
 ```
@@ -26,7 +26,7 @@ python -m src.research_cli init demo-project --ai claude --ignore-agent-tools --
 If you prefer invoking the script file style (uses shebang):
 
 ```bash
-python src/specify_cli/__init__.py init demo-project --script ps
+python src/research_cli/__init__.py init demo-project --script ps
 ```
 
 ## 3. Use Editable Install (Isolated Environment)
@@ -41,8 +41,8 @@ source .venv/bin/activate  # or on Windows PowerShell: .venv\Scripts\Activate.ps
 # Install project in editable mode
 uv pip install -e .
 
-# Now 'specify' entrypoint is available
-specify --help
+# Now 'research' entrypoint is available
+research --help
 ```
 
 Re-running after code edits requires no reinstall because of editable mode.
@@ -68,23 +68,23 @@ uvx --from git+https://github.com/nguyenvanduocit/research-kit.git@your-feature-
 If you're in another directory, use an absolute path instead of `.`:
 
 ```bash
-uvx --from /mnt/c/GitHub/spec-kit specify --help
-uvx --from /mnt/c/GitHub/spec-kit research init demo-anywhere --ai copilot --ignore-agent-tools --script sh
+uvx --from /mnt/c/GitHub/research-kit research --help
+uvx --from /mnt/c/GitHub/research-kit research init demo-anywhere --ai copilot --ignore-agent-tools --script sh
 ```
 
 Set an environment variable for convenience:
 
 ```bash
-export SPEC_KIT_SRC=/mnt/c/GitHub/spec-kit
-uvx --from "$SPEC_KIT_SRC" research init demo-env --ai copilot --ignore-agent-tools --script ps
+export RESEARCH_KIT_SRC=/mnt/c/GitHub/research-kit
+uvx --from "$RESEARCH_KIT_SRC" research init demo-env --ai copilot --ignore-agent-tools --script ps
 ```
 
 (Optional) Define a shell function:
 
 ```bash
-specify-dev() { uvx --from /mnt/c/GitHub/spec-kit specify "$@"; }
+research-dev() { uvx --from /mnt/c/GitHub/research-kit research "$@"; }
 # Then
-specify-dev --help
+research-dev --help
 ```
 
 ## 5. Testing Script Permission Logic
@@ -103,7 +103,7 @@ On Windows you will instead use the `.ps1` scripts (no chmod needed).
 Currently no enforced lint config is bundled, but you can quickly sanity check importability:
 
 ```bash
-python -c "import specify_cli; print('Import OK')"
+python -c "import research_cli; print('Import OK')"
 ```
 
 ## 7. Build a Wheel Locally (Optional)
@@ -144,10 +144,10 @@ research init demo --skip-tls --ai gemini --ignore-agent-tools --script ps
 | Action | Command |
 |--------|---------|
 | Run CLI directly | `python -m src.research_cli --help` |
-| Editable install | `uv pip install -e .` then `specify ...` |
-| Local uvx run (repo root) | `uvx --from . specify ...` |
-| Local uvx run (abs path) | `uvx --from /mnt/c/GitHub/spec-kit specify ...` |
-| Git branch uvx | `uvx --from git+URL@branch specify ...` |
+| Editable install | `uv pip install -e .` then `research ...` |
+| Local uvx run (repo root) | `uvx --from . research ...` |
+| Local uvx run (abs path) | `uvx --from /mnt/c/GitHub/research-kit research ...` |
+| Git branch uvx | `uvx --from git+URL@branch research ...` |
 | Build wheel | `uv build` |
 
 ## 11. Cleaning Up

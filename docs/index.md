@@ -1,12 +1,12 @@
-# Spec Kit
+# Research Kit
 
-*Build high-quality software faster.*
+*Conduct systematic research faster with AI assistance.*
 
-**An effort to allow organizations to focus on product scenarios rather than writing undifferentiated code with the help of Spec-Driven Development.**
+**A toolkit that empowers researchers to follow structured research workflows with the help of Systematic Research Development (SRD) and AI research assistants.**
 
-## What is Spec-Driven Development?
+## What is Systematic Research Development?
 
-Spec-Driven Development **flips the script** on traditional software development. For decades, code has been king — specifications were just scaffolding we built and discarded once the "real work" of coding began. Spec-Driven Development changes this: **specifications become executable**, directly generating working implementations rather than just guiding them.
+Systematic Research Development **transforms how research is conducted**. Instead of ad-hoc exploration and informal note-taking, SRD provides a structured framework that guides researchers through each stage of their work—from defining research questions to publishing findings—with AI assistance at every step.
 
 ## Getting Started
 
@@ -16,46 +16,104 @@ Spec-Driven Development **flips the script** on traditional software development
 
 ## Core Philosophy
 
-Spec-Driven Development is a structured process that emphasizes:
+Systematic Research Development is a structured process that emphasizes:
 
-- **Intent-driven development** where specifications define the "*what*" before the "*how*"
-- **Rich specification creation** using guardrails and organizational principles
-- **Multi-step refinement** rather than one-shot code generation from prompts
-- **Heavy reliance** on advanced AI model capabilities for specification interpretation
+- **Question-driven research** where research questions define the "*what*" before methodology defines the "*how*"
+- **Rigorous methodology design** using research principles and ethical guidelines
+- **Multi-phase research workflow** rather than unstructured exploration
+- **AI-assisted systematic inquiry** that maintains research quality and integrity
 
-## Development Phases
+## Research Phases
 
 | Phase | Focus | Key Activities |
 |-------|-------|----------------|
-| **0-to-1 Development** ("Greenfield") | Generate from scratch | <ul><li>Start with high-level requirements</li><li>Generate specifications</li><li>Plan implementation steps</li><li>Build production-ready applications</li></ul> |
-| **Creative Exploration** | Parallel implementations | <ul><li>Explore diverse solutions</li><li>Support multiple technology stacks & architectures</li><li>Experiment with UX patterns</li></ul> |
-| **Iterative Enhancement** ("Brownfield") | Brownfield modernization | <ul><li>Add features iteratively</li><li>Modernize legacy systems</li><li>Adapt processes</li></ul> |
+| **Definition** | Research Questions | <ul><li>Define research topics and questions</li><li>Establish scope and boundaries</li><li>Clarify objectives and expected outcomes</li><li>Create structured research definitions</li></ul> |
+| **Methodology** | Research Design | <ul><li>Design research methodology</li><li>Plan data collection approaches</li><li>Identify sources and resources</li><li>Address ethical considerations</li></ul> |
+| **Analysis** | Data & Findings | <ul><li>Conduct literature review</li><li>Collect and analyze data</li><li>Identify patterns and themes</li><li>Validate findings</li></ul> |
+| **Synthesis** | Conclusions | <ul><li>Synthesize findings across sources</li><li>Draw evidence-based conclusions</li><li>Connect to existing literature</li><li>Address limitations</li></ul> |
+| **Publication** | Dissemination | <ul><li>Prepare research outputs</li><li>Write papers or reports</li><li>Create presentations</li><li>Share findings</li></ul> |
 
-## Experimental Goals
+## Research Goals
 
-Our research and experimentation focus on:
+Our toolkit supports diverse research needs:
 
-### Technology Independence
+### Academic Research
 
-- Create applications using diverse technology stacks
-- Validate the hypothesis that Spec-Driven Development is a process not tied to specific technologies, programming languages, or frameworks
+- Conduct literature reviews and meta-analyses
+- Design empirical studies (qualitative, quantitative, mixed methods)
+- Validate research with rigor criteria (credibility, transferability, dependability)
+- Support peer review and publication workflows
 
-### Enterprise Constraints
+### Market Research
 
-- Demonstrate mission-critical application development
-- Incorporate organizational constraints (cloud providers, tech stacks, engineering practices)
-- Support enterprise design systems and compliance requirements
+- Analyze competitive landscapes
+- Gather and synthesize market intelligence
+- Identify trends and opportunities
+- Support data-driven business decisions
 
-### User-Centric Development
+### Technical Research
 
-- Build applications for different user cohorts and preferences
-- Support various development approaches (from vibe-coding to AI-native development)
+- Investigate technologies and approaches
+- Compare solutions and frameworks
+- Document findings and recommendations
+- Support architectural decision-making
 
-### Creative & Iterative Processes
+### Exploratory Research
 
-- Validate the concept of parallel implementation exploration
-- Provide robust iterative feature development workflows
-- Extend processes to handle upgrades and modernization tasks
+- Scope emerging topics
+- Build knowledge bases
+- Explore new domains
+- Support learning and discovery
+
+## Workflow Features
+
+### Structured Templates
+
+- **Research definitions** that clearly articulate questions and scope
+- **Methodology templates** for designing rigorous research approaches
+- **Literature review frameworks** for systematic source analysis
+- **Analysis templates** for organizing findings
+- **Publication scaffolds** for preparing outputs
+
+### AI Research Assistants
+
+Research Kit works with multiple AI assistants:
+- Claude Code (Anthropic)
+- GitHub Copilot
+- Gemini CLI (Google)
+- Cursor
+- Windsurf
+- And 10+ more agents
+
+Each assistant receives the same structured prompts and templates, ensuring consistent research quality regardless of which tool you use.
+
+### Git-Based Organization
+
+- **Research topic branches** (e.g., `001-literature-review`, `002-methodology-design`)
+- **Version control** for research artifacts
+- **Collaboration support** for team research
+- **Branch-based isolation** for parallel research streams
+
+### Quality Assurance
+
+- **Principles-based guardrails** that enforce research standards
+- **Ethical review checklists** for responsible research
+- **Bias mitigation protocols** to maintain objectivity
+- **Validation workflows** to ensure rigor
+
+## Key Differences from Software Development Tools
+
+Research Kit is **NOT** for:
+- ❌ Software implementation or code generation
+- ❌ Specification-driven development (use [Spec Kit](https://github.com/anthropics/spec-kit) for that)
+- ❌ Building applications or systems
+
+Research Kit **IS** for:
+- ✅ Systematic inquiry and knowledge discovery
+- ✅ Literature reviews and meta-analyses
+- ✅ Data collection and analysis
+- ✅ Evidence-based conclusions and publications
+- ✅ Research methodology design
 
 ## Contributing
 
@@ -64,3 +122,9 @@ Please see our [Contributing Guide](https://github.com/nguyenvanduocit/research-
 ## Support
 
 For support, please check our [Support Guide](https://github.com/nguyenvanduocit/research-kit/blob/main/SUPPORT.md) or open an issue on GitHub.
+
+## Relationship to Spec Kit
+
+Research Kit is a fork of [Spec Kit](https://github.com/anthropics/spec-kit), adapted for research workflows. While Spec Kit focuses on software development and Specification-Driven Development (SDD), Research Kit focuses on systematic research and Systematic Research Development (SRD).
+
+If you need to build software applications, use Spec Kit. If you need to conduct research, use Research Kit.

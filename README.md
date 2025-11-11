@@ -75,7 +75,7 @@ If you need **defensible conclusions backed by documented sources and transparen
 
 ### Structured Research Workflow
 
-Research Kit guides you through a systematic 7-phase process:
+Research Kit guides you through a systematic 10-phase process:
 
 1. **Principles** - Establish research quality standards and ethical guidelines
 2. **Define** - Articulate research questions, objectives, and scope
@@ -83,7 +83,10 @@ Research Kit guides you through a systematic 7-phase process:
 4. **Methodology** - Design research approach and data collection strategy
 5. **Validate** - Review feasibility and identify potential issues (optional)
 6. **Tasks** - Break down research into executable activities
-7. **Execute** - Conduct research and generate comprehensive reports
+7. **Execute** - Conduct research and collect data
+8. **Analyze** - Process data and generate statistical insights
+9. **Synthesize** - Draw conclusions and answer research questions
+10. **Publish** - Create publication-ready outputs (reports, papers, presentations)
 
 ### Multiple Research Types
 
@@ -188,7 +191,7 @@ Use **`/research.execute`** to conduct research and generate your report:
 
 ## Research Workflow
 
-Research Kit implements a structured 7-phase workflow designed to ensure quality, reproducibility, and defensibility:
+Research Kit implements a structured 10-phase workflow designed to ensure quality, reproducibility, and defensibility:
 
 ### Phase 1: Principles - Establish Research Standards
 
@@ -264,17 +267,57 @@ Convert methodology into executable steps:
 
 **Output**: `/research/<research-id>/tasks.md`
 
-### Phase 7: Execute - Conduct Research & Report
+### Phase 7: Execute - Conduct Research & Collect Data
 
-Execute the research plan systematically:
+Execute the research methodology to gather data:
 
-- Source collection with proper attribution
-- Evidence synthesis and pattern identification
-- Analysis with transparent reasoning
-- Comprehensive report generation with citations
-- Bibliography in BibTeX format
+- Implement data collection protocols
+- Conduct experiments or surveys as designed
+- Gather literature and documentary evidence
+- Record observations systematically
+- Track execution progress and deviations
+- Maintain data quality and integrity
 
-**Output**: `/research/<research-id>/report.md`, `/research/<research-id>/bibliography.bib`
+**Output**: `/research/<research-id>/execution.md`, `/research/<research-id>/data/`, `/research/<research-id>/logs/`
+
+### Phase 8: Analyze - Process Data & Generate Insights
+
+Analyze collected data using appropriate methods:
+
+- Clean and prepare data for analysis
+- Apply statistical tests and models
+- Generate visualizations and figures
+- Identify patterns and relationships
+- Compare findings with literature
+- Document all analysis decisions
+
+**Output**: `/research/<research-id>/analysis.md`, `/research/<research-id>/figures/`, `/research/<research-id>/tables/`
+
+### Phase 9: Synthesize - Draw Conclusions
+
+Integrate findings to answer research questions:
+
+- Connect findings to research questions
+- Identify emergent themes and patterns
+- Build theoretical contributions
+- Develop practical implications
+- Assess confidence in conclusions
+- Acknowledge limitations honestly
+
+**Output**: `/research/<research-id>/synthesis.md`, `/research/<research-id>/models/`
+
+### Phase 10: Publish - Create Publication Outputs
+
+Transform research into publication-ready formats:
+
+- Generate comprehensive research reports
+- Create academic papers for journals
+- Develop presentations for stakeholders
+- Write executive briefs for decision-makers
+- Format citations and bibliographies
+- Prepare submission packages
+
+**Output**: `/research/<research-id>/publications/`, `/research/<research-id>/bibliography.bib`
 
 ## Research Types
 

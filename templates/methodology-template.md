@@ -38,7 +38,7 @@
 ### Documentation (this research topic)
 
 ```text
-specs/[###-topic]/
+research/[###-topic]/
 ├── methodology.md       # This file (/researchkit.methodology command output)
 ├── literature-review.md # Phase 0 output (/researchkit.methodology command)
 ├── data-schema.md       # Phase 1 output (if data collection involved)
@@ -608,7 +608,7 @@ Step 3: [Description]
 - [ ] Literature review draft complete
 
 **Outputs**:
-- `specs/[###-topic]/literature-review.md`
+- `research/[###-topic]/literature-review.md`
 - Updated `data/references/bibliography.bib`
 - Reading notes in `data/notes/`
 
@@ -665,7 +665,7 @@ Step 3: [Description]
 - Analysis files in `analysis/`
 - Coded data and codebook (if applicable)
 - Statistical outputs (if applicable)
-- `specs/[###-topic]/analysis-methodology.md`
+- `research/[###-topic]/analysis-methodology.md`
 
 **Dependencies**: [Requires Phase 1 and Phase 2 data]
 
