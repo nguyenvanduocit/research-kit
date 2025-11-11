@@ -1,26 +1,26 @@
 # AGENTS.md
 
-## About Spec Kit and Specify
+## About Research Kit and Research CLI
 
-**GitHub Spec Kit** is a comprehensive toolkit for implementing Spec-Driven Development (SDD) - a methodology that emphasizes creating clear specifications before implementation. The toolkit includes templates, scripts, and workflows that guide development teams through a structured approach to building software.
+**Research Kit** is a comprehensive toolkit for implementing Systematic Research Development (SRD) - a methodology that emphasizes structured research processes from definition through publication. The toolkit includes templates, scripts, and workflows that guide research teams through a systematic approach to conducting academic and professional research.
 
-**Specify CLI** is the command-line interface that bootstraps projects with the Spec Kit framework. It sets up the necessary directory structures, templates, and AI agent integrations to support the Spec-Driven Development workflow.
+**Research CLI** is the command-line interface that bootstraps research projects with the Research Kit framework. It sets up the necessary directory structures, templates, and AI agent integrations to support the Systematic Research Development workflow.
 
-The toolkit supports multiple AI coding assistants, allowing teams to use their preferred tools while maintaining consistent project structure and development practices.
+The toolkit supports multiple AI research assistants, allowing teams to use their preferred tools while maintaining consistent project structure and research practices.
 
 ---
 
 ## General practices
 
-- Any changes to `__init__.py` for the Specify CLI require a version rev in `pyproject.toml` and addition of entries to `CHANGELOG.md`.
+- Any changes to `__init__.py` for the Research CLI require a version rev in `pyproject.toml` and addition of entries to `CHANGELOG.md`.
 
 ## Adding New Agent Support
 
-This section explains how to add support for new AI agents/assistants to the Specify CLI. Use this guide as a reference when integrating new AI tools into the Spec-Driven Development workflow.
+This section explains how to add support for new AI agents/assistants to the Research CLI. Use this guide as a reference when integrating new AI tools into the Systematic Research Development workflow.
 
 ### Overview
 
-Specify supports multiple AI agents by generating agent-specific command files and directory structures when initializing projects. Each agent has its own conventions for:
+Research CLI supports multiple AI agents by generating agent-specific command files and directory structures when initializing research projects. Each agent has its own conventions for:
 
 - **Command file formats** (Markdown, TOML, etc.)
 - **Directory structures** (`.claude/commands/`, `.windsurf/workflows/`, etc.)
@@ -54,7 +54,7 @@ Follow these steps to add a new agent (using a hypothetical new agent as an exam
 
 **IMPORTANT**: Use the actual CLI tool name as the key, not a shortened version.
 
-Add the new agent to the `AGENT_CONFIG` dictionary in `src/specify_cli/__init__.py`. This is the **single source of truth** for all agent metadata:
+Add the new agent to the `AGENT_CONFIG` dictionary in `src/research_cli/__init__.py`. This is the **single source of truth** for all agent metadata:
 
 ```python
 AGENT_CONFIG = {
@@ -94,11 +94,11 @@ Also update any function docstrings, examples, and error messages that list avai
 
 #### 3. Update README Documentation
 
-Update the **Supported AI Agents** section in `README.md` to include the new agent:
+Update the **Supported AI Research Assistants** section in `README.md` to include the new agent:
 
 - Add the new agent to the table with appropriate support level (Full/Partial)
 - Include the agent's official website link
-- Add any relevant notes about the agent's implementation
+- Add any relevant notes about the agent's implementation for research workflows
 - Ensure the table formatting remains aligned and consistent
 
 #### 4. Update Release Package Script
@@ -122,6 +122,8 @@ case $agent in
 esac
 ```
 
+**Note**: For Research Kit, ensure generated commands use research workflow names (`/research.define`, `/research.methodology`, etc.) instead of code-focused commands.
+
 #### 4. Update GitHub Release Script
 
 Modify `.github/workflows/scripts/create-github-release.sh` to include the new agent's packages:
@@ -129,8 +131,8 @@ Modify `.github/workflows/scripts/create-github-release.sh` to include the new a
 ```bash
 gh release create "$VERSION" \
   # ... existing packages ...
-  .genreleases/spec-kit-template-windsurf-sh-"$VERSION".zip \
-  .genreleases/spec-kit-template-windsurf-ps-"$VERSION".zip \
+  .genreleases/research-kit-template-windsurf-sh-"$VERSION".zip \
+  .genreleases/research-kit-template-windsurf-ps-"$VERSION".zip \
   # Add new agent packages here
 ```
 
@@ -141,7 +143,7 @@ gh release create "$VERSION" \
 Add file variable:
 
 ```bash
-WINDSURF_FILE="$REPO_ROOT/.windsurf/rules/specify-rules.md"
+WINDSURF_FILE="$REPO_ROOT/.windsurf/rules/research-rules.md"
 ```
 
 Add to case statement:
@@ -150,7 +152,7 @@ Add to case statement:
 case "$AGENT_TYPE" in
   # ... existing cases ...
   windsurf) update_agent_file "$WINDSURF_FILE" "Windsurf" ;;
-  "") 
+  "")
     # ... existing checks ...
     [ -f "$WINDSURF_FILE" ] && update_agent_file "$WINDSURF_FILE" "Windsurf";
     # Update default creation condition
@@ -163,7 +165,7 @@ esac
 Add file variable:
 
 ```powershell
-$windsurfFile = Join-Path $repoRoot '.windsurf/rules/specify-rules.md'
+$windsurfFile = Join-Path $repoRoot '.windsurf/rules/research-rules.md'
 ```
 
 Add to switch statement:
@@ -196,7 +198,7 @@ windsurf_ok = check_tool_for_tracker("windsurf", "https://windsurf.com/", tracke
 # In init validation (only if CLI tool required)
 elif selected_ai == "windsurf":
     if not check_tool("windsurf", "Install from: https://windsurf.com/"):
-        console.print("[red]Error:[/red] Windsurf CLI is required for Windsurf projects")
+        console.print("[red]Error:[/red] Windsurf CLI is required for Windsurf research projects")
         agent_tool_missing = True
 ```
 
@@ -330,7 +332,8 @@ Used by: Claude, Cursor, opencode, Windsurf, Amazon Q Developer, Amp
 description: "Command description"
 ---
 
-Command content with {SCRIPT} and $ARGUMENTS placeholders.
+Research command content with {SCRIPT} and $ARGUMENTS placeholders.
+Example: /research.define, /research.methodology, /research.analyze
 ```
 
 ### TOML Format
@@ -341,7 +344,8 @@ Used by: Gemini, Qwen
 description = "Command description"
 
 prompt = """
-Command content with {SCRIPT} and {{args}} placeholders.
+Research command content with {SCRIPT} and {{args}} placeholders.
+Example: /research.define, /research.methodology, /research.analyze
 """
 ```
 
@@ -365,10 +369,11 @@ Different agents use different argument placeholders:
 ## Testing New Agent Integration
 
 1. **Build test**: Run package creation script locally
-2. **CLI test**: Test `specify init --ai <agent>` command
-3. **File generation**: Verify correct directory structure and files
-4. **Command validation**: Ensure generated commands work with the agent
+2. **CLI test**: Test `research init --ai <agent>` command
+3. **File generation**: Verify correct directory structure and files for research projects
+4. **Command validation**: Ensure generated research commands work with the agent (`/research.define`, `/research.methodology`, etc.)
 5. **Context update**: Test agent context update scripts
+6. **Research workflow**: Verify the complete research workflow functions correctly (definition → methodology → analysis → publication)
 
 ## Common Pitfalls
 
@@ -384,10 +389,45 @@ Different agents use different argument placeholders:
 When adding new agents:
 
 - Consider the agent's native command/workflow patterns
-- Ensure compatibility with the Spec-Driven Development process
+- Ensure compatibility with the Systematic Research Development process
+- Verify the agent can handle research-specific tasks (literature review, citation management, methodology design)
+- Consider research ethics and data quality requirements
 - Document any special requirements or limitations
 - Update this guide with lessons learned
 - Verify the actual CLI tool name before adding to AGENT_CONFIG
+
+## Research-Specific Guidance for AI Agents
+
+When working with research projects, AI agents should be configured to:
+
+### Citation Management
+- Properly format citations according to specified style guides (APA, MLA, Chicago, etc.)
+- Track and validate source URLs and DOIs
+- Maintain bibliographic data integrity
+
+### Source Quality
+- Evaluate source credibility (peer-reviewed journals, conference proceedings, reputable institutions)
+- Flag potential predatory journals or unreliable sources
+- Verify publication dates and relevance
+- Check for retracted papers or disputed findings
+
+### Research Ethics
+- Identify potential ethical concerns in research design
+- Flag issues with data privacy, informed consent, or research integrity
+- Ensure compliance with institutional review requirements
+- Recognize potential conflicts of interest
+
+### Methodology Rigor
+- Validate research methodologies are appropriate for research questions
+- Check statistical approaches and sample size justifications
+- Ensure reproducibility through detailed documentation
+- Identify potential biases or confounding factors
+
+### Academic Writing
+- Maintain formal academic tone and structure
+- Ensure logical flow from research question through conclusions
+- Verify claims are supported by evidence
+- Check for plagiarism risks and proper attribution
 
 ---
 

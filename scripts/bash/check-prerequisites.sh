@@ -2,22 +2,22 @@
 
 # Consolidated prerequisite checking script
 #
-# This script provides unified prerequisite checking for Spec-Driven Development workflow.
+# This script provides unified prerequisite checking for Research Kit workflow.
 # It replaces the functionality previously spread across multiple scripts.
 #
 # Usage: ./check-prerequisites.sh [OPTIONS]
 #
 # OPTIONS:
 #   --json              Output in JSON format
-#   --require-tasks     Require tasks.md to exist (for implementation phase)
+#   --require-tasks     Require tasks.md to exist (for execution phase)
 #   --include-tasks     Include tasks.md in AVAILABLE_DOCS list
 #   --paths-only        Only output path variables (no validation)
 #   --help, -h          Show help message
 #
 # OUTPUTS:
-#   JSON mode: {"FEATURE_DIR":"...", "AVAILABLE_DOCS":["..."]}
-#   Text mode: FEATURE_DIR:... \n AVAILABLE_DOCS: \n ✓/✗ file.md
-#   Paths only: REPO_ROOT: ... \n BRANCH: ... \n FEATURE_DIR: ... etc.
+#   JSON mode: {"RESEARCH_DIR":"...", "AVAILABLE_DOCS":["..."]}
+#   Text mode: RESEARCH_DIR:... \n AVAILABLE_DOCS: \n ✓/✗ file.md
+#   Paths only: REPO_ROOT: ... \n BRANCH: ... \n RESEARCH_DIR: ... etc.
 
 set -e
 
@@ -45,25 +45,25 @@ for arg in "$@"; do
             cat << 'EOF'
 Usage: check-prerequisites.sh [OPTIONS]
 
-Consolidated prerequisite checking for Spec-Driven Development workflow.
+Consolidated prerequisite checking for Research Kit workflow.
 
 OPTIONS:
   --json              Output in JSON format
-  --require-tasks     Require tasks.md to exist (for implementation phase)
+  --require-tasks     Require tasks.md to exist (for execution phase)
   --include-tasks     Include tasks.md in AVAILABLE_DOCS list
   --paths-only        Only output path variables (no prerequisite validation)
   --help, -h          Show this help message
 
 EXAMPLES:
-  # Check task prerequisites (plan.md required)
+  # Check task prerequisites (methodology.md required)
   ./check-prerequisites.sh --json
-  
-  # Check implementation prerequisites (plan.md + tasks.md required)
+
+  # Check execution prerequisites (methodology.md + tasks.md required)
   ./check-prerequisites.sh --json --require-tasks --include-tasks
-  
-  # Get feature paths only (no validation)
+
+  # Get research paths only (no validation)
   ./check-prerequisites.sh --paths-only
-  
+
 EOF
             exit 0
             ;;
@@ -78,44 +78,51 @@ done
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/common.sh"
 
-# Get feature paths and validate branch
-eval $(get_feature_paths)
-check_feature_branch "$CURRENT_BRANCH" "$HAS_GIT" || exit 1
+# Get research paths and validate branch
+eval $(get_research_paths)
+check_research_branch "$CURRENT_BRANCH" "$HAS_GIT" || exit 1
+
+# Map research variables to shorter names for backward compatibility
+METHODOLOGY="$RESEARCH_METHODOLOGY"
+TASKS="$RESEARCH_TASKS"
+LITERATURE_REVIEW="$RESEARCH_LITERATURE_REVIEW"
+DATA_ANALYSIS="$RESEARCH_DATA_ANALYSIS"
+REFERENCES_DIR="$RESEARCH_REFERENCES_DIR"
 
 # If paths-only mode, output paths and exit (support JSON + paths-only combined)
 if $PATHS_ONLY; then
     if $JSON_MODE; then
         # Minimal JSON paths payload (no validation performed)
-        printf '{"REPO_ROOT":"%s","BRANCH":"%s","FEATURE_DIR":"%s","FEATURE_SPEC":"%s","IMPL_PLAN":"%s","TASKS":"%s"}\n' \
-            "$REPO_ROOT" "$CURRENT_BRANCH" "$FEATURE_DIR" "$FEATURE_SPEC" "$IMPL_PLAN" "$TASKS"
+        printf '{"REPO_ROOT":"%s","BRANCH":"%s","RESEARCH_DIR":"%s","RESEARCH_DEFINITION":"%s","METHODOLOGY":"%s","TASKS":"%s"}\n' \
+            "$REPO_ROOT" "$CURRENT_BRANCH" "$RESEARCH_DIR" "$RESEARCH_DEFINITION" "$METHODOLOGY" "$TASKS"
     else
         echo "REPO_ROOT: $REPO_ROOT"
         echo "BRANCH: $CURRENT_BRANCH"
-        echo "FEATURE_DIR: $FEATURE_DIR"
-        echo "FEATURE_SPEC: $FEATURE_SPEC"
-        echo "IMPL_PLAN: $IMPL_PLAN"
+        echo "RESEARCH_DIR: $RESEARCH_DIR"
+        echo "RESEARCH_DEFINITION: $RESEARCH_DEFINITION"
+        echo "METHODOLOGY: $METHODOLOGY"
         echo "TASKS: $TASKS"
     fi
     exit 0
 fi
 
 # Validate required directories and files
-if [[ ! -d "$FEATURE_DIR" ]]; then
-    echo "ERROR: Feature directory not found: $FEATURE_DIR" >&2
-    echo "Run /speckit.specify first to create the feature structure." >&2
+if [[ ! -d "$RESEARCH_DIR" ]]; then
+    echo "ERROR: Research directory not found: $RESEARCH_DIR" >&2
+    echo "Run /researchkit.define first to create the research structure." >&2
     exit 1
 fi
 
-if [[ ! -f "$IMPL_PLAN" ]]; then
-    echo "ERROR: plan.md not found in $FEATURE_DIR" >&2
-    echo "Run /speckit.plan first to create the implementation plan." >&2
+if [[ ! -f "$METHODOLOGY" ]]; then
+    echo "ERROR: methodology.md not found in $RESEARCH_DIR" >&2
+    echo "Run /researchkit.methodology first to create the research methodology." >&2
     exit 1
 fi
 
 # Check for tasks.md if required
 if $REQUIRE_TASKS && [[ ! -f "$TASKS" ]]; then
-    echo "ERROR: tasks.md not found in $FEATURE_DIR" >&2
-    echo "Run /speckit.tasks first to create the task list." >&2
+    echo "ERROR: tasks.md not found in $RESEARCH_DIR" >&2
+    echo "Run /researchkit.tasks first to create the task list." >&2
     exit 1
 fi
 
@@ -123,14 +130,15 @@ fi
 docs=()
 
 # Always check these optional docs
-[[ -f "$RESEARCH" ]] && docs+=("research.md")
-[[ -f "$DATA_MODEL" ]] && docs+=("data-model.md")
+[[ -f "$LITERATURE_REVIEW" ]] && docs+=("literature-review.md")
+[[ -f "$DATA_ANALYSIS" ]] && docs+=("data-analysis.md")
 
-# Check contracts directory (only if it exists and has files)
-if [[ -d "$CONTRACTS_DIR" ]] && [[ -n "$(ls -A "$CONTRACTS_DIR" 2>/dev/null)" ]]; then
-    docs+=("contracts/")
+# Check references directory (only if it exists and has files)
+if [[ -d "$REFERENCES_DIR" ]] && [[ -n "$(ls -A "$REFERENCES_DIR" 2>/dev/null)" ]]; then
+    docs+=("references/")
 fi
 
+[[ -f "$REFERENCES_BIB" ]] && docs+=("references.bib")
 [[ -f "$QUICKSTART" ]] && docs+=("quickstart.md")
 
 # Include tasks.md if requested and it exists
@@ -147,19 +155,20 @@ if $JSON_MODE; then
         json_docs=$(printf '"%s",' "${docs[@]}")
         json_docs="[${json_docs%,}]"
     fi
-    
-    printf '{"FEATURE_DIR":"%s","AVAILABLE_DOCS":%s}\n' "$FEATURE_DIR" "$json_docs"
+
+    printf '{"RESEARCH_DIR":"%s","AVAILABLE_DOCS":%s}\n' "$RESEARCH_DIR" "$json_docs"
 else
     # Text output
-    echo "FEATURE_DIR:$FEATURE_DIR"
+    echo "RESEARCH_DIR:$RESEARCH_DIR"
     echo "AVAILABLE_DOCS:"
-    
+
     # Show status of each potential document
-    check_file "$RESEARCH" "research.md"
-    check_file "$DATA_MODEL" "data-model.md"
-    check_dir "$CONTRACTS_DIR" "contracts/"
+    check_file "$LITERATURE_REVIEW" "literature-review.md"
+    check_file "$DATA_ANALYSIS" "data-analysis.md"
+    check_dir "$REFERENCES_DIR" "references/"
+    check_file "$REFERENCES_BIB" "references.bib"
     check_file "$QUICKSTART" "quickstart.md"
-    
+
     if $INCLUDE_TASKS; then
         check_file "$TASKS" "tasks.md"
     fi

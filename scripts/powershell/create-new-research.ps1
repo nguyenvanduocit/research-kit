@@ -1,5 +1,5 @@
 #!/usr/bin/env pwsh
-# Create a new feature
+# Create a new research topic
 [CmdletBinding()]
 param(
     [switch]$Json,
@@ -7,13 +7,13 @@ param(
     [int]$Number = 0,
     [switch]$Help,
     [Parameter(ValueFromRemainingArguments = $true)]
-    [string[]]$FeatureDescription
+    [string[]]$ResearchDescription
 )
 $ErrorActionPreference = 'Stop'
 
 # Show help if requested
 if ($Help) {
-    Write-Host "Usage: ./create-new-feature.ps1 [-Json] [-ShortName <name>] [-Number N] <feature description>"
+    Write-Host "Usage: ./create-new-research.ps1 [-Json] [-ShortName <name>] [-Number N] <research description>"
     Write-Host ""
     Write-Host "Options:"
     Write-Host "  -Json               Output in JSON format"
@@ -22,18 +22,18 @@ if ($Help) {
     Write-Host "  -Help               Show this help message"
     Write-Host ""
     Write-Host "Examples:"
-    Write-Host "  ./create-new-feature.ps1 'Add user authentication system' -ShortName 'user-auth'"
-    Write-Host "  ./create-new-feature.ps1 'Implement OAuth2 integration for API'"
+    Write-Host "  ./create-new-research.ps1 'Explore machine learning algorithms' -ShortName 'ml-algorithms'"
+    Write-Host "  ./create-new-research.ps1 'Investigate API optimization techniques' -Number 5"
     exit 0
 }
 
-# Check if feature description provided
-if (-not $FeatureDescription -or $FeatureDescription.Count -eq 0) {
-    Write-Error "Usage: ./create-new-feature.ps1 [-Json] [-ShortName <name>] <feature description>"
+# Check if research description provided
+if (-not $ResearchDescription -or $ResearchDescription.Count -eq 0) {
+    Write-Error "Usage: ./create-new-research.ps1 [-Json] [-ShortName <name>] <research description>"
     exit 1
 }
 
-$featureDesc = ($FeatureDescription -join ' ').Trim()
+$researchDesc = ($ResearchDescription -join ' ').Trim()
 
 # Resolve repository root. Prefer git information when available, but fall back
 # to searching for repository markers so the workflow still functions in repositories that
@@ -41,7 +41,7 @@ $featureDesc = ($FeatureDescription -join ' ').Trim()
 function Find-RepositoryRoot {
     param(
         [string]$StartDir,
-        [string[]]$Markers = @('.git', '.specify')
+        [string[]]$Markers = @('.git', '.research')
     )
     $current = Resolve-Path $StartDir
     while ($true) {
@@ -62,16 +62,16 @@ function Find-RepositoryRoot {
 function Get-NextBranchNumber {
     param(
         [string]$ShortName,
-        [string]$SpecsDir
+        [string]$ResearchDir
     )
-    
+
     # Fetch all remotes to get latest branch info (suppress errors if no remotes)
     try {
         git fetch --all --prune 2>$null | Out-Null
     } catch {
         # Ignore fetch errors
     }
-    
+
     # Find remote branches matching the pattern using git ls-remote
     $remoteBranches = @()
     try {
@@ -86,7 +86,7 @@ function Get-NextBranchNumber {
     } catch {
         # Ignore errors
     }
-    
+
     # Check local branches
     $localBranches = @()
     try {
@@ -101,12 +101,12 @@ function Get-NextBranchNumber {
     } catch {
         # Ignore errors
     }
-    
-    # Check specs directory
-    $specDirs = @()
-    if (Test-Path $SpecsDir) {
+
+    # Check research directory
+    $researchDirs = @()
+    if (Test-Path $ResearchDir) {
         try {
-            $specDirs = Get-ChildItem -Path $SpecsDir -Directory | Where-Object { $_.Name -match "^(\d+)-$([regex]::Escape($ShortName))$" } | ForEach-Object {
+            $researchDirs = Get-ChildItem -Path $ResearchDir -Directory | Where-Object { $_.Name -match "^(\d+)-$([regex]::Escape($ShortName))$" } | ForEach-Object {
                 if ($_.Name -match "^(\d+)-") {
                     [int]$matches[1]
                 }
@@ -115,15 +115,15 @@ function Get-NextBranchNumber {
             # Ignore errors
         }
     }
-    
+
     # Combine all sources and get the highest number
     $maxNum = 0
-    foreach ($num in ($remoteBranches + $localBranches + $specDirs)) {
+    foreach ($num in ($remoteBranches + $localBranches + $researchDirs)) {
         if ($num -gt $maxNum) {
             $maxNum = $num
         }
     }
-    
+
     # Return next number
     return $maxNum + 1
 }
@@ -147,13 +147,13 @@ try {
 
 Set-Location $repoRoot
 
-$specsDir = Join-Path $repoRoot 'specs'
-New-Item -ItemType Directory -Path $specsDir -Force | Out-Null
+$researchDir = Join-Path $repoRoot 'research'
+New-Item -ItemType Directory -Path $researchDir -Force | Out-Null
 
 # Function to generate branch name with stop word filtering and length filtering
 function Get-BranchName {
     param([string]$Description)
-    
+
     # Common stop words to filter out
     $stopWords = @(
         'i', 'a', 'an', 'the', 'to', 'for', 'of', 'in', 'on', 'at', 'by', 'with', 'from',
@@ -162,17 +162,17 @@ function Get-BranchName {
         'this', 'that', 'these', 'those', 'my', 'your', 'our', 'their',
         'want', 'need', 'add', 'get', 'set'
     )
-    
+
     # Convert to lowercase and extract words (alphanumeric only)
     $cleanName = $Description.ToLower() -replace '[^a-z0-9\s]', ' '
     $words = $cleanName -split '\s+' | Where-Object { $_ }
-    
+
     # Filter words: remove stop words and words shorter than 3 chars (unless they're uppercase acronyms in original)
     $meaningfulWords = @()
     foreach ($word in $words) {
         # Skip stop words
         if ($stopWords -contains $word) { continue }
-        
+
         # Keep words that are length >= 3 OR appear as uppercase in original (likely acronyms)
         if ($word.Length -ge 3) {
             $meaningfulWords += $word
@@ -181,7 +181,7 @@ function Get-BranchName {
             $meaningfulWords += $word
         }
     }
-    
+
     # If we have meaningful words, use first 3-4 of them
     if ($meaningfulWords.Count -gt 0) {
         $maxWords = if ($meaningfulWords.Count -eq 4) { 4 } else { 3 }
@@ -201,19 +201,19 @@ if ($ShortName) {
     $branchSuffix = $ShortName.ToLower() -replace '[^a-z0-9]', '-' -replace '-{2,}', '-' -replace '^-', '' -replace '-$', ''
 } else {
     # Generate from description with smart filtering
-    $branchSuffix = Get-BranchName -Description $featureDesc
+    $branchSuffix = Get-BranchName -Description $researchDesc
 }
 
 # Determine branch number
 if ($Number -eq 0) {
     if ($hasGit) {
         # Check existing branches on remotes
-        $Number = Get-NextBranchNumber -ShortName $branchSuffix -SpecsDir $specsDir
+        $Number = Get-NextBranchNumber -ShortName $branchSuffix -ResearchDir $researchDir
     } else {
         # Fall back to local directory check
         $highest = 0
-        if (Test-Path $specsDir) {
-            Get-ChildItem -Path $specsDir -Directory | ForEach-Object {
+        if (Test-Path $researchDir) {
+            Get-ChildItem -Path $researchDir -Directory | ForEach-Object {
                 if ($_.Name -match '^(\d{3})') {
                     $num = [int]$matches[1]
                     if ($num -gt $highest) { $highest = $num }
@@ -224,28 +224,28 @@ if ($Number -eq 0) {
     }
 }
 
-$featureNum = ('{0:000}' -f $Number)
-$branchName = "$featureNum-$branchSuffix"
+$researchNum = ('{0:000}' -f $Number)
+$branchName = "$researchNum-$branchSuffix"
 
 # GitHub enforces a 244-byte limit on branch names
 # Validate and truncate if necessary
 $maxBranchLength = 244
 if ($branchName.Length -gt $maxBranchLength) {
     # Calculate how much we need to trim from suffix
-    # Account for: feature number (3) + hyphen (1) = 4 chars
+    # Account for: research number (3) + hyphen (1) = 4 chars
     $maxSuffixLength = $maxBranchLength - 4
-    
+
     # Truncate suffix
     $truncatedSuffix = $branchSuffix.Substring(0, [Math]::Min($branchSuffix.Length, $maxSuffixLength))
     # Remove trailing hyphen if truncation created one
     $truncatedSuffix = $truncatedSuffix -replace '-$', ''
-    
+
     $originalBranchName = $branchName
-    $branchName = "$featureNum-$truncatedSuffix"
-    
-    Write-Warning "[specify] Branch name exceeded GitHub's 244-byte limit"
-    Write-Warning "[specify] Original: $originalBranchName ($($originalBranchName.Length) bytes)"
-    Write-Warning "[specify] Truncated to: $branchName ($($branchName.Length) bytes)"
+    $branchName = "$researchNum-$truncatedSuffix"
+
+    Write-Warning "[research-kit] Branch name exceeded GitHub's 244-byte limit"
+    Write-Warning "[research-kit] Original: $originalBranchName ($($originalBranchName.Length) bytes)"
+    Write-Warning "[research-kit] Truncated to: $branchName ($($branchName.Length) bytes)"
 }
 
 if ($hasGit) {
@@ -255,36 +255,35 @@ if ($hasGit) {
         Write-Warning "Failed to create git branch: $branchName"
     }
 } else {
-    Write-Warning "[specify] Warning: Git repository not detected; skipped branch creation for $branchName"
+    Write-Warning "[research-kit] Warning: Git repository not detected; skipped branch creation for $branchName"
 }
 
-$featureDir = Join-Path $specsDir $branchName
-New-Item -ItemType Directory -Path $featureDir -Force | Out-Null
+$researchTopicDir = Join-Path $researchDir $branchName
+New-Item -ItemType Directory -Path $researchTopicDir -Force | Out-Null
 
-$template = Join-Path $repoRoot '.specify/templates/spec-template.md'
-$specFile = Join-Path $featureDir 'spec.md'
-if (Test-Path $template) { 
-    Copy-Item $template $specFile -Force 
-} else { 
-    New-Item -ItemType File -Path $specFile | Out-Null 
+$template = Join-Path $repoRoot '.research/templates/research-definition-template.md'
+$definitionFile = Join-Path $researchTopicDir 'definition.md'
+if (Test-Path $template) {
+    Copy-Item $template $definitionFile -Force
+} else {
+    New-Item -ItemType File -Path $definitionFile | Out-Null
 }
 
-# Set the SPECIFY_FEATURE environment variable for the current session
-$env:SPECIFY_FEATURE = $branchName
+# Set the RESEARCH_TOPIC environment variable for the current session
+$env:RESEARCH_TOPIC = $branchName
 
 if ($Json) {
-    $obj = [PSCustomObject]@{ 
+    $obj = [PSCustomObject]@{
         BRANCH_NAME = $branchName
-        SPEC_FILE = $specFile
-        FEATURE_NUM = $featureNum
-        HAS_GIT = $hasGit
+        DEFINITION_FILE = $definitionFile
+        RESEARCH_NUM = $researchNum
+        RESEARCH_DIR = $researchTopicDir
     }
     $obj | ConvertTo-Json -Compress
 } else {
     Write-Output "BRANCH_NAME: $branchName"
-    Write-Output "SPEC_FILE: $specFile"
-    Write-Output "FEATURE_NUM: $featureNum"
-    Write-Output "HAS_GIT: $hasGit"
-    Write-Output "SPECIFY_FEATURE environment variable set to: $branchName"
+    Write-Output "DEFINITION_FILE: $definitionFile"
+    Write-Output "RESEARCH_NUM: $researchNum"
+    Write-Output "RESEARCH_DIR: $researchTopicDir"
+    Write-Output "RESEARCH_TOPIC environment variable set to: $branchName"
 }
-

@@ -1,7 +1,7 @@
 [project]
-name = "specify-cli"
-version = "0.0.20"
-description = "Specify CLI, part of GitHub Spec Kit. A tool to bootstrap your projects for Spec-Driven Development (SDD)."
+name = "research-cli"
+version = "1.0.0"
+description = "Research Kit CLI - A tool to bootstrap deep research projects with AI agents using structured research methodology."
 requires-python = ">=3.11"
 dependencies = [
     "typer",
@@ -13,12 +13,12 @@ dependencies = [
 ]
 
 [project.scripts]
-specify = "specify_cli:main"
+research = "research_cli:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/specify_cli"]
+packages = ["src/research_cli"]
 

@@ -1,0 +1,176 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+**Research Kit** is an open source toolkit for Systematic Research Development (SRD). It provides a `research` CLI tool that bootstraps research projects with templates, scripts, and slash commands that enable AI research assistants to follow a structured workflow: define research topics, design methodologies, conduct analysis, and prepare publications.
+
+## Common Commands
+
+### Development & Testing
+
+```bash
+# Install dependencies and create virtual environment
+uv sync
+
+# Run the CLI tool
+uv run research --help
+uv run research init <research-project-name>
+uv run research check
+
+# Test CLI functionality
+uv run research init test-research-project --ai claude
+```
+
+### Testing Local Changes
+
+When developing templates, commands, or scripts:
+
+```bash
+# Generate local release packages (replace v1.0.0 with desired version)
+./.github/workflows/scripts/create-release-packages.sh v1.0.0
+
+# Copy package to test research project
+cp -r .genreleases/srd-<agent>-package-<script-type>/. <path-to-test-research-project>/
+
+# Example for Claude with bash scripts
+cp -r .genreleases/srd-claude-package-sh/. ~/test-research-project/
+```
+
+## Repository Structure
+
+### Core Components
+
+- **`src/research_cli/__init__.py`**: Main CLI implementation (Python 3.11+)
+  - Handles research project initialization, agent detection, template deployment
+  - Supports multiple AI research assistants (Claude, Gemini, Copilot, Cursor, etc.)
+  - Features: topic management, template customization, prerequisite checking
+
+- **`templates/`**: Source templates for all generated files
+  - `commands/*.md`: Slash command definitions (`/research.define`, `/research.methodology`, `/research.analyze`, `/research.publish`, etc.)
+  - `research-definition-template.md`, `methodology-template.md`, `analysis-template.md`: Document templates
+  - `agent-file-template.md`: Agent-specific context file template
+  - Templates use frontmatter for metadata and support both bash (`sh`) and PowerShell (`ps`) script variants
+
+- **`scripts/bash/` & `scripts/powershell/`**: Automation scripts deployed to research projects
+  - `common.sh/common.ps1`: Shared utilities (repo root detection, branch detection, topic number extraction)
+  - `create-new-research.sh/ps1`: Creates research topic branches, manages numbering, prevents duplicates
+  - `setup-methodology.sh/ps1`: Prepares directories and templates for research methodology planning
+  - `check-prerequisites.sh/ps1`: Validates required tools and environment
+  - `update-agent-context.sh/ps1`: Updates agent-specific CLAUDE.md/context files
+
+- **`principles/research-principles.md`**: Template for research governance principles
+  - Defines research standards, ethical requirements, methodological constraints
+  - Guides all AI decision-making during research definition and execution
+
+### Documentation
+
+- **`README.md`**: User-facing documentation, installation, and quick start
+- **`research-driven.md`**: Deep dive into Systematic Research Development methodology
+- **`AGENTS.md`**: Agent-specific integration details for research workflows
+- **`CONTRIBUTING.md`**: Contribution workflow, testing local changes, PR guidelines
+
+## Architecture
+
+### The SRD Workflow
+
+1. **Principles** (`/research.principles`): Establish research governance principles
+2. **Definition** (`/research.define`): Define research topics and questions in natural language
+   - Auto-generates topic numbers (001, 002, etc.) by scanning remote branches, local branches, and research directories
+   - Creates research topic branches (`###-topic-name`)
+   - Generates structured definitions from user descriptions
+3. **Clarification** (`/research.clarify`): Interactive Q&A to refine underspecified areas
+4. **Methodology** (`/research.methodology`): Design research methodologies and approaches
+   - Produces `methodology.md`, `literature-review.md`, `data-sources.md`, `ethics.md`
+5. **Analysis** (`/research.analyze`): Conduct analysis and validate findings
+6. **Synthesis** (`/research.synthesize`): Synthesize findings and draw conclusions
+7. **Publication** (`/research.publish`): Prepare research outputs for publication
+
+### Key Design Patterns
+
+- **Branch-based Research Topics**: Each research topic lives on a numbered branch (`001-literature-review`, `002-methodology-design`)
+- **Definition as Source of Truth**: Research outputs serve definitions, not the other way around
+- **Template-driven Generation**: All documents follow consistent templates for AI parsing
+- **Script Hooks**: Slash commands invoke bash/PowerShell scripts that manage git operations, file creation, and validation
+- **Agent Agnostic**: Same templates/scripts support Claude Code, GitHub Copilot, Gemini CLI, Cursor, Windsurf, etc.
+
+### Branching & Numbering
+
+The `create-new-research.sh` script ensures unique topic numbers by:
+1. Fetching all remote branches (`git fetch --all --prune`)
+2. Searching remote branches, local branches, and `research/` directories
+3. Finding the highest existing number for the topic-name
+4. Assigning `N+1` for the new branch
+
+This prevents duplicate branch numbers when multiple researchers work on similar topics.
+
+## Important Development Notes
+
+### Python Project Structure
+
+- Uses `pyproject.toml` with hatchling build backend
+- Entry point: `research = "research_cli:main"`
+- Dependencies: typer, rich, httpx, platformdirs, readchar, truststore
+- Python 3.11+ required
+
+### Testing Changes
+
+Always test template/command changes locally before committing:
+1. Generate release packages with the create-release-packages script
+2. Copy to a test research project directory
+3. Open the AI research assistant in the test project
+4. Verify slash commands work correctly with research workflows
+
+### Release Process
+
+- Automated via `.github/workflows/release.yml`
+- Triggers on pushes to `main` affecting `principles/`, `scripts/`, or `templates/`
+- Auto-increments version, generates release notes, creates GitHub release
+- Version stored in `pyproject.toml` (updated during release, not in main branch)
+
+### Multi-Agent Support
+
+The CLI supports 15+ AI research assistants. Configuration in `AGENT_CONFIG` dict:
+- `folder`: Where agent files live (`.claude/`, `.github/`, `.cursor/`, etc.)
+- `requires_cli`: Whether CLI tool is needed vs. IDE-based
+- `install_url`: Documentation link for CLI installation
+
+When adding agent support, update both Python CLI and script templates.
+
+## Non-Git Repository Support
+
+Scripts support non-git environments via `RESEARCH_TOPIC` environment variable:
+```bash
+export RESEARCH_TOPIC="001-my-research-topic"
+```
+
+This allows SRD workflow in repositories without git (e.g., institutional environments with alternative VCS).
+
+## File Conventions
+
+- Slash commands: `.claude/commands/*.md`, `.github/copilot-instructions/*.md`
+- Research definitions: `research/###-topic-name/definition.md`
+- Research methodologies: `research/###-topic-name/methodology.md`
+- Literature reviews: `research/###-topic-name/literature-review.md`
+- Data sources: `research/###-topic-name/data-sources.md`
+- Analysis results: `research/###-topic-name/analysis.md`
+- Publications: `research/###-topic-name/publications/` (papers, presentations, etc.)
+
+## Key Configuration Files
+
+- `pyproject.toml`: Package metadata, dependencies, entry points
+- `templates/vscode-settings.json`: Recommended VS Code settings for research projects
+- `.markdownlint-cli2.jsonc`: Markdown linting rules
+- `.devcontainer/`: Dev container for contributors (Python, uv, git pre-installed)
+
+## Development Philosophy
+
+- **Simplicity Over Cleverness**: Code should be obvious and maintainable
+- **Template Quality**: Templates directly affect thousands of AI-assisted research projects
+- **Script Portability**: Bash and PowerShell variants must have feature parity
+- **Agent Neutrality**: No hardcoded assumptions about specific agents
+- **Researcher Empowerment**: Researchers control the workflow, AI assists systematically
+- **Research Rigor**: Maintain high standards for research methodology and academic integrity
+- **Citation Accuracy**: Ensure proper attribution and source tracking
+- **Ethical Compliance**: Support ethical research practices and institutional requirements

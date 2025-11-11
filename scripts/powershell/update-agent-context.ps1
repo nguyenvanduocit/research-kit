@@ -1,14 +1,14 @@
 #!/usr/bin/env pwsh
 <#!
 .SYNOPSIS
-Update agent context files with information from plan.md (PowerShell version)
+Update agent context files with information from methodology.md (PowerShell version)
 
 .DESCRIPTION
 Mirrors the behavior of scripts/bash/update-agent-context.sh:
  1. Environment Validation
- 2. Plan Data Extraction
+ 2. Methodology Data Extraction (research-specific)
  3. Agent File Management (create from template or update existing)
- 4. Content Generation (technology stack, recent changes, timestamp)
+ 4. Content Generation (research description, active research activities, recent findings)
  5. Multi-Agent Support (claude, gemini, copilot, cursor-agent, qwen, opencode, codex, windsurf, kilocode, auggie, roo, amp, q)
 
 .PARAMETER AgentType
@@ -41,160 +41,172 @@ $REPO_ROOT     = $envData.REPO_ROOT
 $CURRENT_BRANCH = $envData.CURRENT_BRANCH
 $HAS_GIT       = $envData.HAS_GIT
 $IMPL_PLAN     = $envData.IMPL_PLAN
-$NEW_PLAN = $IMPL_PLAN
+$NEW_METHODOLOGY = $IMPL_PLAN
 
 # Agent file paths
 $CLAUDE_FILE   = Join-Path $REPO_ROOT 'CLAUDE.md'
 $GEMINI_FILE   = Join-Path $REPO_ROOT 'GEMINI.md'
 $COPILOT_FILE  = Join-Path $REPO_ROOT '.github/copilot-instructions.md'
-$CURSOR_FILE   = Join-Path $REPO_ROOT '.cursor/rules/specify-rules.mdc'
+$CURSOR_FILE   = Join-Path $REPO_ROOT '.cursor/rules/research-rules.mdc'
 $QWEN_FILE     = Join-Path $REPO_ROOT 'QWEN.md'
 $AGENTS_FILE   = Join-Path $REPO_ROOT 'AGENTS.md'
-$WINDSURF_FILE = Join-Path $REPO_ROOT '.windsurf/rules/specify-rules.md'
-$KILOCODE_FILE = Join-Path $REPO_ROOT '.kilocode/rules/specify-rules.md'
-$AUGGIE_FILE   = Join-Path $REPO_ROOT '.augment/rules/specify-rules.md'
-$ROO_FILE      = Join-Path $REPO_ROOT '.roo/rules/specify-rules.md'
+$WINDSURF_FILE = Join-Path $REPO_ROOT '.windsurf/rules/research-rules.md'
+$KILOCODE_FILE = Join-Path $REPO_ROOT '.kilocode/rules/research-rules.md'
+$AUGGIE_FILE   = Join-Path $REPO_ROOT '.augment/rules/research-rules.md'
+$ROO_FILE      = Join-Path $REPO_ROOT '.roo/rules/research-rules.md'
 $CODEBUDDY_FILE = Join-Path $REPO_ROOT 'CODEBUDDY.md'
 $AMP_FILE      = Join-Path $REPO_ROOT 'AGENTS.md'
 $Q_FILE        = Join-Path $REPO_ROOT 'AGENTS.md'
 
-$TEMPLATE_FILE = Join-Path $REPO_ROOT '.specify/templates/agent-file-template.md'
+$TEMPLATE_FILE = Join-Path $REPO_ROOT '.research/templates/agent-file-template.md'
 
-# Parsed plan data placeholders
-$script:NEW_LANG = ''
-$script:NEW_FRAMEWORK = ''
-$script:NEW_DB = ''
-$script:NEW_PROJECT_TYPE = ''
+# Parsed methodology data placeholders
+$script:NEW_RESEARCH_TYPE = ''
+$script:NEW_RESEARCH_QUESTIONS = ''
+$script:NEW_METHODS = ''
+$script:NEW_DATA_SOURCES = ''
 
-function Write-Info { 
+function Write-Info {
     param(
         [Parameter(Mandatory=$true)]
         [string]$Message
     )
-    Write-Host "INFO: $Message" 
+    Write-Host "INFO: $Message"
 }
 
-function Write-Success { 
+function Write-Success {
     param(
         [Parameter(Mandatory=$true)]
         [string]$Message
     )
-    Write-Host "$([char]0x2713) $Message" 
+    Write-Host "$([char]0x2713) $Message"
 }
 
-function Write-WarningMsg { 
+function Write-WarningMsg {
     param(
         [Parameter(Mandatory=$true)]
         [string]$Message
     )
-    Write-Warning $Message 
+    Write-Warning $Message
 }
 
-function Write-Err { 
+function Write-Err {
     param(
         [Parameter(Mandatory=$true)]
         [string]$Message
     )
-    Write-Host "ERROR: $Message" -ForegroundColor Red 
+    Write-Host "ERROR: $Message" -ForegroundColor Red
 }
 
 function Validate-Environment {
     if (-not $CURRENT_BRANCH) {
-        Write-Err 'Unable to determine current feature'
-        if ($HAS_GIT) { Write-Info "Make sure you're on a feature branch" } else { Write-Info 'Set SPECIFY_FEATURE environment variable or create a feature first' }
+        Write-Err 'Unable to determine current research topic'
+        if ($HAS_GIT) { Write-Info "Make sure you're on a research topic branch" } else { Write-Info 'Set RESEARCH_TOPIC environment variable or create a research topic first' }
         exit 1
     }
-    if (-not (Test-Path $NEW_PLAN)) {
-        Write-Err "No plan.md found at $NEW_PLAN"
-        Write-Info 'Ensure you are working on a feature with a corresponding spec directory'
-        if (-not $HAS_GIT) { Write-Info 'Use: $env:SPECIFY_FEATURE=your-feature-name or create a new feature first' }
+    if (-not (Test-Path $NEW_METHODOLOGY)) {
+        Write-Err "No methodology.md found at $NEW_METHODOLOGY"
+        Write-Info 'Make sure you are working on a research topic with a corresponding research directory'
+        if (-not $HAS_GIT) { Write-Info 'Use: $env:RESEARCH_TOPIC=your-topic-name or create a new research topic first' }
         exit 1
     }
     if (-not (Test-Path $TEMPLATE_FILE)) {
-        Write-Err "Template file not found at $TEMPLATE_FILE"
-        Write-Info 'Run specify init to scaffold .specify/templates, or add agent-file-template.md there.'
-        exit 1
+        Write-WarningMsg "Template file not found at $TEMPLATE_FILE"
+        Write-WarningMsg 'Creating new agent files will fail'
     }
 }
 
-function Extract-PlanField {
+function Extract-MethodologyField {
     param(
         [Parameter(Mandatory=$true)]
         [string]$FieldPattern,
         [Parameter(Mandatory=$true)]
-        [string]$PlanFile
+        [string]$MethodologyFile
     )
-    if (-not (Test-Path $PlanFile)) { return '' }
-    # Lines like **Language/Version**: Python 3.12
+    if (-not (Test-Path $MethodologyFile)) { return '' }
+    # Lines like **Research Type**: Academic Literature Review
     $regex = "^\*\*$([Regex]::Escape($FieldPattern))\*\*: (.+)$"
-    Get-Content -LiteralPath $PlanFile -Encoding utf8 | ForEach-Object {
-        if ($_ -match $regex) { 
+    Get-Content -LiteralPath $MethodologyFile -Encoding utf8 | ForEach-Object {
+        if ($_ -match $regex) {
             $val = $Matches[1].Trim()
             if ($val -notin @('NEEDS CLARIFICATION','N/A')) { return $val }
         }
     } | Select-Object -First 1
 }
 
-function Parse-PlanData {
+function Parse-MethodologyData {
     param(
         [Parameter(Mandatory=$true)]
-        [string]$PlanFile
+        [string]$MethodologyFile
     )
-    if (-not (Test-Path $PlanFile)) { Write-Err "Plan file not found: $PlanFile"; return $false }
-    Write-Info "Parsing plan data from $PlanFile"
-    $script:NEW_LANG        = Extract-PlanField -FieldPattern 'Language/Version' -PlanFile $PlanFile
-    $script:NEW_FRAMEWORK   = Extract-PlanField -FieldPattern 'Primary Dependencies' -PlanFile $PlanFile
-    $script:NEW_DB          = Extract-PlanField -FieldPattern 'Storage' -PlanFile $PlanFile
-    $script:NEW_PROJECT_TYPE = Extract-PlanField -FieldPattern 'Project Type' -PlanFile $PlanFile
+    if (-not (Test-Path $MethodologyFile)) { Write-Err "Methodology file not found: $MethodologyFile"; return $false }
+    Write-Info "Parsing research data from $MethodologyFile"
+    $script:NEW_RESEARCH_TYPE     = Extract-MethodologyField -FieldPattern 'Research Type' -MethodologyFile $MethodologyFile
+    $script:NEW_RESEARCH_QUESTIONS = Extract-MethodologyField -FieldPattern 'Research Questions' -MethodologyFile $MethodologyFile
+    $script:NEW_METHODS           = Extract-MethodologyField -FieldPattern 'Research Methods' -MethodologyFile $MethodologyFile
+    $script:NEW_DATA_SOURCES      = Extract-MethodologyField -FieldPattern 'Data Sources' -MethodologyFile $MethodologyFile
 
-    if ($NEW_LANG) { Write-Info "Found language: $NEW_LANG" } else { Write-WarningMsg 'No language information found in plan' }
-    if ($NEW_FRAMEWORK) { Write-Info "Found framework: $NEW_FRAMEWORK" }
-    if ($NEW_DB -and $NEW_DB -ne 'N/A') { Write-Info "Found database: $NEW_DB" }
-    if ($NEW_PROJECT_TYPE) { Write-Info "Found project type: $NEW_PROJECT_TYPE" }
+    if ($NEW_RESEARCH_TYPE) { Write-Info "Found research type: $NEW_RESEARCH_TYPE" } else { Write-WarningMsg 'No research type information found in methodology' }
+    if ($NEW_RESEARCH_QUESTIONS) { Write-Info "Found research questions: $NEW_RESEARCH_QUESTIONS" }
+    if ($NEW_METHODS) { Write-Info "Found research methods: $NEW_METHODS" }
+    if ($NEW_DATA_SOURCES -and $NEW_DATA_SOURCES -ne 'N/A') { Write-Info "Found data sources: $NEW_DATA_SOURCES" }
     return $true
 }
 
-function Format-TechnologyStack {
+function Format-ResearchDescription {
     param(
         [Parameter(Mandatory=$false)]
-        [string]$Lang,
+        [string]$ResearchType,
         [Parameter(Mandatory=$false)]
-        [string]$Framework
+        [string]$ResearchQuestions
     )
     $parts = @()
-    if ($Lang -and $Lang -ne 'NEEDS CLARIFICATION') { $parts += $Lang }
-    if ($Framework -and $Framework -notin @('NEEDS CLARIFICATION','N/A')) { $parts += $Framework }
+    if ($ResearchType -and $ResearchType -ne 'NEEDS CLARIFICATION') { $parts += $ResearchType }
+    if ($ResearchQuestions -and $ResearchQuestions -notin @('NEEDS CLARIFICATION','N/A')) { $parts += $ResearchQuestions }
     if (-not $parts) { return '' }
-    return ($parts -join ' + ')
+    return ($parts -join ' - ')
 }
 
-function Get-ProjectStructure { 
-    param(
-        [Parameter(Mandatory=$false)]
-        [string]$ProjectType
-    )
-    if ($ProjectType -match 'web') { return "backend/`nfrontend/`ntests/" } else { return "src/`ntests/" } 
-}
-
-function Get-CommandsForLanguage { 
-    param(
-        [Parameter(Mandatory=$false)]
-        [string]$Lang
-    )
-    switch -Regex ($Lang) {
-        'Python' { return "cd src; pytest; ruff check ." }
-        'Rust' { return "cargo test; cargo clippy" }
-        'JavaScript|TypeScript' { return "npm test; npm run lint" }
-        default { return "# Add commands for $Lang" }
+function Get-ResearchPrinciples {
+    $principlesFile = Join-Path $REPO_ROOT 'principles/research-principles.md'
+    if ((Test-Path $principlesFile)) {
+        try {
+            # Extract first 5 lines after a heading as a summary
+            $lines = Get-Content -LiteralPath $principlesFile -Encoding utf8
+            $afterHeading = $false
+            $count = 0
+            $result = @()
+            foreach ($line in $lines) {
+                if ($line -match '^#') {
+                    $afterHeading = $true
+                    continue
+                }
+                if ($afterHeading -and $count -lt 5) {
+                    $result += $line
+                    $count++
+                }
+            }
+            if ($result.Count -gt 0) {
+                return ($result -join [Environment]::NewLine)
+            }
+        } catch {
+            # Fall through to default
+        }
     }
+    return 'Follow rigorous research methodology and ethical guidelines'
 }
 
-function Get-LanguageConventions { 
+function Get-ResearchActivities {
     param(
         [Parameter(Mandatory=$false)]
-        [string]$Lang
+        [string]$ResearchType
     )
-    if ($Lang) { "${Lang}: Follow standard conventions" } else { 'General: Follow standard conventions' } 
+    switch -Regex ($ResearchType) {
+        'Academic' { return "- Literature review in academic databases`n- Critical analysis of peer-reviewed sources`n- Synthesis of theoretical frameworks" }
+        'Market' { return "- Industry report analysis`n- Competitive landscape mapping`n- Trend identification and validation" }
+        'Technical' { return "- Documentation review`n- Technical feasibility assessment`n- Implementation comparison" }
+        default { return "- Source identification and evaluation`n- Data collection and organization`n- Synthesis and reporting" }
+    }
 }
 
 function New-AgentFile {
@@ -210,49 +222,48 @@ function New-AgentFile {
     $temp = New-TemporaryFile
     Copy-Item -LiteralPath $TEMPLATE_FILE -Destination $temp -Force
 
-    $projectStructure = Get-ProjectStructure -ProjectType $NEW_PROJECT_TYPE
-    $commands = Get-CommandsForLanguage -Lang $NEW_LANG
-    $languageConventions = Get-LanguageConventions -Lang $NEW_LANG
+    $researchPrinciples = Get-ResearchPrinciples
+    $researchActivities = Get-ResearchActivities -ResearchType $NEW_RESEARCH_TYPE
 
-    $escaped_lang = $NEW_LANG
-    $escaped_framework = $NEW_FRAMEWORK
+    $escaped_type = $NEW_RESEARCH_TYPE
+    $escaped_questions = $NEW_RESEARCH_QUESTIONS
     $escaped_branch = $CURRENT_BRANCH
 
     $content = Get-Content -LiteralPath $temp -Raw -Encoding utf8
-    $content = $content -replace '\[PROJECT NAME\]',$ProjectName
+    $content = $content -replace '\[PROJECT_NAME\]',$ProjectName
     $content = $content -replace '\[DATE\]',$Date.ToString('yyyy-MM-dd')
-    
-    # Build the technology stack string safely
-    $techStackForTemplate = ""
-    if ($escaped_lang -and $escaped_framework) {
-        $techStackForTemplate = "- $escaped_lang + $escaped_framework ($escaped_branch)"
-    } elseif ($escaped_lang) {
-        $techStackForTemplate = "- $escaped_lang ($escaped_branch)"
-    } elseif ($escaped_framework) {
-        $techStackForTemplate = "- $escaped_framework ($escaped_branch)"
+    $content = $content -replace '\[RESEARCH_PRINCIPLES\]',$researchPrinciples
+
+    # Build the research description string safely
+    $researchDescForTemplate = ""
+    if ($escaped_type -and $escaped_questions) {
+        $researchDescForTemplate = "- $escaped_type - $escaped_questions ($escaped_branch)"
+    } elseif ($escaped_type) {
+        $researchDescForTemplate = "- $escaped_type ($escaped_branch)"
+    } elseif ($escaped_questions) {
+        $researchDescForTemplate = "- $escaped_questions ($escaped_branch)"
+    } else {
+        $researchDescForTemplate = "- ($escaped_branch)"
     }
-    
-    $content = $content -replace '\[EXTRACTED FROM ALL PLAN.MD FILES\]',$techStackForTemplate
-    # For project structure we manually embed (keep newlines)
-    $escapedStructure = [Regex]::Escape($projectStructure)
-    $content = $content -replace '\[ACTUAL STRUCTURE FROM PLANS\]',$escapedStructure
-    # Replace escaped newlines placeholder after all replacements
-    $content = $content -replace '\[ONLY COMMANDS FOR ACTIVE TECHNOLOGIES\]',$commands
-    $content = $content -replace '\[LANGUAGE-SPECIFIC, ONLY FOR LANGUAGES IN USE\]',$languageConventions
-    
-    # Build the recent changes string safely
-    $recentChangesForTemplate = ""
-    if ($escaped_lang -and $escaped_framework) {
-        $recentChangesForTemplate = "- ${escaped_branch}: Added ${escaped_lang} + ${escaped_framework}"
-    } elseif ($escaped_lang) {
-        $recentChangesForTemplate = "- ${escaped_branch}: Added ${escaped_lang}"
-    } elseif ($escaped_framework) {
-        $recentChangesForTemplate = "- ${escaped_branch}: Added ${escaped_framework}"
+
+    $content = $content -replace '\[EXTRACTED_FROM_ALL_METHODOLOGY_FILES\]',$researchDescForTemplate
+    $content = $content -replace '\[ACTIVE_RESEARCH_ACTIVITIES\]',$researchActivities
+
+    # Build the recent research string safely
+    $recentResearchForTemplate = ""
+    if ($escaped_type -and $escaped_questions) {
+        $recentResearchForTemplate = "- ${escaped_branch}: Completed ${escaped_type} research - ${escaped_questions}"
+    } elseif ($escaped_type) {
+        $recentResearchForTemplate = "- ${escaped_branch}: Completed ${escaped_type} research"
+    } elseif ($escaped_questions) {
+        $recentResearchForTemplate = "- ${escaped_branch}: Addressed research question - ${escaped_questions}"
+    } else {
+        $recentResearchForTemplate = "- ${escaped_branch}: Completed research"
     }
-    
-    $content = $content -replace '\[LAST 3 FEATURES AND WHAT THEY ADDED\]',$recentChangesForTemplate
-    # Convert literal \n sequences introduced by Escape to real newlines
-    $content = $content -replace '\\n',[Environment]::NewLine
+
+    $content = $content -replace '\[LAST_3_TOPICS_AND_KEY_FINDINGS\]',$recentResearchForTemplate
+    # Convert literal \n sequences to actual newlines
+    $content = $content -replace '`n',[Environment]::NewLine
 
     $parent = Split-Path -Parent $TargetFile
     if (-not (Test-Path $parent)) { New-Item -ItemType Directory -Path $parent | Out-Null }
@@ -270,64 +281,119 @@ function Update-ExistingAgentFile {
     )
     if (-not (Test-Path $TargetFile)) { return (New-AgentFile -TargetFile $TargetFile -ProjectName (Split-Path $REPO_ROOT -Leaf) -Date $Date) }
 
-    $techStack = Format-TechnologyStack -Lang $NEW_LANG -Framework $NEW_FRAMEWORK
-    $newTechEntries = @()
-    if ($techStack) {
-        $escapedTechStack = [Regex]::Escape($techStack)
-        if (-not (Select-String -Pattern $escapedTechStack -Path $TargetFile -Quiet)) { 
-            $newTechEntries += "- $techStack ($CURRENT_BRANCH)" 
+    $researchDesc = Format-ResearchDescription -ResearchType $NEW_RESEARCH_TYPE -ResearchQuestions $NEW_RESEARCH_QUESTIONS
+    $newResearchEntries = @()
+    $newRecentEntry = ''
+
+    # Prepare new research topic entries
+    if ($researchDesc) {
+        $escapedResearchDesc = [Regex]::Escape($researchDesc)
+        if (-not (Select-String -Pattern $escapedResearchDesc -Path $TargetFile -Quiet)) {
+            $newResearchEntries += "- $researchDesc ($CURRENT_BRANCH)"
         }
     }
-    if ($NEW_DB -and $NEW_DB -notin @('N/A','NEEDS CLARIFICATION')) {
-        $escapedDB = [Regex]::Escape($NEW_DB)
-        if (-not (Select-String -Pattern $escapedDB -Path $TargetFile -Quiet)) { 
-            $newTechEntries += "- $NEW_DB ($CURRENT_BRANCH)" 
+    if ($NEW_METHODS -and $NEW_METHODS -notin @('N/A','NEEDS CLARIFICATION')) {
+        $escapedMethods = [Regex]::Escape($NEW_METHODS)
+        if (-not (Select-String -Pattern $escapedMethods -Path $TargetFile -Quiet)) {
+            $newResearchEntries += "- Methods: $NEW_METHODS ($CURRENT_BRANCH)"
         }
     }
-    $newChangeEntry = ''
-    if ($techStack) { $newChangeEntry = "- ${CURRENT_BRANCH}: Added ${techStack}" }
-    elseif ($NEW_DB -and $NEW_DB -notin @('N/A','NEEDS CLARIFICATION')) { $newChangeEntry = "- ${CURRENT_BRANCH}: Added ${NEW_DB}" }
+
+    # Prepare new recent research entry
+    if ($researchDesc) {
+        $newRecentEntry = "- ${CURRENT_BRANCH}: Completed ${researchDesc}"
+    } elseif ($NEW_METHODS -and $NEW_METHODS -notin @('N/A','NEEDS CLARIFICATION')) {
+        $newRecentEntry = "- ${CURRENT_BRANCH}: Used methods - ${NEW_METHODS}"
+    }
+
+    # Check if sections exist in the file
+    $hasActiveResearch = $false
+    $hasRecentResearch = $false
+    $content = Get-Content -LiteralPath $TargetFile -Encoding utf8 -Raw
+    if ($content -match '(?m)^## Active Research Topics') { $hasActiveResearch = $true }
+    if ($content -match '(?m)^## Recent Research') { $hasRecentResearch = $true }
 
     $lines = Get-Content -LiteralPath $TargetFile -Encoding utf8
     $output = New-Object System.Collections.Generic.List[string]
-    $inTech = $false; $inChanges = $false; $techAdded = $false; $changeAdded = $false; $existingChanges = 0
+    $inResearch = $false; $inRecent = $false; $researchAdded = $false; $recentAdded = $false; $existingRecentCount = 0
 
     for ($i=0; $i -lt $lines.Count; $i++) {
         $line = $lines[$i]
-        if ($line -eq '## Active Technologies') {
+
+        # Handle Active Research Topics section
+        if ($line -eq '## Active Research Topics') {
             $output.Add($line)
-            $inTech = $true
+            $inResearch = $true
             continue
         }
-        if ($inTech -and $line -match '^##\s') {
-            if (-not $techAdded -and $newTechEntries.Count -gt 0) { $newTechEntries | ForEach-Object { $output.Add($_) }; $techAdded = $true }
-            $output.Add($line); $inTech = $false; continue
-        }
-        if ($inTech -and [string]::IsNullOrWhiteSpace($line)) {
-            if (-not $techAdded -and $newTechEntries.Count -gt 0) { $newTechEntries | ForEach-Object { $output.Add($_) }; $techAdded = $true }
-            $output.Add($line); continue
-        }
-        if ($line -eq '## Recent Changes') {
+        if ($inResearch -and $line -match '^##\s') {
+            if (-not $researchAdded -and $newResearchEntries.Count -gt 0) {
+                $newResearchEntries | ForEach-Object { $output.Add($_) }
+                $researchAdded = $true
+            }
             $output.Add($line)
-            if ($newChangeEntry) { $output.Add($newChangeEntry); $changeAdded = $true }
-            $inChanges = $true
+            $inResearch = $false
             continue
         }
-        if ($inChanges -and $line -match '^##\s') { $output.Add($line); $inChanges = $false; continue }
-        if ($inChanges -and $line -match '^- ') {
-            if ($existingChanges -lt 2) { $output.Add($line); $existingChanges++ }
+        if ($inResearch -and [string]::IsNullOrWhiteSpace($line)) {
+            if (-not $researchAdded -and $newResearchEntries.Count -gt 0) {
+                $newResearchEntries | ForEach-Object { $output.Add($_) }
+                $researchAdded = $true
+            }
+            $output.Add($line)
             continue
         }
-        if ($line -match '\*\*Last updated\*\*: .*\d{4}-\d{2}-\d{2}') {
+
+        # Handle Recent Research section
+        if ($line -eq '## Recent Research') {
+            $output.Add($line)
+            if ($newRecentEntry) {
+                $output.Add($newRecentEntry)
+                $recentAdded = $true
+            }
+            $inRecent = $true
+            continue
+        }
+        if ($inRecent -and $line -match '^##\s') {
+            $output.Add($line)
+            $inRecent = $false
+            continue
+        }
+        if ($inRecent -and $line -match '^- ') {
+            if ($existingRecentCount -lt 2) {
+                $output.Add($line)
+                $existingRecentCount++
+            }
+            continue
+        }
+
+        # Update timestamp
+        if ($line -match '\*\*Last updated\*\*:.*\d{4}-\d{2}-\d{2}' -or $line -match 'Last updated:.*\d{4}-\d{2}-\d{2}') {
             $output.Add(($line -replace '\d{4}-\d{2}-\d{2}',$Date.ToString('yyyy-MM-dd')))
             continue
         }
         $output.Add($line)
     }
 
-    # Post-loop check: if we're still in the Active Technologies section and haven't added new entries
-    if ($inTech -and -not $techAdded -and $newTechEntries.Count -gt 0) {
-        $newTechEntries | ForEach-Object { $output.Add($_) }
+    # Post-loop check: if we're still in Active Research Topics section and haven't added new entries
+    if ($inResearch -and -not $researchAdded -and $newResearchEntries.Count -gt 0) {
+        $newResearchEntries | ForEach-Object { $output.Add($_) }
+        $researchAdded = $true
+    }
+
+    # If sections don't exist, add them at the end of the file
+    if (-not $hasActiveResearch -and $newResearchEntries.Count -gt 0) {
+        $output.Add('')
+        $output.Add('## Active Research Topics')
+        $newResearchEntries | ForEach-Object { $output.Add($_) }
+        $researchAdded = $true
+    }
+
+    if (-not $hasRecentResearch -and $newRecentEntry) {
+        $output.Add('')
+        $output.Add('## Recent Research')
+        $output.Add($newRecentEntry)
+        $recentAdded = $true
     }
 
     Set-Content -LiteralPath $TargetFile -Value ($output -join [Environment]::NewLine) -Encoding utf8
@@ -410,18 +476,21 @@ function Update-AllExistingAgents {
 
 function Print-Summary {
     Write-Host ''
-    Write-Info 'Summary of changes:'
-    if ($NEW_LANG) { Write-Host "  - Added language: $NEW_LANG" }
-    if ($NEW_FRAMEWORK) { Write-Host "  - Added framework: $NEW_FRAMEWORK" }
-    if ($NEW_DB -and $NEW_DB -ne 'N/A') { Write-Host "  - Added database: $NEW_DB" }
+    Write-Info 'Summary of research context updates:'
+    if ($NEW_RESEARCH_TYPE) { Write-Host "  - Research type: $NEW_RESEARCH_TYPE" }
+    if ($NEW_RESEARCH_QUESTIONS) { Write-Host "  - Research questions: $NEW_RESEARCH_QUESTIONS" }
+    if ($NEW_METHODS) { Write-Host "  - Research methods: $NEW_METHODS" }
+    if ($NEW_DATA_SOURCES -and $NEW_DATA_SOURCES -ne 'N/A') { Write-Host "  - Data sources: $NEW_DATA_SOURCES" }
+    Write-Host ''
+    Write-Info 'Agent context files updated with current research information'
     Write-Host ''
     Write-Info 'Usage: ./update-agent-context.ps1 [-AgentType claude|gemini|copilot|cursor-agent|qwen|opencode|codex|windsurf|kilocode|auggie|roo|codebuddy|amp|q]'
 }
 
 function Main {
     Validate-Environment
-    Write-Info "=== Updating agent context files for feature $CURRENT_BRANCH ==="
-    if (-not (Parse-PlanData -PlanFile $NEW_PLAN)) { Write-Err 'Failed to parse plan data'; exit 1 }
+    Write-Info "=== Updating agent context files for research topic $CURRENT_BRANCH ==="
+    if (-not (Parse-MethodologyData -MethodologyFile $NEW_METHODOLOGY)) { Write-Err 'Failed to parse methodology data'; exit 1 }
     $success = $true
     if ($AgentType) {
         Write-Info "Updating specific agent: $AgentType"
@@ -436,4 +505,3 @@ function Main {
 }
 
 Main
-

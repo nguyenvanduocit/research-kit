@@ -1,8 +1,5 @@
 ---
-description: Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts.
-scripts:
-  sh: scripts/bash/check-prerequisites.sh --json
-  ps: scripts/powershell/check-prerequisites.ps1 -Json
+description: Generate ordered, actionable research tasks from methodology
 ---
 
 ## User Input
@@ -11,121 +8,102 @@ scripts:
 $ARGUMENTS
 ```
 
-You **MUST** consider the user input before proceeding (if not empty).
-
 ## Outline
 
-1. **Setup**: Run `{SCRIPT}` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+This command breaks down the research methodology into specific, actionable tasks organized by phase. Run this **after** `/research.methodology` (and optionally `/research.validate`).
 
-2. **Load design documents**: Read from FEATURE_DIR:
-   - **Required**: plan.md (tech stack, libraries, structure), spec.md (user stories with priorities)
-   - **Optional**: data-model.md (entities), contracts/ (API endpoints), research.md (decisions), quickstart.md (test scenarios)
-   - Note: Not all projects have all documents. Generate tasks based on what's available.
+1. **Load methodology** from `research/###-topic-name/methodology.md`
 
-3. **Execute task generation workflow**:
-   - Load plan.md and extract tech stack, libraries, project structure
-   - Load spec.md and extract user stories with their priorities (P1, P2, P3, etc.)
-   - If data-model.md exists: Extract entities and map to user stories
-   - If contracts/ exists: Map endpoints to user stories
-   - If research.md exists: Extract decisions for setup tasks
-   - Generate tasks organized by user story (see Task Generation Rules below)
-   - Generate dependency graph showing user story completion order
-   - Create parallel execution examples per user story
-   - Validate task completeness (each user story has all needed tasks, independently testable)
+2. **Load research definition** from `research/###-topic-name/definition.md`
 
-4. **Generate tasks.md**: Use `.specify/templates/tasks-template.md` as structure, fill with:
-   - Correct feature name from plan.md
-   - Phase 1: Setup tasks (project initialization)
-   - Phase 2: Foundational tasks (blocking prerequisites for all user stories)
-   - Phase 3+: One phase per user story (in priority order from spec.md)
-   - Each phase includes: story goal, independent test criteria, tests (if requested), implementation tasks
-   - Final Phase: Polish & cross-cutting concerns
-   - All tasks must follow the strict checklist format (see Task Generation Rules below)
-   - Clear file paths for each task
-   - Dependencies section showing story completion order
-   - Parallel execution examples per story
-   - Implementation strategy section (MVP first, incremental delivery)
+3. **Generate task breakdown** organized by research phases:
 
-5. **Report**: Output path to generated tasks.md and summary:
-   - Total task count
-   - Task count per user story
-   - Parallel opportunities identified
-   - Independent test criteria for each story
-   - Suggested MVP scope (typically just User Story 1)
-   - Format validation: Confirm ALL tasks follow the checklist format (checkbox, ID, labels, file paths)
+   **Phase 1: Setup & Preparation**
+   - [ ] T001: Set up research directory structure
+   - [ ] T002: Initialize citation management (BibTeX file)
+   - [ ] T003: Document search terms and keywords
+   - [ ] T004: Identify key databases and sources
+   - [ ] T005: Set up research tools (if needed)
 
-Context for task generation: {ARGS}
+   **Phase 2: Literature Review**
+   - [ ] T010: Conduct database searches with defined terms
+   - [ ] T011: Screen titles and abstracts for relevance
+   - [ ] T012: Download and organize selected papers/sources
+   - [ ] T013: Read and extract key findings from sources
+   - [ ] T014: Document findings in literature-review.md
+   - [ ] T015: Identify gaps in existing research
+   - [ ] T016: Update references.bib with all sources
 
-The tasks.md should be immediately executable - each task must be specific enough that an LLM can complete it without additional context.
+   **Phase 3: Data Collection** (if applicable)
+   - [ ] T020: Prepare data collection instruments
+   - [ ] T021: Recruit participants/identify data sources
+   - [ ] T022: Collect primary data
+   - [ ] T023: Compile secondary data
+   - [ ] T024: Organize and catalog all collected data
+   - [ ] T025: Document data provenance and quality
 
-## Task Generation Rules
+   **Phase 4: Data Analysis**
+   - [ ] T030: Clean and prepare data for analysis
+   - [ ] T031: Apply analytical frameworks
+   - [ ] T032: Identify patterns, themes, and insights
+   - [ ] T033: Cross-reference findings across sources
+   - [ ] T034: Validate findings against research questions
+   - [ ] T035: Document analysis in findings.md
+   - [ ] T036: Create visualizations/charts (if applicable)
 
-**CRITICAL**: Tasks MUST be organized by user story to enable independent implementation and testing.
+   **Phase 5: Synthesis & Conclusions**
+   - [ ] T040: Synthesize findings across all sources
+   - [ ] T041: Answer each research question explicitly
+   - [ ] T042: Draw conclusions based on evidence
+   - [ ] T043: Formulate recommendations (if applicable)
+   - [ ] T044: Identify limitations of the research
+   - [ ] T045: Suggest areas for future research
 
-**Tests are OPTIONAL**: Only generate test tasks if explicitly requested in the feature specification or if user requests TDD approach.
+   **Phase 6: Report Writing**
+   - [ ] T050: Draft executive summary
+   - [ ] T051: Write research question & objectives section
+   - [ ] T052: Write methodology section
+   - [ ] T053: Write literature review section
+   - [ ] T054: Write findings section
+   - [ ] T055: Write analysis & discussion section
+   - [ ] T056: Write conclusions & recommendations
+   - [ ] T057: Write limitations section
+   - [ ] T058: Compile references from BibTeX
+   - [ ] T059: Create appendices (if needed)
+   - [ ] T060: Review and edit full report
+   - [ ] T061: Final quality check against principles
 
-### Checklist Format (REQUIRED)
+4. **Task Dependencies & Parallelization**:
+   - Mark tasks that can be done in parallel with [P]
+   - Indicate dependencies (e.g., "T012 depends on T011")
+   - Suggest optimal order of execution
 
-Every task MUST strictly follow this format:
+5. **Add estimates** (optional):
+   - Rough time estimates per task
+   - Total estimated duration
+   - Milestones/checkpoints
 
-```text
-- [ ] [TaskID] [P?] [Story?] Description with file path
-```
+6. **Write tasks** to `research/###-topic-name/tasks.md`
 
-**Format Components**:
+7. **Output summary**:
+   - Total number of tasks
+   - Number of phases
+   - Estimated duration (if calculated)
+   - Tasks that can be parallelized
+   - Next step: Proceed to `/research.execute`
 
-1. **Checkbox**: ALWAYS start with `- [ ]` (markdown checkbox)
-2. **Task ID**: Sequential number (T001, T002, T003...) in execution order
-3. **[P] marker**: Include ONLY if task is parallelizable (different files, no dependencies on incomplete tasks)
-4. **[Story] label**: REQUIRED for user story phase tasks only
-   - Format: [US1], [US2], [US3], etc. (maps to user stories from spec.md)
-   - Setup phase: NO story label
-   - Foundational phase: NO story label  
-   - User Story phases: MUST have story label
-   - Polish phase: NO story label
-5. **Description**: Clear action with exact file path
+**Task Granularity Guidelines**:
+- Each task should be completable in one work session (2-4 hours max)
+- Tasks should have clear start and end points
+- Tasks should be specific enough to track progress
+- Avoid tasks like "Do research" - break down further
+- Good task: "Screen abstracts of papers from Google Scholar search"
+- Bad task: "Research the topic"
 
-**Examples**:
-
-- ✅ CORRECT: `- [ ] T001 Create project structure per implementation plan`
-- ✅ CORRECT: `- [ ] T005 [P] Implement authentication middleware in src/middleware/auth.py`
-- ✅ CORRECT: `- [ ] T012 [P] [US1] Create User model in src/models/user.py`
-- ✅ CORRECT: `- [ ] T014 [US1] Implement UserService in src/services/user_service.py`
-- ❌ WRONG: `- [ ] Create User model` (missing ID and Story label)
-- ❌ WRONG: `T001 [US1] Create model` (missing checkbox)
-- ❌ WRONG: `- [ ] [US1] Create User model` (missing Task ID)
-- ❌ WRONG: `- [ ] T001 [US1] Create model` (missing file path)
-
-### Task Organization
-
-1. **From User Stories (spec.md)** - PRIMARY ORGANIZATION:
-   - Each user story (P1, P2, P3...) gets its own phase
-   - Map all related components to their story:
-     - Models needed for that story
-     - Services needed for that story
-     - Endpoints/UI needed for that story
-     - If tests requested: Tests specific to that story
-   - Mark story dependencies (most stories should be independent)
-
-2. **From Contracts**:
-   - Map each contract/endpoint → to the user story it serves
-   - If tests requested: Each contract → contract test task [P] before implementation in that story's phase
-
-3. **From Data Model**:
-   - Map each entity to the user story(ies) that need it
-   - If entity serves multiple stories: Put in earliest story or Setup phase
-   - Relationships → service layer tasks in appropriate story phase
-
-4. **From Setup/Infrastructure**:
-   - Shared infrastructure → Setup phase (Phase 1)
-   - Foundational/blocking tasks → Foundational phase (Phase 2)
-   - Story-specific setup → within that story's phase
-
-### Phase Structure
-
-- **Phase 1**: Setup (project initialization)
-- **Phase 2**: Foundational (blocking prerequisites - MUST complete before user stories)
-- **Phase 3+**: User Stories in priority order (P1, P2, P3...)
-  - Within each story: Tests (if requested) → Models → Services → Endpoints → Integration
-  - Each phase should be a complete, independently testable increment
-- **Final Phase**: Polish & Cross-Cutting Concerns
+**Task Numbering**:
+- T001-T009: Setup
+- T010-T019: Literature Review
+- T020-T029: Data Collection
+- T030-T039: Analysis
+- T040-T049: Synthesis
+- T050-T099: Writing & Finalization
