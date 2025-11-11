@@ -133,9 +133,8 @@ build_variant() {
   # Copy templates (portable across macOS BSD and GNU)
   if [[ -d templates ]]; then
     mkdir -p "$SPEC_DIR/templates"
-    # Use rsync for portable --parents-like behavior
-    # Exclude commands directory and vscode-settings.json
-    rsync -a --relative templates/./ "$SPEC_DIR"/ --exclude='commands/*' --exclude='**/vscode-settings.json'
+    # Copy template files to the templates subdirectory, excluding commands and vscode-settings.json
+    rsync -a templates/ "$SPEC_DIR/templates/" --exclude='commands/' --exclude='vscode-settings.json'
     echo "Copied templates -> .research/templates (excluding commands/)"
   fi
 
