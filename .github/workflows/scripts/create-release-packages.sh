@@ -134,8 +134,9 @@ build_variant() {
   if [[ -d templates ]]; then
     mkdir -p "$SPEC_DIR/templates"
     # Use rsync for portable --parents-like behavior
-    rsync -a --relative templates/./ "$SPEC_DIR"/ --exclude='templates/commands/*' --exclude='**/vscode-settings.json'
-    echo "Copied templates -> .research/templates"
+    # Exclude commands directory and vscode-settings.json
+    rsync -a --relative templates/./ "$SPEC_DIR"/ --exclude='commands/*' --exclude='**/vscode-settings.json'
+    echo "Copied templates -> .research/templates (excluding commands/)"
   fi
 
   # Ensure scripts have executable permissions
@@ -216,13 +217,13 @@ norm_list() {
 
 validate_subset() {
   local type=$1; shift; local -n allowed=$1; shift; local items=("$@")
-  local ok=1
+  local ok=0
   for it in "${items[@]}"; do
     local found=0
     for a in "${allowed[@]}"; do [[ $it == "$a" ]] && { found=1; break; }; done
     if [[ $found -eq 0 ]]; then
       echo "Error: unknown $type '$it' (allowed: ${allowed[*]})" >&2
-      ok=0
+      ok=1
     fi
   done
   return $ok
