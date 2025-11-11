@@ -20,22 +20,41 @@ if ($Help) {
 # Load common functions
 . "$PSScriptRoot/common.ps1"
 
-# Get all paths and variables from common functions
-$paths = Get-FeaturePathsEnv
+# Get paths and variables
+$paths = Get-ResearchPaths
+foreach ($key in $paths.Keys) {
+    Set-Variable -Name $key -Value $paths[$key] -Scope Script
+}
 
-# Check if we're on a proper feature branch (only for git repos)
-if (-not (Test-FeatureBranch -Branch $paths.CURRENT_BRANCH -HasGit $paths.HAS_GIT)) {
+# Check if we're on a proper research branch (only for git repos)
+if (-not (Check-ResearchBranch -Branch $CURRENT_BRANCH -HasGit $HAS_GIT)) {
     exit 1
 }
 
 # Ensure the research directory exists
-New-Item -ItemType Directory -Path $paths.FEATURE_DIR -Force | Out-Null
+New-Item -ItemType Directory -Path $RESEARCH_DIR -Force | Out-Null
+
+# Check phase dependencies - methodology requires definition to be completed first
+$DEFINITION_FILE = Join-Path $RESEARCH_DIR "definition.md"
+if (-not (Test-Path $DEFINITION_FILE)) {
+    Write-Error "Error: definition.md not found in $RESEARCH_DIR"
+    Write-Output "Please run /research.define before running /research.methodology"
+    Write-Output ""
+    Write-Output "The research workflow phases must be completed in order:"
+    Write-Output "  1. /research.define - Define research question (must be completed)"
+    Write-Output "  2. /research.methodology - Design methodology (current step)"
+    Write-Output "  3. /research.execute - Collect data"
+    Write-Output "  4. /research.analyze - Analyze data"
+    Write-Output "  5. /research.synthesize - Draw conclusions"
+    Write-Output "  6. /research.publish - Create outputs"
+    exit 1
+}
 
 # Define methodology file path
-$MethodologyFile = Join-Path $paths.FEATURE_DIR 'methodology.md'
+$MethodologyFile = Join-Path $RESEARCH_DIR 'methodology.md'
 
 # Copy methodology template if it exists
-$MethodologyTemplate = Join-Path $paths.REPO_ROOT '.research/templates/methodology-template.md'
+$MethodologyTemplate = Join-Path $REPO_ROOT '.research/templates/methodology-template.md'
 if (Test-Path $MethodologyTemplate) {
     Copy-Item $MethodologyTemplate $MethodologyFile -Force
     Write-Output "Copied methodology template to $MethodologyFile"
@@ -46,8 +65,8 @@ if (Test-Path $MethodologyTemplate) {
 }
 
 # Copy literature review template if it exists
-$LiteratureReviewTemplate = Join-Path $paths.REPO_ROOT '.research/templates/literature-review-template.md'
-$LiteratureReviewFile = Join-Path $paths.FEATURE_DIR 'literature-review.md'
+$LiteratureReviewTemplate = Join-Path $REPO_ROOT '.research/templates/literature-review-template.md'
+$LiteratureReviewFile = Join-Path $RESEARCH_DIR 'literature-review.md'
 if (Test-Path $LiteratureReviewTemplate) {
     Copy-Item $LiteratureReviewTemplate $LiteratureReviewFile -Force
     Write-Output "Copied literature review template to $LiteratureReviewFile"
@@ -56,8 +75,8 @@ if (Test-Path $LiteratureReviewTemplate) {
 }
 
 # Copy references template if it exists
-$ReferencesTemplate = Join-Path $paths.REPO_ROOT '.research/templates/references.bib'
-$ReferencesFile = Join-Path $paths.FEATURE_DIR 'references.bib'
+$ReferencesTemplate = Join-Path $REPO_ROOT '.research/templates/references.bib'
+$ReferencesFile = Join-Path $RESEARCH_DIR 'references.bib'
 if (Test-Path $ReferencesTemplate) {
     Copy-Item $ReferencesTemplate $ReferencesFile -Force
     Write-Output "Copied references template to $ReferencesFile"
@@ -66,7 +85,7 @@ if (Test-Path $ReferencesTemplate) {
 }
 
 # Create data-sources.md placeholder (no template exists yet)
-$DataSourcesFile = Join-Path $paths.FEATURE_DIR 'data-sources.md'
+$DataSourcesFile = Join-Path $RESEARCH_DIR 'data-sources.md'
 if (-not (Test-Path $DataSourcesFile)) {
     @'
 # Data Sources
@@ -104,7 +123,7 @@ List and describe all data sources used in this research.
 }
 
 # Create findings.md placeholder (no template exists yet)
-$FindingsFile = Join-Path $paths.FEATURE_DIR 'findings.md'
+$FindingsFile = Join-Path $RESEARCH_DIR 'findings.md'
 if (-not (Test-Path $FindingsFile)) {
     @'
 # Research Findings
@@ -126,9 +145,9 @@ Document key findings as they emerge during the research process.
 }
 
 # Create research-specific subdirectories
-$ProtocolsDir = Join-Path $paths.FEATURE_DIR 'protocols'
-$DataDir = Join-Path $paths.FEATURE_DIR 'data'
-$AnalysisDir = Join-Path $paths.FEATURE_DIR 'analysis'
+$ProtocolsDir = Join-Path $RESEARCH_DIR 'protocols'
+$DataDir = Join-Path $RESEARCH_DIR 'data'
+$AnalysisDir = Join-Path $RESEARCH_DIR 'analysis'
 
 New-Item -ItemType Directory -Path $ProtocolsDir -Force | Out-Null
 New-Item -ItemType Directory -Path $DataDir -Force | Out-Null
@@ -142,31 +161,31 @@ Write-Output "  - analysis/ for analysis outputs"
 # Output results
 if ($Json) {
     $result = [PSCustomObject]@{
-        DEFINITION_FILE = $paths.FEATURE_SPEC
+        DEFINITION_FILE = $DEFINITION_FILE
         METHODOLOGY_FILE = $MethodologyFile
         LITERATURE_REVIEW = $LiteratureReviewFile
         DATA_SOURCES = $DataSourcesFile
         FINDINGS = $FindingsFile
         REFERENCES = $ReferencesFile
-        RESEARCH_DIR = $paths.FEATURE_DIR
+        RESEARCH_DIR = $RESEARCH_DIR
         PROTOCOLS_DIR = $ProtocolsDir
         DATA_DIR = $DataDir
         ANALYSIS_DIR = $AnalysisDir
-        BRANCH = $paths.CURRENT_BRANCH
-        HAS_GIT = $paths.HAS_GIT
+        BRANCH = $CURRENT_BRANCH
+        HAS_GIT = $HAS_GIT
     }
     $result | ConvertTo-Json -Compress
 } else {
-    Write-Output "DEFINITION_FILE: $($paths.FEATURE_SPEC)"
+    Write-Output "DEFINITION_FILE: $($DEFINITION_FILE)"
     Write-Output "METHODOLOGY_FILE: $MethodologyFile"
     Write-Output "LITERATURE_REVIEW: $LiteratureReviewFile"
     Write-Output "DATA_SOURCES: $DataSourcesFile"
     Write-Output "FINDINGS: $FindingsFile"
     Write-Output "REFERENCES: $ReferencesFile"
-    Write-Output "RESEARCH_DIR: $($paths.FEATURE_DIR)"
+    Write-Output "RESEARCH_DIR: $($RESEARCH_DIR)"
     Write-Output "PROTOCOLS_DIR: $ProtocolsDir"
     Write-Output "DATA_DIR: $DataDir"
     Write-Output "ANALYSIS_DIR: $AnalysisDir"
-    Write-Output "BRANCH: $($paths.CURRENT_BRANCH)"
-    Write-Output "HAS_GIT: $($paths.HAS_GIT)"
+    Write-Output "BRANCH: $($CURRENT_BRANCH)"
+    Write-Output "HAS_GIT: $($HAS_GIT)"
 }

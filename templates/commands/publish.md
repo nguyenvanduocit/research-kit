@@ -15,6 +15,15 @@ $ARGUMENTS
 
 This command guides the creation of publication-ready research outputs including reports, papers, and presentations. Run this **after** `/research.synthesize`.
 
+**IMPORTANT**: The setup script (`scripts/bash/setup-publish.sh` or `scripts/powershell/setup-publish.ps1`) will automatically:
+- Create publication directories (`publications/report/`, `publications/paper/`, `publications/presentation/`, `publications/brief/`)
+- Initialize publication templates based on type
+- Copy figures and tables from analysis phase
+- Set up metadata and checklist files
+- Verify prerequisite phases have been completed (especially `synthesis.md`)
+
+**DO NOT manually create these directories or files - let the script handle it!**
+
 1. **Load complete research materials**:
    - Definition, methodology, execution log
    - Analysis results and synthesis

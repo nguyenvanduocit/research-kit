@@ -15,10 +15,15 @@ $ARGUMENTS
 
 This command generates a comprehensive research methodology based on the research definition. Run this **after** `/research.define` (and optionally `/research.refine`).
 
-1. **Run the methodology setup script** `{SCRIPT}` to:
-   - Create methodology directory structure
-   - Copy methodology template
-   - Initialize supporting document templates
+**IMPORTANT**: The setup script (`scripts/bash/setup-methodology.sh` or `scripts/powershell/setup-methodology.ps1`) will automatically:
+- Create methodology directory structure
+- Initialize methodology template (`methodology.md`)
+- Set up supporting document templates (literature review, data sources, ethics)
+- Verify prerequisite phases have been completed (especially `definition.md`)
+
+**DO NOT manually create these directories or files - the script `{SCRIPT}` handles everything!**
+
+1. **Run the methodology setup script** `{SCRIPT}` which will set up all required files and verify prerequisites
 
 2. **Load research definition** from `research/###-topic-name/definition.md`
 

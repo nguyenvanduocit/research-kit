@@ -1179,11 +1179,15 @@ def init(
 
     steps_lines.append(f"{step_num}. Start using slash commands with your AI agent:")
 
-    steps_lines.append("   2.1 [cyan]/research.principles[/] - Establish research principles")
-    steps_lines.append("   2.2 [cyan]/research.define[/] - Define research question & objectives")
-    steps_lines.append("   2.3 [cyan]/research.methodology[/] - Design research methodology")
-    steps_lines.append("   2.4 [cyan]/research.tasks[/] - Generate research tasks")
-    steps_lines.append("   2.5 [cyan]/research.execute[/] - Execute research & compile report")
+    steps_lines.append("   Core workflow:")
+    steps_lines.append("   [cyan]/research.principles[/] - Establish research principles")
+    steps_lines.append("   [cyan]/research.define[/] - Define research question & objectives")
+    steps_lines.append("   [cyan]/research.methodology[/] - Design research methodology")
+    steps_lines.append("   [cyan]/research.tasks[/] - Generate research tasks")
+    steps_lines.append("   [cyan]/research.execute[/] - Conduct research & collect data")
+    steps_lines.append("   [cyan]/research.analyze[/] - Analyze collected data & generate insights")
+    steps_lines.append("   [cyan]/research.synthesize[/] - Draw conclusions from findings")
+    steps_lines.append("   [cyan]/research.publish[/] - Create publication-ready outputs")
 
     steps_panel = Panel("\n".join(steps_lines), title="Next Steps", border_style="cyan", padding=(1,2))
     console.print()

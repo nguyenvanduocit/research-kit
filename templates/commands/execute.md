@@ -15,6 +15,14 @@ $ARGUMENTS
 
 This command guides the systematic execution of the research methodology to collect data and generate raw results. Run this **after** `/research.methodology`.
 
+**IMPORTANT**: The setup script (`scripts/bash/setup-execution.sh` or `scripts/powershell/setup-execution.ps1`) will automatically:
+- Create all necessary directories (`data/raw/`, `data/processed/`, `logs/`, `notebooks/`, `scripts/`)
+- Initialize execution tracking file (`execution.md`)
+- Create data inventory template
+- Verify prerequisite phases have been completed
+
+**DO NOT manually create these directories or files - let the script handle it!**
+
 1. **Load research context**:
    - Research definition from `research/###-topic-name/definition.md`
    - Methodology from `research/###-topic-name/methodology.md`

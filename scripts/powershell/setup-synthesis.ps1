@@ -30,6 +30,28 @@ if (-not (Check-ResearchBranch -Branch $CURRENT_BRANCH -HasGit $HAS_GIT)) {
 # Ensure the research directory exists
 New-Item -ItemType Directory -Path $RESEARCH_DIR -Force | Out-Null
 
+# Check phase dependencies - synthesis requires analysis to be completed first
+$ANALYSIS_FILE = Join-Path $RESEARCH_DIR "analysis.md"
+if (-not (Test-Path $ANALYSIS_FILE)) {
+    Write-Error "Error: analysis.md not found in $RESEARCH_DIR"
+    Write-Output "Please run /research.analyze before running /research.synthesize"
+    Write-Output ""
+    Write-Output "The research workflow phases must be completed in order:"
+    Write-Output "  1. /research.define - Define research question"
+    Write-Output "  2. /research.methodology - Design methodology"
+    Write-Output "  3. /research.execute - Collect data"
+    Write-Output "  4. /research.analyze - Analyze data"
+    Write-Output "  5. /research.synthesize - Draw conclusions (current step)"
+    Write-Output "  6. /research.publish - Create outputs"
+    exit 1
+}
+
+# Also check for execution.md to ensure proper workflow
+$EXECUTION_FILE = Join-Path $RESEARCH_DIR "execution.md"
+if (-not (Test-Path $EXECUTION_FILE)) {
+    Write-Warning "Warning: execution.md not found - workflow may be incomplete"
+}
+
 # Define synthesis file path
 $SYNTHESIS_FILE = Join-Path $RESEARCH_DIR "synthesis.md"
 

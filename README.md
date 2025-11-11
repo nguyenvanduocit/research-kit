@@ -183,10 +183,13 @@ Use **`/research.tasks`** to create an actionable research plan:
 
 ### 6. Execute Research
 
-Use **`/research.execute`** to conduct research and generate your report:
+Use the following commands to conduct and complete your research:
 
 ```bash
-/research.execute
+/research.execute    # Collect data and conduct research
+/research.analyze    # Analyze collected data
+/research.synthesize # Draw conclusions from findings
+/research.publish    # Create final research outputs
 ```
 
 ## Research Workflow
@@ -528,7 +531,10 @@ Essential commands for the Research Kit workflow:
 | `/research.define`         | Define research question, objectives, and scope                       |
 | `/research.methodology`    | Design research approach and data collection strategy                 |
 | `/research.tasks`          | Generate actionable research task breakdown                           |
-| `/research.execute`        | Conduct research and generate comprehensive report                    |
+| `/research.execute`        | Conduct research and collect data systematically                     |
+| `/research.analyze`        | Analyze collected data and generate insights                         |
+| `/research.synthesize`     | Synthesize findings and draw conclusions                             |
+| `/research.publish`        | Create publication-ready outputs (reports, papers, presentations)     |
 
 #### Optional Research Commands
 
@@ -559,7 +565,16 @@ my-research-project/
 │       ├── definition.md             # Research question and scope
 │       ├── methodology.md            # Research approach and strategy
 │       ├── tasks.md                  # Actionable research breakdown
-│       ├── report.md                 # Comprehensive findings report
+│       ├── execution.md              # Research execution log
+│       ├── analysis.md               # Data analysis and insights
+│       ├── synthesis.md              # Conclusions and findings
+│       ├── publications/             # Publication-ready outputs
+│       │   ├── report.md             # Comprehensive research report
+│       │   ├── paper.md              # Academic paper (if applicable)
+│       │   └── presentation.md       # Executive presentation
+│       ├── data/                     # Collected research data
+│       ├── figures/                  # Charts and visualizations
+│       ├── tables/                   # Data tables
 │       └── bibliography.bib          # BibTeX citation database
 └── templates/
     ├── definition-template.md        # Template for new research questions

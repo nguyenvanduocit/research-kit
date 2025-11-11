@@ -15,6 +15,14 @@ $ARGUMENTS
 
 This command guides the systematic analysis of collected data to generate insights and findings. Run this **after** `/research.execute`.
 
+**IMPORTANT**: The setup script (`scripts/bash/setup-analysis.sh` or `scripts/powershell/setup-analysis.ps1`) will automatically:
+- Create all necessary directories (`figures/`, `tables/`, `data/results/`, `notebooks/`)
+- Set up analysis templates and notebooks
+- Initialize tracking files
+- Verify prerequisite phases have been completed
+
+**DO NOT manually create these directories or files - let the script handle it!**
+
 1. **Load research context**:
    - Research definition from `research/###-topic-name/definition.md`
    - Methodology from `research/###-topic-name/methodology.md`

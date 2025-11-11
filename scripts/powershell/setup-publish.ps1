@@ -32,6 +32,36 @@ if (-not (Check-ResearchBranch -Branch $CURRENT_BRANCH -HasGit $HAS_GIT)) {
 # Ensure the research directory exists
 New-Item -ItemType Directory -Path $RESEARCH_DIR -Force | Out-Null
 
+# Check phase dependencies - publish requires synthesis to be completed first
+$SYNTHESIS_FILE = Join-Path $RESEARCH_DIR "synthesis.md"
+if (-not (Test-Path $SYNTHESIS_FILE)) {
+    Write-Error "Error: synthesis.md not found in $RESEARCH_DIR"
+    Write-Output "Please run /research.synthesize before running /research.publish"
+    Write-Output ""
+    Write-Output "The research workflow phases must be completed in order:"
+    Write-Output "  1. /research.define - Define research question"
+    Write-Output "  2. /research.methodology - Design methodology"
+    Write-Output "  3. /research.execute - Collect data"
+    Write-Output "  4. /research.analyze - Analyze data"
+    Write-Output "  5. /research.synthesize - Draw conclusions"
+    Write-Output "  6. /research.publish - Create outputs (current step)"
+    exit 1
+}
+
+# Also check for critical prerequisite files
+$DEFINITION_FILE = Join-Path $RESEARCH_DIR "definition.md"
+$ANALYSIS_FILE = Join-Path $RESEARCH_DIR "analysis.md"
+if (-not (Test-Path $DEFINITION_FILE) -or -not (Test-Path $ANALYSIS_FILE)) {
+    Write-Warning "Warning: Missing critical files for publication"
+    if (-not (Test-Path $DEFINITION_FILE)) {
+        Write-Warning "  - definition.md not found"
+    }
+    if (-not (Test-Path $ANALYSIS_FILE)) {
+        Write-Warning "  - analysis.md not found"
+    }
+    Write-Warning "Publication quality may be affected"
+}
+
 # Create publications directory structure
 $PUBLICATIONS_DIR = Join-Path $RESEARCH_DIR "publications"
 $REPORT_DIR = Join-Path $PUBLICATIONS_DIR "report"

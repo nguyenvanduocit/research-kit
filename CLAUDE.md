@@ -80,12 +80,15 @@ cp -r .genreleases/srd-claude-package-sh/. ~/test-research-project/
    - Auto-generates topic numbers (001, 002, etc.) by scanning remote branches, local branches, and research directories
    - Creates research topic branches (`###-topic-name`)
    - Generates structured definitions from user descriptions
-3. **Clarification** (`/research.clarify`): Interactive Q&A to refine underspecified areas
+3. **Refine** (`/research.refine`): Interactive Q&A to clarify underspecified areas (optional)
 4. **Methodology** (`/research.methodology`): Design research methodologies and approaches
    - Produces `methodology.md`, `literature-review.md`, `data-sources.md`, `ethics.md`
-5. **Analysis** (`/research.analyze`): Conduct analysis and validate findings
-6. **Synthesis** (`/research.synthesize`): Synthesize findings and draw conclusions
-7. **Publication** (`/research.publish`): Prepare research outputs for publication
+5. **Validate** (`/research.validate`): Review feasibility and identify potential issues (optional)
+6. **Tasks** (`/research.tasks`): Break down research into executable activities
+7. **Execute** (`/research.execute`): Conduct research and collect data
+8. **Analyze** (`/research.analyze`): Process data and generate statistical insights
+9. **Synthesize** (`/research.synthesize`): Draw conclusions and answer research questions
+10. **Publish** (`/research.publish`): Create publication-ready outputs (reports, papers, presentations)
 
 ### Key Design Patterns
 

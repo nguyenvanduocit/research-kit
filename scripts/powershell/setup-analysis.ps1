@@ -30,6 +30,30 @@ if (-not (Check-ResearchBranch -Branch $CURRENT_BRANCH -HasGit $HAS_GIT)) {
 # Ensure the research directory exists
 New-Item -ItemType Directory -Path $RESEARCH_DIR -Force | Out-Null
 
+# Check phase dependencies - analysis requires execution to be completed first
+$EXECUTION_FILE = Join-Path $RESEARCH_DIR "execution.md"
+if (-not (Test-Path $EXECUTION_FILE)) {
+    Write-Error "Error: execution.md not found in $RESEARCH_DIR"
+    Write-Output "Please run /research.execute before running /research.analyze"
+    Write-Output ""
+    Write-Output "The research workflow phases must be completed in order:"
+    Write-Output "  1. /research.define - Define research question"
+    Write-Output "  2. /research.methodology - Design methodology"
+    Write-Output "  3. /research.execute - Collect data"
+    Write-Output "  4. /research.analyze - Analyze data (current step)"
+    Write-Output "  5. /research.synthesize - Draw conclusions"
+    Write-Output "  6. /research.publish - Create outputs"
+    exit 1
+}
+
+# Also check if data directory exists with some data
+$DATA_DIR = Join-Path $RESEARCH_DIR "data"
+if (-not (Test-Path $DATA_DIR) -or (Get-ChildItem $DATA_DIR -ErrorAction SilentlyContinue | Measure-Object).Count -eq 0) {
+    Write-Warning "Warning: No data directory or data files found"
+    Write-Warning "The execution phase should have created data in: $DATA_DIR"
+    Write-Warning "Continuing anyway, but analysis may be limited..."
+}
+
 # Define analysis file path
 $ANALYSIS_FILE = Join-Path $RESEARCH_DIR "analysis.md"
 

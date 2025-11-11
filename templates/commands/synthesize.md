@@ -15,6 +15,14 @@ $ARGUMENTS
 
 This command guides the synthesis of analysis findings to draw conclusions and answer research questions. Run this **after** `/research.analyze`.
 
+**IMPORTANT**: The setup script (`scripts/bash/setup-synthesis.sh` or `scripts/powershell/setup-synthesis.ps1`) will automatically:
+- Create synthesis directories (`models/`, `figures/synthesis/`, `briefs/`)
+- Initialize synthesis tracking file (`synthesis.md`)
+- Set up synthesis templates and checklists
+- Verify prerequisite phases have been completed (especially `analysis.md`)
+
+**DO NOT manually create these directories or files - let the script handle it!**
+
 1. **Load complete research context**:
    - Research definition and questions from `definition.md`
    - Methodology framework from `methodology.md`
