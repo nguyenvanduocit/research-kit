@@ -1,6 +1,6 @@
 [project]
 name = "research-cli"
-version = "1.0.8"
+version = "1.0.9"
 description = "Research Kit CLI - A tool to bootstrap deep research projects with AI agents using structured research methodology."
 requires-python = ">=3.11"
 dependencies = [
