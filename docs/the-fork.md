@@ -125,15 +125,17 @@ We considered extending Spec Kit with research features, but decided to fork bec
 
 ### 2. Slash Commands
 
+> **Note**: Research Kit recently simplified its command prefix from `/researchkit.` to `/research.` for better usability (November 2025).
+
 | Spec Kit | Research Kit | Purpose |
 |----------|--------------|---------|
-| `/speckit.define` | `/researchkit.define` | Define research questions and scope |
-| `/speckit.clarify` | `/researchkit.clarify` | Clarify underspecified research areas |
-| `/speckit.implement` | `/researchkit.methodology` | Design research methodology |
-| `/speckit.test` | `/researchkit.analyze` | Conduct analysis and validate findings |
-| `/speckit.verify` | `/researchkit.synthesize` | Synthesize findings and conclusions |
-| (none) | `/researchkit.publish` | Prepare research outputs for publication |
-| `/speckit.principles` | `/researchkit.principles` | Define research governance principles |
+| `/speckit.define` | `/research.define` | Define research questions and scope |
+| `/speckit.clarify` | `/research.clarify` | Clarify underspecified research areas |
+| `/speckit.implement` | `/research.methodology` | Design research methodology |
+| `/speckit.test` | `/research.analyze` | Conduct analysis and validate findings |
+| `/speckit.verify` | `/research.synthesize` | Synthesize findings and conclusions |
+| (none) | `/research.publish` | Prepare research outputs for publication |
+| `/speckit.principles` | `/research.principles` | Define research governance principles |
 
 ### 3. Directory Structure
 
@@ -324,7 +326,7 @@ Use this translation guide when applying changes:
 | `spec-name` | `topic-name` | Branch naming |
 | `implementation.md` | `methodology.md` | Different purpose |
 | `tests.md` | `analysis.md` | Different purpose |
-| `/spec.define` | `/research.define` | Slash command |
+| `/speckit.define` | `/research.define` | Slash command (simplified prefix) |
 | `spec-driven` | `research-driven` | Methodology name |
 | `SDD` | `SRD` | Acronym |
 
@@ -472,7 +474,7 @@ These files serve different purposes and should NOT be synced:
 
 - `templates/research-definition-template.md` ≠ `spec-definition-template.md`
 - `templates/methodology-template.md` ≠ `implementation-template.md`
-- `templates/commands/researchkit.methodology.md` ≠ `speckit.implement.md`
+- `templates/commands/methodology.md` ≠ `speckit.implement.md`
 - `docs/research-driven.md` ≠ `spec-driven.md`
 
 ### Development Workflow
@@ -575,3 +577,9 @@ Research Kit maintains backward compatibility for projects transitioning from Sp
 ---
 
 **This document is maintained by the Research Kit community. Last updated: 2025-11-12**
+
+### Recent Updates (2025-11-12)
+
+- **Simplified slash command prefix**: Changed from `/researchkit.` to `/research.` for better usability
+- **Repository references**: Updated all documentation to use correct repository URL (`github.com/nguyenvanduocit/research-kit`)
+- **Command naming**: All slash commands now use the simpler `/research.` prefix (e.g., `/research.define`, `/research.methodology`)

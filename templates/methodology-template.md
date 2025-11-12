@@ -3,7 +3,7 @@
 **Branch**: `[###-topic-name]` | **Date**: [DATE] | **Spec**: [link]
 **Input**: Research specification from `/research/[###-topic-name]/definition.md`
 
-**Note**: This template is filled in by the `/researchkit.methodology` command. See `.specify/templates/commands/methodology.md` for the execution workflow.
+**Note**: This template is filled in by the `/research.methodology` command. See `.specify/templates/commands/methodology.md` for the execution workflow.
 
 ## Summary
 
@@ -39,12 +39,12 @@
 
 ```text
 research/[###-topic]/
-├── methodology.md       # This file (/researchkit.methodology command output)
-├── literature-review.md # Phase 0 output (/researchkit.methodology command)
+├── methodology.md       # This file (/research.methodology command output)
+├── literature-review.md # Phase 0 output (/research.methodology command)
 ├── data-schema.md       # Phase 1 output (if data collection involved)
-├── analysis-methodology.md     # Phase 1 output (/researchkit.methodology command)
+├── analysis-methodology.md     # Phase 1 output (/research.methodology command)
 ├── protocols/           # Phase 1 output (interview guides, survey instruments, etc.)
-└── tasks.md             # Phase 2 output (/researchkit.tasks command - NOT created by /researchkit.methodology)
+└── tasks.md             # Phase 2 output (/research.tasks command - NOT created by /research.methodology)
 ```
 
 ### Data Organization (repository root)

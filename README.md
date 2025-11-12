@@ -9,9 +9,9 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/github/research-kit/actions/workflows/release.yml"><img src="https://github.com/github/research-kit/actions/workflows/release.yml/badge.svg" alt="Release"/></a>
-    <a href="https://github.com/github/research-kit/stargazers"><img src="https://img.shields.io/github/stars/github/research-kit?style=social" alt="GitHub stars"/></a>
-    <a href="https://github.com/github/research-kit/blob/main/LICENSE"><img src="https://img.shields.io/github/license/github/research-kit" alt="License"/></a>
+    <a href="https://github.com/nguyenvanduocit/research-kit/actions/workflows/release.yml"><img src="https://github.com/nguyenvanduocit/research-kit/actions/workflows/release.yml/badge.svg" alt="Release"/></a>
+    <a href="https://github.com/nguyenvanduocit/research-kit/stargazers"><img src="https://img.shields.io/github/stars/nguyenvanduocit/research-kit?style=social" alt="GitHub stars"/></a>
+    <a href="https://github.com/nguyenvanduocit/research-kit/blob/main/LICENSE"><img src="https://img.shields.io/github/license/nguyenvanduocit/research-kit" alt="License"/></a>
 </p>
 
 ---
@@ -123,7 +123,7 @@ Choose your preferred installation method:
 Install once and use everywhere:
 
 ```bash
-uv tool install research-cli --from git+https://github.com/github/research-kit.git
+uv tool install research-cli --from git+https://github.com/nguyenvanduocit/research-kit.git
 ```
 
 Then use the tool directly:
@@ -136,7 +136,7 @@ research check
 To upgrade:
 
 ```bash
-uv tool install research-cli --force --from git+https://github.com/github/research-kit.git
+uv tool install research-cli --force --from git+https://github.com/nguyenvanduocit/research-kit.git
 ```
 
 #### Option 2: One-time Usage
@@ -144,7 +144,7 @@ uv tool install research-cli --force --from git+https://github.com/github/resear
 Run directly without installing:
 
 ```bash
-uvx --from git+https://github.com/github/research-kit.git research init my-research-project
+uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init my-research-project
 ```
 
 ### 2. Establish Research Principles
@@ -433,7 +433,7 @@ Research Kit works with all major AI coding agents:
 
 ```bash
 # Persistent installation
-uv tool install research-cli --from git+https://github.com/github/research-kit.git
+uv tool install research-cli --from git+https://github.com/nguyenvanduocit/research-kit.git
 
 # Verify installation
 research check
@@ -442,17 +442,17 @@ research check
 ### Install with pip
 
 ```bash
-pip install git+https://github.com/github/research-kit.git
+pip install git+https://github.com/nguyenvanduocit/research-kit.git
 ```
 
 ### Upgrade
 
 ```bash
 # With uv
-uv tool install research-cli --force --from git+https://github.com/github/research-kit.git
+uv tool install research-cli --force --from git+https://github.com/nguyenvanduocit/research-kit.git
 
 # With pip
-pip install --upgrade git+https://github.com/github/research-kit.git
+pip install --upgrade git+https://github.com/nguyenvanduocit/research-kit.git
 ```
 
 ## Research CLI Reference
@@ -706,7 +706,7 @@ If `research` command is not found after installation:
 uv tool list
 
 # Reinstall with explicit path
-uv tool install research-cli --force --from git+https://github.com/github/research-kit.git
+uv tool install research-cli --force --from git+https://github.com/nguyenvanduocit/research-kit.git
 
 # Verify PATH includes uv tools directory
 echo $PATH | grep -q ".local/bin" || echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
@@ -727,7 +727,7 @@ research init my-project --ignore-agent-tools --ai claude
 
 ### For More Help
 
-- Open an [issue on GitHub](https://github.com/github/research-kit/issues/new)
+- Open an [issue on GitHub](https://github.com/nguyenvanduocit/research-kit/issues/new)
 - Check the [SUPPORT.md](./SUPPORT.md) guide
 - Review [agent-specific documentation](./AGENTS.md)
 
@@ -737,7 +737,7 @@ We welcome contributions to Research Kit! Here's how you can help:
 
 ### Ways to Contribute
 
-- **Report bugs** - Found something broken? [Open an issue](https://github.com/github/research-kit/issues/new)
+- **Report bugs** - Found something broken? [Open an issue](https://github.com/nguyenvanduocit/research-kit/issues/new)
 - **Suggest features** - Have ideas for new research types or workflow improvements? We'd love to hear them
 - **Improve documentation** - Help make Research Kit easier to use
 - **Add agent support** - Integrate new AI coding agents
@@ -748,7 +748,7 @@ We welcome contributions to Research Kit! Here's how you can help:
 
 1. Read the [Contributing Guide](./CONTRIBUTING.md)
 2. Check the [Code of Conduct](./CODE_OF_CONDUCT.md)
-3. Look for ["good first issue"](https://github.com/github/research-kit/labels/good%20first%20issue) labels
+3. Look for ["good first issue"](https://github.com/nguyenvanduocit/research-kit/labels/good%20first%20issue) labels
 4. Fork the repository and make your changes
 5. Submit a pull request
 
@@ -756,7 +756,7 @@ We welcome contributions to Research Kit! Here's how you can help:
 
 ```bash
 # Clone the repository
-git clone https://github.com/github/research-kit.git
+git clone https://github.com/nguyenvanduocit/research-kit.git
 cd research-kit
 
 # Install dependencies with uv
@@ -783,5 +783,5 @@ Research Kit builds on ideas from systematic review methodologies, evidence-base
 
 <p align="center">
     <strong>Start conducting rigorous, reproducible research with AI agents today.</strong><br/>
-    <code>uv tool install research-cli --from git+https://github.com/github/research-kit.git</code>
+    <code>uv tool install research-cli --from git+https://github.com/nguyenvanduocit/research-kit.git</code>
 </p>

@@ -88,20 +88,20 @@ if ($PathsOnly) {
 # Validate required directories and files
 if (-not (Test-Path $paths.RESEARCH_DIR -PathType Container)) {
     Write-Output "ERROR: Research directory not found: $($paths.RESEARCH_DIR)"
-    Write-Output "Run /researchkit.define first to create the research structure."
+    Write-Output "Run /research.define first to create the research structure."
     exit 1
 }
 
 if (-not (Test-Path $paths.METHODOLOGY -PathType Leaf)) {
     Write-Output "ERROR: methodology.md not found in $($paths.RESEARCH_DIR)"
-    Write-Output "Run /researchkit.methodology first to create the research methodology."
+    Write-Output "Run /research.methodology first to create the research methodology."
     exit 1
 }
 
 # Check for tasks.md if required
 if ($RequireTasks -and -not (Test-Path $paths.TASKS -PathType Leaf)) {
     Write-Output "ERROR: tasks.md not found in $($paths.RESEARCH_DIR)"
-    Write-Output "Run /researchkit.tasks first to create the task list."
+    Write-Output "Run /research.tasks first to create the task list."
     exit 1
 }
 

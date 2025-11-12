@@ -29,7 +29,7 @@ description: "Task list template for feature implementation"
   ============================================================================
   IMPORTANT: The tasks below are SAMPLE TASKS for illustration purposes only.
 
-  The /researchkit.tasks command MUST replace these with actual tasks based on:
+  The /research.tasks command MUST replace these with actual tasks based on:
   - Research questions from definition.md
   - Methodology from methodology.md
   - Data collection requirements

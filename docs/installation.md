@@ -66,9 +66,9 @@ uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init
 
 After initialization, you should see the following commands available in your AI agent:
 
-- `/researchkit.research` - Create specifications
-- `/researchkit.plan` - Generate implementation plans  
-- `/researchkit.tasks` - Break down into actionable tasks
+- `/research.define` - Define research topic and questions
+- `/research.methodology` - Design research methodology
+- `/research.tasks` - Break down into actionable tasks
 
 The `.research/scripts` directory will contain both `.sh` and `.ps1` scripts.
 

@@ -1,11 +1,11 @@
 {
     "chat.promptFilesRecommendations": {
-        "researchkit.principles": true,
-        "researchkit.define": true,
-        "researchkit.methodology": true,
-        "researchkit.analyze": true,
-        "researchkit.synthesize": true,
-        "researchkit.publish": true
+        "research.principles": true,
+        "research.define": true,
+        "research.methodology": true,
+        "research.analyze": true,
+        "research.synthesize": true,
+        "research.publish": true
     },
     "chat.tools.terminal.autoApprove": {
         ".research/scripts/bash/": true,

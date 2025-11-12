@@ -109,20 +109,20 @@ fi
 # Validate required directories and files
 if [[ ! -d "$RESEARCH_DIR" ]]; then
     echo "ERROR: Research directory not found: $RESEARCH_DIR" >&2
-    echo "Run /researchkit.define first to create the research structure." >&2
+    echo "Run /research.define first to create the research structure." >&2
     exit 1
 fi
 
 if [[ ! -f "$METHODOLOGY" ]]; then
     echo "ERROR: methodology.md not found in $RESEARCH_DIR" >&2
-    echo "Run /researchkit.methodology first to create the research methodology." >&2
+    echo "Run /research.methodology first to create the research methodology." >&2
     exit 1
 fi
 
 # Check for tasks.md if required
 if $REQUIRE_TASKS && [[ ! -f "$TASKS" ]]; then
     echo "ERROR: tasks.md not found in $RESEARCH_DIR" >&2
-    echo "Run /researchkit.tasks first to create the task list." >&2
+    echo "Run /research.tasks first to create the task list." >&2
     exit 1
 fi
 
