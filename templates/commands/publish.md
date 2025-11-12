@@ -133,42 +133,94 @@ This command guides the creation of publication-ready research outputs including
 
 6. **Generate Presentation** (if selected):
 
-   Create `publications/presentation/slides.md`:
+   Create `publications/presentation/` with **Sli.dev** format:
+
+   **Files Created**:
+   - `slides.md` - Main presentation file in Sli.dev format
+   - `package.json` - Node.js dependencies for Sli.dev
+   - `README.md` - Instructions for running the presentation
+
+   **Sli.dev Presentation Structure** (15-17 slides):
    ```markdown
-   # Slide 1: Title
+   # Slide 1: Title (layout: cover)
    - Title, Authors, Date, Institution
+   - Interactive navigation hints
 
-   # Slide 2: Overview
-   - Research question
-   - Why it matters
-   - What we found
+   # Slide 2: Agenda (layout: two-cols)
+   - Research Foundation
+   - Findings & Impact
+   - Duration estimate
 
-   # Slide 3: Background
-   - Context and motivation
-   - Knowledge gap
+   # Slide 3: Background (layout: image-right)
+   - Problem statement with bullet points
+   - Visual context
+   - Impact statement highlight
 
-   # Slides 4-6: Methodology
-   - Research design
-   - Data sources
-   - Analysis approach
+   # Slide 4: Research Questions (layout: center)
+   - Color-coded questions
+   - Progressive reveal with v-clicks
 
-   # Slides 7-12: Key Findings
-   - Finding 1 with visualization
-   - Finding 2 with evidence
-   - Finding 3 with implications
+   # Slide 5: Methodology (layout: two-cols)
+   - Approach, data, analysis
+   - Mermaid diagram flowchart
 
-   # Slides 13-14: Discussion
-   - What it means
-   - How it fits with existing knowledge
+   # Slides 6-8: Key Findings (layout: image-left)
+   - Finding with visualization
+   - Evidence and impact
+   - Key insight callout box
 
-   # Slide 15: Conclusions
-   - Main takeaways
-   - Recommendations
+   # Slide 9: Discussion (layout: grid)
+   - Confirms/Challenges/Reveals
+   - Color-coded insight boxes
 
-   # Slide 16: Future Directions
+   # Slide 10: Limitations (layout: quote)
+   - Study boundaries
+   - Impact assessment
 
-   # Slide 17: Questions
+   # Slide 11: Conclusions (layout: statement)
+   - Numbered key takeaways
+   - Color-coded importance
+
+   # Slide 12: Recommendations (layout: default)
+   - Immediate/Short-term/Long-term
+   - Action-oriented with icons
+
+   # Slide 13: Future Research (layout: default)
+   - Research directions with icons
+   - Progressive reveal
+
+   # Slide 14: Thank You (layout: end)
+   - Contact information
+   - Resource links
+
+   # Slides 15+: Backup Slides
+   - Additional detail for Q&A
    ```
+
+   **Running the Presentation**:
+   ```bash
+   # Install dependencies (use bun or npm)
+   bun install
+
+   # Start development server
+   bun run dev
+
+   # Export to PDF
+   bun run export-pdf
+
+   # Export to PowerPoint
+   bun run export-pptx
+   ```
+
+   **Sli.dev Features**:
+   - Web-based presentation framework
+   - Interactive animations and transitions
+   - Presenter mode with notes
+   - Export to PDF, PowerPoint, PNG
+   - Code highlighting with Shiki
+   - Mermaid diagram support
+   - Dark mode toggle
+   - Responsive layouts
 
 7. **Generate Executive Brief** (if selected):
 
