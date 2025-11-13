@@ -43,3 +43,9 @@ env/
 .genreleases/
 *.zip
 sdd-*/
+
+# Research Kit generated files (when applied to itself)
+.claude/commands/research.*.md
+.research/
+research/
+principles/research-principles.md
