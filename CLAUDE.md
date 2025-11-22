@@ -32,10 +32,13 @@ When developing templates, commands, or scripts:
 ./.github/workflows/scripts/create-release-packages.sh v1.0.0
 
 # Copy package to test research project
-cp -r .genreleases/srd-<agent>-package-<script-type>/. <path-to-test-research-project>/
+cp -r .genreleases/research-claude-package/. <path-to-test-research-project>/
 
-# Example for Claude with bash scripts
-cp -r .genreleases/srd-claude-package-sh/. ~/test-research-project/
+# Example for Claude
+cp -r .genreleases/research-claude-package/. ~/test-research-project/
+
+# Example for Codex
+cp -r .genreleases/research-codex-package/. ~/test-research-project/
 ```
 
 ## Repository Structure
@@ -44,21 +47,21 @@ cp -r .genreleases/srd-claude-package-sh/. ~/test-research-project/
 
 - **`src/research_cli/__init__.py`**: Main CLI implementation (Python 3.11+)
   - Handles research project initialization, agent detection, template deployment
-  - Supports multiple AI research assistants (Claude, Gemini, Copilot, Cursor, etc.)
+  - Supports Claude Code and Codex CLI
   - Features: topic management, template customization, prerequisite checking
 
 - **`templates/`**: Source templates for all generated files
   - `commands/*.md`: Slash command definitions (`/research.define`, `/research.methodology`, `/research.analyze`, `/research.publish`, etc.)
+  - `agents/*.md`: Agent definitions (`research-assistant`, `research-reviewer`)
   - `research-definition-template.md`, `methodology-template.md`, `analysis-template.md`: Document templates
   - `agent-file-template.md`: Agent-specific context file template
-  - Templates use frontmatter for metadata and support both bash (`sh`) and PowerShell (`ps`) script variants
 
-- **`scripts/bash/` & `scripts/powershell/`**: Automation scripts deployed to research projects
-  - `common.sh/common.ps1`: Shared utilities (repo root detection, branch detection, topic number extraction)
-  - `create-new-research.sh/ps1`: Creates research topic branches, manages numbering, prevents duplicates
-  - `setup-methodology.sh/ps1`: Prepares directories and templates for research methodology planning
-  - `check-prerequisites.sh/ps1`: Validates required tools and environment
-  - `update-agent-context.sh/ps1`: Updates agent-specific CLAUDE.md/context files
+- **`scripts/bash/`**: Automation scripts deployed to research projects
+  - `common.sh`: Shared utilities (repo root detection, branch detection, topic number extraction)
+  - `create-new-research.sh`: Creates research topic branches, manages numbering, prevents duplicates
+  - `setup-methodology.sh`: Prepares directories and templates for research methodology planning
+  - `check-prerequisites.sh`: Validates required tools and environment
+  - `update-agent-context.sh`: Updates agent-specific CLAUDE.md/context files
 
 - **`principles/research-principles.md`**: Template for research governance principles
   - Defines research standards, ethical requirements, methodological constraints
@@ -95,8 +98,8 @@ cp -r .genreleases/srd-claude-package-sh/. ~/test-research-project/
 - **Branch-based Research Topics**: Each research topic lives on a numbered branch (`001-literature-review`, `002-methodology-design`)
 - **Definition as Source of Truth**: Research outputs serve definitions, not the other way around
 - **Template-driven Generation**: All documents follow consistent templates for AI parsing
-- **Script Hooks**: Slash commands invoke bash/PowerShell scripts that manage git operations, file creation, and validation
-- **Agent Agnostic**: Same templates/scripts support Claude Code, GitHub Copilot, Gemini CLI, Cursor, Windsurf, etc.
+- **Script Hooks**: Slash commands invoke bash scripts that manage git operations, file creation, and validation
+- **Agent Support**: Templates and scripts support Claude Code and Codex CLI
 
 ### Branching & Numbering
 
@@ -132,14 +135,12 @@ Always test template/command changes locally before committing:
 - Auto-increments version, generates release notes, creates GitHub release
 - Version stored in `pyproject.toml` (updated during release, not in main branch)
 
-### Multi-Agent Support
+### Agent Support
 
-The CLI supports 15+ AI research assistants. Configuration in `AGENT_CONFIG` dict:
-- `folder`: Where agent files live (`.claude/`, `.github/`, `.cursor/`, etc.)
-- `requires_cli`: Whether CLI tool is needed vs. IDE-based
+The CLI supports Claude Code and Codex CLI. Configuration in `AGENT_CONFIG` dict:
+- `folder`: Where agent files live (`.claude/`, `.codex/`)
+- `requires_cli`: Whether CLI tool is needed
 - `install_url`: Documentation link for CLI installation
-
-When adding agent support, update both Python CLI and script templates.
 
 ## Non-Git Repository Support
 
@@ -152,7 +153,8 @@ This allows SRD workflow in repositories without git (e.g., institutional enviro
 
 ## File Conventions
 
-- Slash commands: `.claude/commands/*.md`, `.github/copilot-instructions/*.md`
+- Slash commands: `.claude/commands/*.md`, `.codex/prompts/*.md`
+- Agents: `.claude/agents/*.md`
 - Research definitions: `research/###-topic-name/definition.md`
 - Research methodologies: `research/###-topic-name/methodology.md`
 - Literature reviews: `research/###-topic-name/literature-review.md`
@@ -171,8 +173,6 @@ This allows SRD workflow in repositories without git (e.g., institutional enviro
 
 - **Simplicity Over Cleverness**: Code should be obvious and maintainable
 - **Template Quality**: Templates directly affect thousands of AI-assisted research projects
-- **Script Portability**: Bash and PowerShell variants must have feature parity
-- **Agent Neutrality**: No hardcoded assumptions about specific agents
 - **Researcher Empowerment**: Researchers control the workflow, AI assists systematically
 - **Research Rigor**: Maintain high standards for research methodology and academic integrity
 - **Citation Accuracy**: Ensure proper attribution and source tracking

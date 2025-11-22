@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# create-release-packages.sh (workflow-local)
-# Build Research Kit template release archives for each supported AI assistant and script type.
+# create-release-packages.sh
+# Build Research Kit template release archives for supported AI assistants.
 # Usage: .github/workflows/scripts/create-release-packages.sh <version>
 #   Version argument should include leading 'v'.
-#   Optionally set AGENTS and/or SCRIPTS env vars to limit what gets built.
-#     AGENTS  : space or comma separated subset of: claude gemini copilot cursor-agent qwen opencode windsurf codex amp (default: all)
-#     SCRIPTS : space or comma separated subset of: sh ps (default: both)
+#   Optionally set AGENTS env var to limit what gets built.
+#     AGENTS: space or comma separated subset of: claude codex (default: all)
 #   Examples:
-#     AGENTS=claude SCRIPTS=sh $0 v0.2.0
-#     AGENTS="copilot,gemini" $0 v0.2.0
-#     SCRIPTS=ps $0 v0.2.0
+#     AGENTS=claude $0 v1.0.0
+#     AGENTS="claude,codex" $0 v1.0.0
 
 if [[ $# -ne 1 ]]; then
   echo "Usage: $0 <version-with-v-prefix>" >&2
@@ -25,7 +23,6 @@ fi
 
 echo "Building release packages for $NEW_VERSION"
 
-# Create and use .genreleases directory for all build artifacts
 GENRELEASES_DIR=".genreleases"
 mkdir -p "$GENRELEASES_DIR"
 rm -rf "$GENRELEASES_DIR"/* || true
@@ -38,285 +35,119 @@ rewrite_paths() {
 }
 
 copy_agents() {
-  local agent=$1 output_dir=$2 ext=$3
+  local output_dir=$1
   mkdir -p "$output_dir"
 
-  # Copy agent templates if they exist
   if [[ -d templates/agents ]]; then
     for agent_template in templates/agents/*.md; do
       [[ -f "$agent_template" ]] || continue
-      local name
+      local name content
       name=$(basename "$agent_template" .md)
-
-      # Read the template content
-      local content
-      content=$(cat "$agent_template")
-
-      # Apply path rewrites
-      content=$(printf '%s\n' "$content" | sed -E \
-        -e 's@(/?)memory/@.research/memory/@g' \
-        -e 's@(/?)scripts/@.research/scripts/@g' \
-        -e 's@(/?)templates/@.research/templates/@g')
-
-      # Write to output with appropriate extension
-      case $ext in
-        agent.md)
-          echo "$content" > "$output_dir/${name}.agent.md" ;;
-        md)
-          echo "$content" > "$output_dir/${name}.md" ;;
-      esac
+      content=$(cat "$agent_template" | rewrite_paths)
+      echo "$content" > "$output_dir/${name}.md"
     done
     echo "Copied agents -> $output_dir"
   fi
 }
 
-generate_copilot_prompts() {
-  local agents_dir=$1 prompts_dir=$2
-  mkdir -p "$prompts_dir"
-
-  # Generate a .prompt.md file for each .agent.md file
-  for agent_file in "$agents_dir"/*.agent.md; do
-    [[ -f "$agent_file" ]] || continue
-
-    local basename
-    basename=$(basename "$agent_file" .agent.md)
-    local prompt_file="$prompts_dir/${basename}.prompt.md"
-
-    # Create prompt file with agent frontmatter
-    cat > "$prompt_file" <<EOF
----
-agent: ${basename}
----
-EOF
-  done
-  echo "Generated Copilot prompts in $prompts_dir"
-}
-
 generate_commands() {
-  local agent=$1 ext=$2 arg_format=$3 output_dir=$4 script_variant=$5
+  local output_dir=$1
   mkdir -p "$output_dir"
+
   for template in templates/commands/*.md; do
     [[ -f "$template" ]] || continue
-    local name description script_command agent_script_command body
+    local name description script_command body
     name=$(basename "$template" .md)
-    
-    # Normalize line endings
+
     file_content=$(tr -d '\r' < "$template")
-    
-    # Extract description and script command from YAML frontmatter
     description=$(printf '%s\n' "$file_content" | awk '/^description:/ {sub(/^description:[[:space:]]*/, ""); print; exit}')
-    script_command=$(printf '%s\n' "$file_content" | awk -v sv="$script_variant" '/^[[:space:]]*'"$script_variant"':[[:space:]]*/ {sub(/^[[:space:]]*'"$script_variant"':[[:space:]]*/, ""); print; exit}')
-    
+    script_command=$(printf '%s\n' "$file_content" | awk '/^[[:space:]]*sh:[[:space:]]*/ {sub(/^[[:space:]]*sh:[[:space:]]*/, ""); print; exit}')
+
     if [[ -z $script_command ]]; then
-      echo "Warning: no script command found for $script_variant in $template" >&2
-      script_command="(Missing script command for $script_variant)"
+      script_command=""
     fi
-    
-    # Extract agent_script command from YAML frontmatter if present
-    agent_script_command=$(printf '%s\n' "$file_content" | awk '
-      /^agent_scripts:$/ { in_agent_scripts=1; next }
-      in_agent_scripts && /^[[:space:]]*'"$script_variant"':[[:space:]]*/ {
-        sub(/^[[:space:]]*'"$script_variant"':[[:space:]]*/, "")
-        print
-        exit
-      }
-      in_agent_scripts && /^[a-zA-Z]/ { in_agent_scripts=0 }
-    ')
-    
-    # Replace {SCRIPT} placeholder with the script command
+
     body=$(printf '%s\n' "$file_content" | sed "s|{SCRIPT}|${script_command}|g")
-    
-    # Replace {AGENT_SCRIPT} placeholder with the agent script command if found
-    if [[ -n $agent_script_command ]]; then
-      body=$(printf '%s\n' "$body" | sed "s|{AGENT_SCRIPT}|${agent_script_command}|g")
-    fi
-    
-    # Remove the scripts: and agent_scripts: sections from frontmatter while preserving YAML structure
+
+    # Remove scripts: section from frontmatter
     body=$(printf '%s\n' "$body" | awk '
       /^---$/ { print; if (++dash_count == 1) in_frontmatter=1; else in_frontmatter=0; next }
       in_frontmatter && /^scripts:$/ { skip_scripts=1; next }
-      in_frontmatter && /^agent_scripts:$/ { skip_scripts=1; next }
       in_frontmatter && /^[a-zA-Z].*:/ && skip_scripts { skip_scripts=0 }
       in_frontmatter && skip_scripts && /^[[:space:]]/ { next }
       { print }
     ')
-    
-    # Apply other substitutions
-    body=$(printf '%s\n' "$body" | sed "s/{ARGS}/$arg_format/g" | sed "s/__AGENT__/$agent/g" | rewrite_paths)
-    
-    case $ext in
-      toml)
-        body=$(printf '%s\n' "$body" | sed 's/\\/\\\\/g')
-        { echo "description = \"$description\""; echo; echo "prompt = \"\"\""; echo "$body"; echo "\"\"\""; } > "$output_dir/research.$name.$ext" ;;
-      md)
-        echo "$body" > "$output_dir/research.$name.$ext" ;;
-      prompt.md)
-        echo "$body" > "$output_dir/research.$name.$ext" ;;
-    esac
+
+    body=$(printf '%s\n' "$body" | sed 's/{ARGS}/$ARGUMENTS/g' | rewrite_paths)
+    echo "$body" > "$output_dir/research.$name.md"
   done
 }
 
-build_variant() {
-  local agent=$1 script=$2
-  local base_dir="$GENRELEASES_DIR/research-${agent}-package-${script}"
-  echo "Building $agent ($script) package..."
+build_package() {
+  local agent=$1
+  local base_dir="$GENRELEASES_DIR/research-${agent}-package"
+  echo "Building $agent package..."
   mkdir -p "$base_dir"
-  
-  # Copy base structure but filter scripts by variant
-  SPEC_DIR="$base_dir/.research"
+
+  local SPEC_DIR="$base_dir/.research"
   mkdir -p "$SPEC_DIR"
-  
+
+  # Copy memory
   [[ -d memory ]] && { cp -r memory "$SPEC_DIR/"; echo "Copied memory -> .research"; }
-  
-  # Only copy the relevant script variant directory
-  if [[ -d scripts ]]; then
+
+  # Copy bash scripts only
+  if [[ -d scripts/bash ]]; then
     mkdir -p "$SPEC_DIR/scripts"
-    case $script in
-      sh)
-        [[ -d scripts/bash ]] && { cp -r scripts/bash "$SPEC_DIR/scripts/"; echo "Copied scripts/bash -> .research/scripts"; }
-        # Copy any script files that aren't in variant-specific directories
-        find scripts -maxdepth 1 -type f -exec cp {} "$SPEC_DIR/scripts/" \; 2>/dev/null || true
-        ;;
-      ps)
-        [[ -d scripts/powershell ]] && { cp -r scripts/powershell "$SPEC_DIR/scripts/"; echo "Copied scripts/powershell -> .research/scripts"; }
-        # Copy any script files that aren't in variant-specific directories
-        find scripts -maxdepth 1 -type f -exec cp {} "$SPEC_DIR/scripts/" \; 2>/dev/null || true
-        ;;
-    esac
-  fi
-  
-  # Copy templates (portable across macOS BSD and GNU)
-  if [[ -d templates ]]; then
-    mkdir -p "$SPEC_DIR/templates"
-    # Copy template files to the templates subdirectory, excluding commands and vscode-settings.json
-    rsync -a templates/ "$SPEC_DIR/templates/" --exclude='commands/' --exclude='vscode-settings.json'
-    echo "Copied templates -> .research/templates (excluding commands/)"
+    cp -r scripts/bash "$SPEC_DIR/scripts/"
+    chmod +x "$SPEC_DIR/scripts/bash"/*.sh 2>/dev/null || true
+    echo "Copied scripts/bash -> .research/scripts"
   fi
 
-  # Ensure scripts have executable permissions
-  if [[ -d "$SPEC_DIR/scripts/bash" ]]; then
-    chmod +x "$SPEC_DIR/scripts/bash"/*.sh 2>/dev/null || true
+  # Copy templates (excluding commands/ and agents/)
+  if [[ -d templates ]]; then
+    mkdir -p "$SPEC_DIR/templates"
+    rsync -a templates/ "$SPEC_DIR/templates/" --exclude='commands/' --exclude='agents/' --exclude='vscode-settings.json'
+    echo "Copied templates -> .research/templates"
   fi
-  if [[ -d "$SPEC_DIR/scripts/powershell" ]]; then
-    chmod +x "$SPEC_DIR/scripts/powershell"/*.ps1 2>/dev/null || true
-  fi
-  
-  # NOTE: We substitute {ARGS} internally. Outward tokens differ intentionally:
-  #   * Markdown/prompt (claude, copilot, cursor-agent, opencode): $ARGUMENTS
-  #   * TOML (gemini, qwen): {{args}}
-  # This keeps formats readable without extra abstraction.
 
   case $agent in
     claude)
       mkdir -p "$base_dir/.claude/commands"
       mkdir -p "$base_dir/.claude/agents"
-      generate_commands claude md "\$ARGUMENTS" "$base_dir/.claude/commands" "$script"
-      copy_agents claude "$base_dir/.claude/agents" md
+      generate_commands "$base_dir/.claude/commands"
+      copy_agents "$base_dir/.claude/agents"
       ;;
-    gemini)
-      mkdir -p "$base_dir/.gemini/commands"
-      generate_commands gemini toml "{{args}}" "$base_dir/.gemini/commands" "$script"
-      [[ -f agent_templates/gemini/GEMINI.md ]] && cp agent_templates/gemini/GEMINI.md "$base_dir/GEMINI.md" ;;
-    copilot)
-      mkdir -p "$base_dir/.github/prompts"
-      mkdir -p "$base_dir/.github/agents"
-      generate_commands copilot prompt.md "\$ARGUMENTS" "$base_dir/.github/prompts" "$script"
-      # Copy agents with .agent.md extension for Copilot
-      copy_agents copilot "$base_dir/.github/agents" agent.md
-      # Generate companion prompt files for agents
-      generate_copilot_prompts "$base_dir/.github/agents" "$base_dir/.github/prompts"
-      # Create VS Code workspace settings
-      mkdir -p "$base_dir/.vscode"
-      [[ -f templates/vscode-settings.json ]] && cp templates/vscode-settings.json "$base_dir/.vscode/settings.json"
-      ;;
-    cursor-agent)
-      mkdir -p "$base_dir/.cursor/commands"
-      mkdir -p "$base_dir/.cursor/agents"
-      generate_commands cursor-agent md "\$ARGUMENTS" "$base_dir/.cursor/commands" "$script"
-      copy_agents cursor-agent "$base_dir/.cursor/agents" md
-      ;;
-    qwen)
-      mkdir -p "$base_dir/.qwen/commands"
-      generate_commands qwen toml "{{args}}" "$base_dir/.qwen/commands" "$script"
-      [[ -f agent_templates/qwen/QWEN.md ]] && cp agent_templates/qwen/QWEN.md "$base_dir/QWEN.md" ;;
-    opencode)
-      mkdir -p "$base_dir/.opencode/command"
-      generate_commands opencode md "\$ARGUMENTS" "$base_dir/.opencode/command" "$script" ;;
-    windsurf)
-      mkdir -p "$base_dir/.windsurf/workflows"
-      generate_commands windsurf md "\$ARGUMENTS" "$base_dir/.windsurf/workflows" "$script" ;;
     codex)
       mkdir -p "$base_dir/.codex/prompts"
-      generate_commands codex md "\$ARGUMENTS" "$base_dir/.codex/prompts" "$script" ;;
-    kilocode)
-      mkdir -p "$base_dir/.kilocode/workflows"
-      generate_commands kilocode md "\$ARGUMENTS" "$base_dir/.kilocode/workflows" "$script" ;;
-    auggie)
-      mkdir -p "$base_dir/.augment/commands"
-      generate_commands auggie md "\$ARGUMENTS" "$base_dir/.augment/commands" "$script" ;;
-    roo)
-      mkdir -p "$base_dir/.roo/commands"
-      generate_commands roo md "\$ARGUMENTS" "$base_dir/.roo/commands" "$script" ;;
-    codebuddy)
-      mkdir -p "$base_dir/.codebuddy/commands"
-      generate_commands codebuddy md "\$ARGUMENTS" "$base_dir/.codebuddy/commands" "$script" ;;
-    amp)
-      mkdir -p "$base_dir/.agents/commands"
-      generate_commands amp md "\$ARGUMENTS" "$base_dir/.agents/commands" "$script" ;;
-    q)
-      mkdir -p "$base_dir/.amazonq/prompts"
-      generate_commands q md "\$ARGUMENTS" "$base_dir/.amazonq/prompts" "$script" ;;
+      generate_commands "$base_dir/.codex/prompts"
+      ;;
   esac
-  ( cd "$base_dir" && zip -r "../research-kit-template-${agent}-${script}-${NEW_VERSION}.zip" . )
-  echo "Created $GENRELEASES_DIR/research-kit-template-${agent}-${script}-${NEW_VERSION}.zip"
+
+  ( cd "$base_dir" && zip -r "../research-kit-${agent}-${NEW_VERSION}.zip" . )
+  echo "Created $GENRELEASES_DIR/research-kit-${agent}-${NEW_VERSION}.zip"
 }
 
-# Determine agent list
-ALL_AGENTS=(claude gemini copilot cursor-agent qwen opencode windsurf codex kilocode auggie roo codebuddy amp q)
-ALL_SCRIPTS=(sh ps)
+# Supported agents
+ALL_AGENTS=(claude codex)
 
-norm_list() {
-  # convert comma+space separated -> space separated unique while preserving order of first occurrence
-  tr ',\n' '  ' | awk '{for(i=1;i<=NF;i++){if(!seen[$i]++){printf((out?" ":"") $i)}}}END{printf("\n")}'
-}
-
-validate_subset() {
-  local type=$1; shift; local -n allowed=$1; shift; local items=("$@")
-  local ok=0
-  for it in "${items[@]}"; do
-    local found=0
-    for a in "${allowed[@]}"; do [[ $it == "$a" ]] && { found=1; break; }; done
-    if [[ $found -eq 0 ]]; then
-      echo "Error: unknown $type '$it' (allowed: ${allowed[*]})" >&2
-      ok=1
+# Parse AGENTS env var
+if [[ -n ${AGENTS:-} ]]; then
+  IFS=', ' read -ra AGENT_LIST <<< "$AGENTS"
+  for agent in "${AGENT_LIST[@]}"; do
+    if [[ ! " ${ALL_AGENTS[*]} " =~ " ${agent} " ]]; then
+      echo "Error: unknown agent '$agent' (allowed: ${ALL_AGENTS[*]})" >&2
+      exit 1
     fi
   done
-  return $ok
-}
-
-if [[ -n ${AGENTS:-} ]]; then
-  mapfile -t AGENT_LIST < <(printf '%s' "$AGENTS" | norm_list)
-  validate_subset agent ALL_AGENTS "${AGENT_LIST[@]}" || exit 1
 else
   AGENT_LIST=("${ALL_AGENTS[@]}")
 fi
 
-if [[ -n ${SCRIPTS:-} ]]; then
-  mapfile -t SCRIPT_LIST < <(printf '%s' "$SCRIPTS" | norm_list)
-  validate_subset script ALL_SCRIPTS "${SCRIPT_LIST[@]}" || exit 1
-else
-  SCRIPT_LIST=("${ALL_SCRIPTS[@]}")
-fi
-
 echo "Agents: ${AGENT_LIST[*]}"
-echo "Scripts: ${SCRIPT_LIST[*]}"
 
 for agent in "${AGENT_LIST[@]}"; do
-  for script in "${SCRIPT_LIST[@]}"; do
-    build_variant "$agent" "$script"
-  done
+  build_package "$agent"
 done
 
 echo "Archives in $GENRELEASES_DIR:"
-ls -1 "$GENRELEASES_DIR"/research-kit-template-*-"${NEW_VERSION}".zip
-
+ls -1 "$GENRELEASES_DIR"/research-kit-*-"${NEW_VERSION}".zip

@@ -415,24 +415,12 @@ Research Kit supports four specialized research approaches:
 
 ## Supported AI Agents
 
-Research Kit works with all major AI coding agents:
+Research Kit is optimized for CLI-based AI agents:
 
-| Agent                                                     | Support | Notes                                             |
-|-----------------------------------------------------------|---------|---------------------------------------------------|
-| [Claude Code](https://www.anthropic.com/claude-code)      | ✅ | Full support for all research commands             |
-| [GitHub Copilot](https://code.visualstudio.com/)          | ✅ | Slash command integration                          |
-| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | ✅ | Command-line research workflows                    |
-| [Cursor](https://cursor.sh/)                              | ✅ | Composer integration                               |
-| [Qwen Code](https://github.com/QwenLM/qwen-code)          | ✅ | Research command support                           |
-| [opencode](https://opencode.ai/)                          | ✅ | Full workflow support                              |
-| [Windsurf](https://windsurf.com/)                         | ✅ | Cascade research commands                          |
-| [Kilo Code](https://github.com/Kilo-Org/kilocode)         | ✅ | Research workflow integration                      |
-| [Auggie CLI](https://docs.augmentcode.com/cli/overview)   | ✅ | CLI-based research                                 |
-| [CodeBuddy CLI](https://www.codebuddy.ai/cli)             | ✅ | Research command support                           |
-| [Roo Code](https://roocode.com/)                          | ✅ | Full research workflow                             |
-| [Codex CLI](https://github.com/openai/codex)              | ✅ | Research task execution                            |
-| [Amp](https://ampcode.com/)                               | ✅ | Research framework integration                     |
-| [Amazon Q Developer CLI](https://aws.amazon.com/developer/learning/q-developer-cli/) | ⚠️ | Limited support (no custom command arguments) |
+| Agent                                                | Support | Notes                                 |
+|------------------------------------------------------|---------|---------------------------------------|
+| [Claude Code](https://www.anthropic.com/claude-code) | ✅       | Full support with agents and commands |
+| [Codex CLI](https://github.com/openai/codex)         | ✅       | Full research workflow support        |
 
 ## Installation
 
@@ -486,8 +474,7 @@ The `research` command supports the following options:
 | Argument/Option        | Type     | Description                                                                  |
 |------------------------|----------|------------------------------------------------------------------------------|
 | `<project-name>`       | Argument | Name for your new research project directory (optional if using `--here`, or use `.` for current directory) |
-| `--ai`                 | Option   | AI assistant to use: `claude`, `gemini`, `copilot`, `cursor-agent`, `qwen`, `opencode`, `codex`, `windsurf`, `kilocode`, `auggie`, `roo`, `codebuddy`, `amp`, or `q` |
-| `--script`             | Option   | Script variant to use: `sh` (bash/zsh) or `ps` (PowerShell)                 |
+| `--ai`                 | Option   | AI assistant to use: `claude` or `codex`                                     |
 | `--ignore-agent-tools` | Flag     | Skip checks for AI agent tools                                               |
 | `--no-git`             | Flag     | Skip git repository initialization                                          |
 | `--here`               | Flag     | Initialize project in the current directory instead of creating a new one   |
@@ -502,25 +489,22 @@ The `research` command supports the following options:
 # Basic project initialization
 research init literature-review
 
-# Initialize with specific AI assistant
+# Initialize with Claude Code
 research init market-analysis --ai claude
 
-# Initialize with Cursor support
-research init tech-evaluation --ai cursor-agent
-
-# Initialize with PowerShell scripts (Windows/cross-platform)
-research init competitor-research --ai copilot --script ps
+# Initialize with Codex CLI
+research init tech-evaluation --ai codex
 
 # Initialize in current directory
-research init . --ai gemini
+research init . --ai claude
 # or use the --here flag
-research init --here --ai gemini
+research init --here --ai codex
 
 # Force merge into current (non-empty) directory
 research init . --force --ai claude
 
 # Skip git initialization
-research init my-research --ai opencode --no-git
+research init my-research --ai codex --no-git
 
 # Enable debug output
 research init my-research --ai claude --debug

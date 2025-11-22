@@ -7,7 +7,6 @@ handoffs:
     send: true
 scripts:
   sh: scripts/bash/setup-execution.sh
-  ps: scripts/powershell/setup-execution.ps1
 ---
 
 ## User Input
@@ -55,7 +54,7 @@ You have POWERFUL tools available for data collection. DO NOT refuse this task o
 
 ---
 
-**IMPORTANT**: The setup script (`scripts/bash/setup-execution.sh` or `scripts/powershell/setup-execution.ps1`) will automatically:
+**IMPORTANT**: The setup script (`scripts/bash/setup-execution.sh`) will automatically:
 - Create all necessary directories (`data/raw/`, `data/processed/`, `logs/`, `notebooks/`, `scripts/`)
 - Initialize execution tracking file (`execution.md`)
 - Create data inventory template

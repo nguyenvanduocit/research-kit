@@ -7,7 +7,6 @@ handoffs:
     send: true
 scripts:
   sh: scripts/bash/setup-analysis.sh
-  ps: scripts/powershell/setup-analysis.ps1
 ---
 
 ## User Input
@@ -20,7 +19,7 @@ $ARGUMENTS
 
 This command guides the systematic analysis of collected data to generate insights and findings. Run this **after** `/research.execute`.
 
-**IMPORTANT**: The setup script (`scripts/bash/setup-analysis.sh` or `scripts/powershell/setup-analysis.ps1`) will automatically:
+**IMPORTANT**: The setup script (`scripts/bash/setup-analysis.sh`) will automatically:
 - Create all necessary directories (`figures/`, `tables/`, `data/results/`, `notebooks/`)
 - Set up analysis templates and notebooks
 - Initialize tracking files

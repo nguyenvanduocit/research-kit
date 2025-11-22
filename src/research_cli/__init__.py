@@ -65,41 +65,12 @@ def _github_auth_headers(cli_token: str | None = None) -> dict:
     return {"Authorization": f"Bearer {token}"} if token else {}
 
 # Agent configuration with name, folder, install URL, and CLI tool requirement
+# Only claude and codex are supported
 AGENT_CONFIG = {
-    "copilot": {
-        "name": "GitHub Copilot",
-        "folder": ".github/",
-        "install_url": None,  # IDE-based, no CLI check needed
-        "requires_cli": False,
-    },
     "claude": {
         "name": "Claude Code",
         "folder": ".claude/",
         "install_url": "https://docs.anthropic.com/en/docs/claude-code/setup",
-        "requires_cli": True,
-    },
-    "gemini": {
-        "name": "Gemini CLI",
-        "folder": ".gemini/",
-        "install_url": "https://github.com/google-gemini/gemini-cli",
-        "requires_cli": True,
-    },
-    "cursor-agent": {
-        "name": "Cursor",
-        "folder": ".cursor/",
-        "install_url": None,  # IDE-based
-        "requires_cli": False,
-    },
-    "qwen": {
-        "name": "Qwen Code",
-        "folder": ".qwen/",
-        "install_url": "https://github.com/QwenLM/qwen-code",
-        "requires_cli": True,
-    },
-    "opencode": {
-        "name": "opencode",
-        "folder": ".opencode/",
-        "install_url": "https://opencode.ai",
         "requires_cli": True,
     },
     "codex": {
@@ -108,51 +79,10 @@ AGENT_CONFIG = {
         "install_url": "https://github.com/openai/codex",
         "requires_cli": True,
     },
-    "windsurf": {
-        "name": "Windsurf",
-        "folder": ".windsurf/",
-        "install_url": None,  # IDE-based
-        "requires_cli": False,
-    },
-    "kilocode": {
-        "name": "Kilo Code",
-        "folder": ".kilocode/",
-        "install_url": None,  # IDE-based
-        "requires_cli": False,
-    },
-    "auggie": {
-        "name": "Auggie CLI",
-        "folder": ".augment/",
-        "install_url": "https://docs.augmentcode.com/cli/setup-auggie/install-auggie-cli",
-        "requires_cli": True,
-    },
-    "codebuddy": {
-        "name": "CodeBuddy",
-        "folder": ".codebuddy/",
-        "install_url": "https://www.codebuddy.ai/cli",
-        "requires_cli": True,
-    },
-    "roo": {
-        "name": "Roo Code",
-        "folder": ".roo/",
-        "install_url": None,  # IDE-based
-        "requires_cli": False,
-    },
-    "q": {
-        "name": "Amazon Q Developer CLI",
-        "folder": ".amazonq/",
-        "install_url": "https://aws.amazon.com/developer/learning/q-developer-cli/",
-        "requires_cli": True,
-    },
-    "amp": {
-        "name": "Amp",
-        "folder": ".agents/",
-        "install_url": "https://ampcode.com/manual#install",
-        "requires_cli": True,
-    },
 }
 
-SCRIPT_TYPE_CHOICES = {"sh": "POSIX Shell (bash/zsh)", "ps": "PowerShell"}
+# Only bash scripts are supported
+SCRIPT_TYPE_CHOICES = {"sh": "POSIX Shell (bash/zsh)"}
 
 CLAUDE_LOCAL_PATH = Path.home() / ".claude" / "local" / "claude"
 
@@ -905,8 +835,8 @@ def ensure_executable_scripts(project_path: Path, tracker: StepTracker | None = 
 @app.command()
 def init(
     project_name: str = typer.Argument(None, help="Name for your new project directory (optional if using --here, or use '.' for current directory)"),
-    ai_assistant: str = typer.Option(None, "--ai", help="AI assistant to use: claude, gemini, copilot, cursor-agent, qwen, opencode, codex, windsurf, kilocode, auggie, codebuddy, amp, or q"),
-    script_type: str = typer.Option(None, "--script", help="Script type to use: sh or ps"),
+    ai_assistant: str = typer.Option(None, "--ai", help="AI assistant to use: claude or codex"),
+    script_type: str = typer.Option(None, "--script", hidden=True, help="Script type (deprecated, only sh supported)"),
     ignore_agent_tools: bool = typer.Option(False, "--ignore-agent-tools", help="Skip checks for AI agent tools like Claude Code"),
     no_git: bool = typer.Option(False, "--no-git", help="Skip git repository initialization"),
     here: bool = typer.Option(False, "--here", help="Initialize project in the current directory instead of creating a new one"),
@@ -917,25 +847,23 @@ def init(
 ):
     """
     Initialize a new Research Kit project from the latest template.
-    
+
     This command will:
     1. Check that required tools are installed (git is optional)
-    2. Let you choose your AI assistant
+    2. Let you choose your AI assistant (claude or codex)
     3. Download the appropriate template from GitHub
     4. Extract the template to a new project directory or current directory
     5. Initialize a fresh git repository (if not --no-git and no existing repo)
-    6. Optionally set up AI assistant commands
-    
+
     Examples:
         research init my-project
         research init my-project --ai claude
-        research init my-project --ai copilot --no-git
+        research init my-project --ai codex --no-git
         research init --ignore-agent-tools my-project
         research init . --ai claude         # Initialize in current directory
         research init .                     # Initialize in current directory (interactive AI selection)
         research init --here --ai claude    # Alternative syntax for current directory
         research init --here --ai codex
-        research init --here --ai codebuddy
         research init --here
         research init --here --force  # Skip confirmation when current directory not empty
     """
@@ -1035,18 +963,11 @@ def init(
                 console.print(error_panel)
                 raise typer.Exit(1)
 
-    if script_type:
-        if script_type not in SCRIPT_TYPE_CHOICES:
-            console.print(f"[red]Error:[/red] Invalid script type '{script_type}'. Choose from: {', '.join(SCRIPT_TYPE_CHOICES.keys())}")
-            raise typer.Exit(1)
-        selected_script = script_type
-    else:
-        default_script = "ps" if os.name == "nt" else "sh"
+    # Only sh scripts are supported - skip selection
+    selected_script = "sh"
+    if script_type and script_type != "sh":
+        console.print(f"[yellow]Warning:[/yellow] Only 'sh' script type is supported. Using 'sh'.")
 
-        if sys.stdin.isatty():
-            selected_script = select_with_arrows(SCRIPT_TYPE_CHOICES, "Choose script type (or press Enter)", default_script)
-        else:
-            selected_script = default_script
 
     console.print(f"[cyan]Selected AI assistant:[/cyan] {selected_ai}")
     console.print(f"[cyan]Selected script type:[/cyan] {selected_script}")

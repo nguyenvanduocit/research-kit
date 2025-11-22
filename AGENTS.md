@@ -36,8 +36,7 @@ Research Kit now includes **custom agents** that provide autonomous, multi-step 
 | Assistant | Agents Location | Extension |
 |-----------|-----------------|-----------|
 | Claude Code | `.claude/agents/` | `.md` |
-| GitHub Copilot | `.github/agents/` | `.agent.md` |
-| Cursor | `.cursor/agents/` | `.md` |
+| Codex CLI | `.codex/prompts/` | `.md` |
 
 ### Using Agents
 
@@ -48,11 +47,11 @@ User: "I want to research AI productivity impacts"
 → Agent guides through full SRD workflow
 ```
 
-**GitHub Copilot (VS Code):**
+**Codex CLI:**
 ```
-User: Selects "research-assistant" from agent picker
-→ Agent activates with isolated context
-→ Handoff buttons appear for workflow transitions
+User: codex "I want to research AI productivity impacts"
+→ Codex uses prompts from .codex/prompts/
+→ Guides through research workflow
 ```
 
 ---
@@ -99,7 +98,6 @@ handoffs:
     prompt: Alternative path prompt
 scripts:
   sh: scripts/bash/script-name.sh
-  ps: scripts/powershell/script-name.ps1
 ---
 ```
 
@@ -143,22 +141,12 @@ Research CLI supports multiple AI agents by generating agent-specific command fi
 
 ### Current Supported Agents
 
+Research Kit currently supports two AI agents:
+
 | Agent | Directory | Format | CLI Tool | Description |
 |-------|-----------|---------|----------|-------------|
-| **Claude Code** | `.claude/commands/` | Markdown | `claude` | Anthropic's Claude Code CLI |
-| **Gemini CLI** | `.gemini/commands/` | TOML | `gemini` | Google's Gemini CLI |
-| **GitHub Copilot** | `.github/prompts/` | Markdown | N/A (IDE-based) | GitHub Copilot in VS Code |
-| **Cursor** | `.cursor/commands/` | Markdown | `cursor-agent` | Cursor CLI |
-| **Qwen Code** | `.qwen/commands/` | TOML | `qwen` | Alibaba's Qwen Code CLI |
-| **opencode** | `.opencode/command/` | Markdown | `opencode` | opencode CLI |
-| **Codex CLI** | `.codex/commands/` | Markdown | `codex` | Codex CLI |
-| **Windsurf** | `.windsurf/workflows/` | Markdown | N/A (IDE-based) | Windsurf IDE workflows |
-| **Kilo Code** | `.kilocode/rules/` | Markdown | N/A (IDE-based) | Kilo Code IDE |
-| **Auggie CLI** | `.augment/rules/` | Markdown | `auggie` | Auggie CLI |
-| **Roo Code** | `.roo/rules/` | Markdown | N/A (IDE-based) | Roo Code IDE |
-| **CodeBuddy CLI** | `.codebuddy/commands/` | Markdown | `codebuddy` | CodeBuddy CLI |
-| **Amazon Q Developer CLI** | `.amazonq/prompts/` | Markdown | `q` | Amazon Q Developer CLI |
-| **Amp** | `.agents/commands/` | Markdown | `amp` | Amp CLI |
+| **Claude Code** | `.claude/commands/`, `.claude/agents/` | Markdown | `claude` | Anthropic's Claude Code CLI |
+| **Codex CLI** | `.codex/prompts/` | Markdown | `codex` | OpenAI's Codex CLI |
 
 ### Step-by-Step Integration Guide
 
@@ -420,26 +408,13 @@ echo "✅ Done"
 Require a command-line tool to be installed:
 
 - **Claude Code**: `claude` CLI
-- **Gemini CLI**: `gemini` CLI  
-- **Cursor**: `cursor-agent` CLI
-- **Qwen Code**: `qwen` CLI
-- **opencode**: `opencode` CLI
-- **Amazon Q Developer CLI**: `q` CLI
-- **CodeBuddy CLI**: `codebuddy` CLI
-- **Amp**: `amp` CLI
-
-### IDE-Based Agents
-
-Work within integrated development environments:
-
-- **GitHub Copilot**: Built into VS Code/compatible editors
-- **Windsurf**: Built into Windsurf IDE
+- **Codex CLI**: `codex` CLI
 
 ## Command File Formats
 
 ### Markdown Format
 
-Used by: Claude, Cursor, opencode, Windsurf, Amazon Q Developer, Amp
+Used by: Claude Code, Codex CLI
 
 ```markdown
 ---
@@ -450,35 +425,15 @@ Research command content with {SCRIPT} and $ARGUMENTS placeholders.
 Example: /research.define, /research.methodology, /research.analyze
 ```
 
-### TOML Format
-
-Used by: Gemini, Qwen
-
-```toml
-description = "Command description"
-
-prompt = """
-Research command content with {SCRIPT} and {{args}} placeholders.
-Example: /research.define, /research.methodology, /research.analyze
-"""
-```
-
 ## Directory Conventions
 
-- **CLI agents**: Usually `.<agent-name>/commands/`
-- **IDE agents**: Follow IDE-specific patterns:
-  - Copilot: `.github/prompts/`
-  - Cursor: `.cursor/commands/`
-  - Windsurf: `.windsurf/workflows/`
+- **Claude Code**: `.claude/commands/` for commands, `.claude/agents/` for agents
+- **Codex CLI**: `.codex/prompts/` for prompts
 
 ## Argument Patterns
 
-Different agents use different argument placeholders:
-
 - **Markdown/prompt-based**: `$ARGUMENTS`
-- **TOML-based**: `{{args}}`
 - **Script placeholders**: `{SCRIPT}` (replaced with actual script path)
-- **Agent placeholders**: `__AGENT__` (replaced with agent name)
 
 ## Testing New Agent Integration
 

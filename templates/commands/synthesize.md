@@ -7,7 +7,6 @@ handoffs:
     send: true
 scripts:
   sh: scripts/bash/setup-synthesis.sh
-  ps: scripts/powershell/setup-synthesis.ps1
 ---
 
 ## User Input
@@ -20,7 +19,7 @@ $ARGUMENTS
 
 This command guides the synthesis of analysis findings to draw conclusions and answer research questions. Run this **after** `/research.analyze`.
 
-**IMPORTANT**: The setup script (`scripts/bash/setup-synthesis.sh` or `scripts/powershell/setup-synthesis.ps1`) will automatically:
+**IMPORTANT**: The setup script (`scripts/bash/setup-synthesis.sh`) will automatically:
 - Create synthesis directories (`models/`, `figures/synthesis/`, `briefs/`)
 - Initialize synthesis tracking file (`synthesis.md`)
 - Set up synthesis templates and checklists

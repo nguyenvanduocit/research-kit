@@ -10,7 +10,6 @@ handoffs:
     send: true
 scripts:
   sh: scripts/bash/setup-methodology.sh
-  ps: scripts/powershell/setup-methodology.ps1
 ---
 
 ## User Input
@@ -23,7 +22,7 @@ $ARGUMENTS
 
 This command generates a comprehensive research methodology based on the research definition. Run this **after** `/research.define` (and optionally `/research.refine`).
 
-**IMPORTANT**: The setup script (`scripts/bash/setup-methodology.sh` or `scripts/powershell/setup-methodology.ps1`) will automatically:
+**IMPORTANT**: The setup script (`scripts/bash/setup-methodology.sh`) will automatically:
 - Create methodology directory structure
 - Initialize methodology template (`methodology.md`)
 - Set up supporting document templates (literature review, data sources, ethics)

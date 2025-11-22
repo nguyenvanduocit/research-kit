@@ -10,7 +10,6 @@ handoffs:
     prompt: Create a methodology for this research
 scripts:
   sh: scripts/bash/create-new-research.sh --json "{ARGS}"
-  ps: scripts/powershell/create-new-research.ps1 -Json "{ARGS}"
 ---
 
 ## User Input
@@ -57,8 +56,7 @@ Given that research topic description, do this:
 
    d. Run the script `{SCRIPT}` with the calculated number and short-name:
       - Pass `--number N+1` and `--short-name "your-short-name"` along with the research description
-      - Bash example: `{SCRIPT} --json --number 5 --short-name "ai-healthcare" "Research AI trends in healthcare"`
-      - PowerShell example: `{SCRIPT} -Json -Number 5 -ShortName "ai-healthcare" "Research AI trends in healthcare"`
+      - Example: `{SCRIPT} --json --number 5 --short-name "ai-healthcare" "Research AI trends in healthcare"`
 
    **IMPORTANT**:
    - Check all three sources (remote branches, local branches, research directories) to find the highest number

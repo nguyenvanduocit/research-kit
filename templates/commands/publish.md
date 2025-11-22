@@ -2,7 +2,6 @@
 description: Create publication-ready research outputs
 scripts:
   sh: scripts/bash/setup-publish.sh
-  ps: scripts/powershell/setup-publish.ps1
 ---
 
 ## User Input
@@ -15,7 +14,7 @@ $ARGUMENTS
 
 This command guides the creation of publication-ready research outputs including reports, papers, and presentations. Run this **after** `/research.synthesize`.
 
-**IMPORTANT**: The setup script (`scripts/bash/setup-publish.sh` or `scripts/powershell/setup-publish.ps1`) will automatically:
+**IMPORTANT**: The setup script (`scripts/bash/setup-publish.sh`) will automatically:
 - Create publication directories (`publications/report/`, `publications/paper/`, `publications/presentation/`, `publications/brief/`)
 - Initialize publication templates based on type
 - Copy figures and tables from analysis phase
