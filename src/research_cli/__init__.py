@@ -81,8 +81,6 @@ AGENT_CONFIG = {
     },
 }
 
-# Only bash scripts are supported
-SCRIPT_TYPE_CHOICES = {"sh": "POSIX Shell (bash/zsh)"}
 
 CLAUDE_LOCAL_PATH = Path.home() / ".claude" / "local" / "claude"
 
@@ -836,7 +834,6 @@ def ensure_executable_scripts(project_path: Path, tracker: StepTracker | None = 
 def init(
     project_name: str = typer.Argument(None, help="Name for your new project directory (optional if using --here, or use '.' for current directory)"),
     ai_assistant: str = typer.Option(None, "--ai", help="AI assistant to use: claude or codex"),
-    script_type: str = typer.Option(None, "--script", hidden=True, help="Script type (deprecated, only sh supported)"),
     ignore_agent_tools: bool = typer.Option(False, "--ignore-agent-tools", help="Skip checks for AI agent tools like Claude Code"),
     no_git: bool = typer.Option(False, "--no-git", help="Skip git repository initialization"),
     here: bool = typer.Option(False, "--here", help="Initialize project in the current directory instead of creating a new one"),
@@ -963,14 +960,10 @@ def init(
                 console.print(error_panel)
                 raise typer.Exit(1)
 
-    # Only sh scripts are supported - skip selection
+    # Only sh scripts are supported
     selected_script = "sh"
-    if script_type and script_type != "sh":
-        console.print(f"[yellow]Warning:[/yellow] Only 'sh' script type is supported. Using 'sh'.")
-
 
     console.print(f"[cyan]Selected AI assistant:[/cyan] {selected_ai}")
-    console.print(f"[cyan]Selected script type:[/cyan] {selected_script}")
 
     tracker = StepTracker("Initialize Research Kit Project")
 
@@ -980,8 +973,6 @@ def init(
     tracker.complete("precheck", "ok")
     tracker.add("ai-select", "Select AI assistant")
     tracker.complete("ai-select", f"{selected_ai}")
-    tracker.add("script-select", "Select script type")
-    tracker.complete("script-select", selected_script)
     for key, label in [
         ("fetch", "Fetch latest release"),
         ("download", "Download template"),
