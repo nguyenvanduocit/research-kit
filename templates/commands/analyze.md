@@ -1,5 +1,10 @@
 ---
 description: Analyze collected data and generate insights
+handoffs:
+  - label: Synthesize Findings
+    agent: research.synthesize
+    prompt: Synthesize analysis findings and draw conclusions
+    send: true
 scripts:
   sh: scripts/bash/setup-analysis.sh
   ps: scripts/powershell/setup-analysis.ps1

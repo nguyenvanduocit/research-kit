@@ -1,5 +1,10 @@
 ---
 description: Validate research methodology for feasibility, rigor, and ethics before execution
+handoffs:
+  - label: Generate Tasks
+    agent: research.tasks
+    prompt: Break down methodology into actionable tasks
+    send: true
 ---
 
 ## User Input

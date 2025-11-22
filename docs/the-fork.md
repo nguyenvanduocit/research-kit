@@ -1,6 +1,6 @@
 # The Fork: From Spec Kit to Research Kit
 
-**Last Updated**: 2025-11-12
+**Last Updated**: 2025-11-22
 
 ---
 
@@ -275,7 +275,8 @@ Spec Kit and Research Kit share common infrastructure:
 - **CLI enhancements**: Better validation, UX improvements, new flags
 - **Agent support**: New AI assistants (Gemini, Cursor, Qwen, etc.)
 - **Build process**: Release automation, packaging, distribution
-- **Bug fixes**: Anything that improves reliability
+- **Bug fixes**: Anything that improves reliability (e.g., CDPATH fix)
+- **Agentic features**: Handoffs, custom agents, workflow transitions
 
 #### ❌ DON'T Sync These Changes
 
@@ -330,32 +331,32 @@ Use this translation guide when applying changes:
 | `spec-driven` | `research-driven` | Methodology name |
 | `SDD` | `SRD` | Acronym |
 
-#### 5. Example: Applying a Bug Fix
+#### 5. Example: Applying a Bug Fix (Real Example: CDPATH Fix)
 
-**Scenario**: Spec Kit fixed a branch numbering bug in `create-new-spec.sh`
+**Scenario**: Spec Kit fixed a CDPATH bug that broke script execution when users had `CDPATH` set.
 
 ```bash
-# 1. View the upstream change
-git diff upstream/main HEAD -- scripts/bash/create-new-spec.sh
+# 1. Identified the upstream change in PR #1039
+# Old: SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# New: SCRIPT_DIR="$(CDPATH="" cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# 2. Identify the logic change
-# Old: branches=$(git branch -r | grep -oE '[0-9]{3}-' | sort -u)
-# New: branches=$(git branch -r | grep -oE '[0-9]{3}-[^/]+$' | sort -u)
+# 2. Applied to all 9 bash scripts in Research Kit:
+# - scripts/bash/common.sh
+# - scripts/bash/create-new-research.sh
+# - scripts/bash/setup-methodology.sh
+# - scripts/bash/setup-execution.sh
+# - scripts/bash/setup-analysis.sh
+# - scripts/bash/setup-synthesis.sh
+# - scripts/bash/setup-publish.sh
+# - scripts/bash/check-prerequisites.sh
+# - scripts/bash/update-agent-context.sh
 
-# 3. Apply to our equivalent file with name translation
-vim scripts/bash/create-new-research.sh
-# Replace the corresponding line in our script
+# 3. Test the fix
+.github/workflows/scripts/create-release-packages.sh v1.0.10-test
+# Verify scripts work with CDPATH set
 
-# 4. Apply the same fix to PowerShell variant
-vim scripts/powershell/create-new-research.ps1
-
-# 5. Test the fix
-.github/workflows/scripts/create-release-packages.sh v1.0.0-test
-cp -r .genreleases/srd-claude-package-sh/. ~/test-research-project/
-# Test in the research project
-
-# 6. Commit with reference
-git commit -m "fix: improve branch numbering detection (from spec-kit upstream)"
+# 4. Commit with reference
+git commit -m "fix: CDPATH bug in shell scripts (from spec-kit PR #1039)"
 ```
 
 #### 6. Example: Adding New Agent Support
@@ -387,6 +388,42 @@ uv run research init test-nova --ai nova
 
 # 6. Commit
 git commit -m "feat: add Nova Code agent support (from spec-kit upstream)"
+```
+
+#### 7. Example: Adding Agentic Features (Real Example: Handoffs & Agents)
+
+**Scenario**: Spec Kit added agentic modes with handoffs and custom agents for VS Code/Copilot.
+
+```bash
+# 1. Reviewed spec-kit's changes in v0.0.21-v0.0.22
+# - Handoffs in command frontmatter
+# - Custom agents in .github/agents/
+# - Companion prompt files
+
+# 2. Created research-focused agents (not direct copy):
+# templates/agents/research-assistant.md - SRD workflow orchestrator
+# templates/agents/research-reviewer.md - Quality specialist
+
+# 3. Added handoffs to slash commands:
+# Each command now includes handoffs: metadata pointing to next workflow step
+# Example in templates/commands/define.md:
+# handoffs:
+#   - label: Refine Research Scope
+#     agent: research.refine
+#     prompt: Clarify and refine research requirements
+#     send: true
+
+# 4. Updated release script to deploy agents:
+# - copy_agents() function
+# - generate_copilot_prompts() function
+# - Agent paths: .claude/agents/, .github/agents/, .cursor/agents/
+
+# 5. Test
+AGENTS=claude,copilot SCRIPTS=sh .github/workflows/scripts/create-release-packages.sh v1.0.10-test
+# Verify agents deployed to correct locations
+
+# 6. Commit
+git commit -m "feat: add research agents and handoffs (adapted from spec-kit)"
 ```
 
 ### Testing After Sync
@@ -521,12 +558,16 @@ research-kit/
 │   └── powershell/
 ├── templates/                 # Templates (research-specific, don't sync)
 │   ├── commands/             # Slash command definitions
+│   ├── agents/               # Custom agent templates (NEW)
+│   │   ├── research-assistant.md
+│   │   └── research-reviewer.md
 │   ├── research-definition-template.md
 │   ├── methodology-template.md
 │   └── ...
 ├── docs/                      # Documentation (research-specific, don't sync)
 │   ├── index.md
 │   ├── quickstart.md
+│   ├── upgrade.md            # Upgrade guide (NEW)
 │   ├── the-fork.md           # This file
 │   └── ...
 ├── .github/workflows/         # CI/CD (sync-able with translation)
@@ -571,14 +612,32 @@ Research Kit maintains backward compatibility for projects transitioning from Sp
 - [README.md](../README.md) - Getting started guide
 - [research-driven.md](../research-driven.md) - SRD methodology deep dive
 - [quickstart.md](quickstart.md) - Quick start guide
+- [upgrade.md](upgrade.md) - Upgrade guide for CLI and projects
 - [CONTRIBUTING.md](../CONTRIBUTING.md) - Contribution guidelines
-- [Spec Kit Upstream](https://github.com/anthropics/spec-kit) - Original project
+- [AGENTS.md](../AGENTS.md) - Agent integration and workflow documentation
+- [Spec Kit Upstream](https://github.com/github/spec-kit) - Original project
 
 ---
 
-**This document is maintained by the Research Kit community. Last updated: 2025-11-12**
+**This document is maintained by the Research Kit community. Last updated: 2025-11-22**
 
-### Recent Updates (2025-11-12)
+### Recent Updates (2025-11-22)
+
+**Synced from Spec Kit (v0.0.21-v0.0.22):**
+
+- **CDPATH bug fix**: Fixed shell script vulnerability where `CDPATH` environment variable could break script directory resolution. Applied `CDPATH=""` inline fix to all 9 bash scripts.
+- **Handoffs**: Added workflow transition metadata to slash commands. Copilot users see handoff buttons for workflow transitions; Claude users see suggested next steps.
+- **Custom agents**: Added two research-focused agents:
+  - `research-assistant`: Full SRD workflow orchestrator (auto-delegates when user mentions research)
+  - `research-reviewer`: Quality assurance specialist for validating research rigor
+- **Agent deployment**: Updated release script to deploy agents to correct locations:
+  - Claude: `.claude/agents/*.md`
+  - Copilot: `.github/agents/*.agent.md` with companion `.prompt.md` files
+  - Cursor: `.cursor/agents/*.md`
+- **Version command**: Added `research version` command to CLI
+- **Upgrade documentation**: Created comprehensive `docs/upgrade.md` guide
+
+**Previous Updates (2025-11-12):**
 
 - **Simplified slash command prefix**: Changed from `/researchkit.` to `/research.` for better usability
 - **Repository references**: Updated all documentation to use correct repository URL (`github.com/nguyenvanduocit/research-kit`)

@@ -1,5 +1,13 @@
 ---
 description: Create or update the research definition from a natural language research topic description.
+handoffs:
+  - label: Refine Research Scope
+    agent: research.refine
+    prompt: Clarify and refine research requirements
+    send: true
+  - label: Design Methodology
+    agent: research.methodology
+    prompt: Create a methodology for this research
 scripts:
   sh: scripts/bash/create-new-research.sh --json "{ARGS}"
   ps: scripts/powershell/create-new-research.ps1 -Json "{ARGS}"

@@ -1,5 +1,10 @@
 ---
 description: Interactively refine research scope through structured questions to clarify ambiguous areas before methodology design
+handoffs:
+  - label: Design Methodology
+    agent: research.methodology
+    prompt: Create a methodology for this research
+    send: true
 ---
 
 ## User Input

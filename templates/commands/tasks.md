@@ -1,5 +1,10 @@
 ---
 description: Generate ordered, actionable research tasks from methodology
+handoffs:
+  - label: Execute Research
+    agent: research.execute
+    prompt: Execute the research methodology and collect data
+    send: true
 ---
 
 ## User Input

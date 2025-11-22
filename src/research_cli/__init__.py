@@ -1204,6 +1204,32 @@ def init(
     console.print()
     console.print(enhancements_panel)
 
+def get_version() -> str:
+    """Get the version from pyproject.toml."""
+    try:
+        package_dir = Path(__file__).parent.parent.parent
+        pyproject_path = package_dir / "pyproject.toml"
+
+        if pyproject_path.exists():
+            with open(pyproject_path, "rb") as f:
+                try:
+                    import tomllib
+                except ImportError:
+                    import tomli as tomllib
+                data = tomllib.load(f)
+            return data.get("project", {}).get("version", "unknown")
+    except Exception:
+        pass
+    return "unknown"
+
+
+@app.command()
+def version():
+    """Show the Research CLI version."""
+    ver = get_version()
+    console.print(f"[bold]Research CLI[/bold] version [cyan]{ver}[/cyan]")
+
+
 @app.command()
 def check():
     """Check that all required tools are installed."""

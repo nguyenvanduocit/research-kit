@@ -1,5 +1,13 @@
 ---
 description: Generate research methodology document based on research definition
+handoffs:
+  - label: Validate Methodology
+    agent: research.validate
+    prompt: Validate research methodology for rigor and feasibility
+  - label: Generate Tasks
+    agent: research.tasks
+    prompt: Break down methodology into actionable tasks
+    send: true
 scripts:
   sh: scripts/bash/setup-methodology.sh
   ps: scripts/powershell/setup-methodology.ps1

@@ -10,6 +10,120 @@ The toolkit supports multiple AI research assistants, allowing teams to use thei
 
 ---
 
+## Research Kit Agents
+
+Research Kit now includes **custom agents** that provide autonomous, multi-step research workflows. These agents work alongside slash commands to offer different interaction patterns.
+
+### Agents vs Slash Commands
+
+| Aspect | Agents | Slash Commands |
+|--------|--------|----------------|
+| **Location** | `.claude/agents/`, `.github/agents/` | `.claude/commands/`, `.github/prompts/` |
+| **Context** | Isolated (own conversation) | Shared (main conversation) |
+| **Invocation** | Auto-delegated or explicit | Manual with `/` prefix |
+| **Use Case** | Complex multi-step workflows | Single-step utilities |
+| **State** | Maintains own context | Inline in main thread |
+
+### Available Agents
+
+| Agent | Description | Best For |
+|-------|-------------|----------|
+| **research-assistant** | Full SRD workflow orchestrator | Starting new research, guided workflow |
+| **research-reviewer** | Quality assurance specialist | Validating definitions, checking rigor |
+
+### Agent Locations by AI Assistant
+
+| Assistant | Agents Location | Extension |
+|-----------|-----------------|-----------|
+| Claude Code | `.claude/agents/` | `.md` |
+| GitHub Copilot | `.github/agents/` | `.agent.md` |
+| Cursor | `.cursor/agents/` | `.md` |
+
+### Using Agents
+
+**Claude Code:**
+```
+User: "I want to research AI productivity impacts"
+→ Claude auto-delegates to research-assistant agent
+→ Agent guides through full SRD workflow
+```
+
+**GitHub Copilot (VS Code):**
+```
+User: Selects "research-assistant" from agent picker
+→ Agent activates with isolated context
+→ Handoff buttons appear for workflow transitions
+```
+
+---
+
+## The SRD Workflow with Hand-offs
+
+Research Kit uses an agentic workflow where each command can hand off to the next phase. This creates a natural research progression:
+
+```
+define → refine → methodology → validate → tasks → execute → analyze → synthesize → publish
+        (opt)                   (opt)
+```
+
+### Command Hand-offs
+
+Each research command includes hand-off metadata that defines natural next steps:
+
+| Command | Hand-offs To | Description |
+|---------|--------------|-------------|
+| `/research.define` | refine, methodology | Define research topic and questions |
+| `/research.refine` | methodology | Clarify ambiguous scope (optional) |
+| `/research.methodology` | validate, tasks | Design research methodology |
+| `/research.validate` | tasks | Validate methodology rigor (optional) |
+| `/research.tasks` | execute | Generate actionable task breakdown |
+| `/research.execute` | analyze | Collect data and run research |
+| `/research.analyze` | synthesize | Analyze collected data |
+| `/research.synthesize` | publish | Draw conclusions |
+| `/research.publish` | - | Create publication outputs |
+
+### Hand-off Format
+
+Hand-offs are defined in command frontmatter:
+
+```yaml
+---
+description: Command description
+handoffs:
+  - label: Next Step Label
+    agent: research.next-command
+    prompt: Initial prompt for next phase
+    send: true  # Auto-send to next agent
+  - label: Alternative Step
+    agent: research.alternative
+    prompt: Alternative path prompt
+scripts:
+  sh: scripts/bash/script-name.sh
+  ps: scripts/powershell/script-name.ps1
+---
+```
+
+**Hand-off Fields**:
+- `label`: Button/link text shown to user
+- `agent`: Target command (e.g., `research.methodology`)
+- `prompt`: Initial prompt passed to next agent
+- `send`: If `true`, automatically transitions (default: `false`, shows as option)
+
+### Research Flow Examples
+
+**Minimal Flow** (4 steps):
+```
+/research.define → /research.methodology → /research.execute → /research.publish
+```
+
+**Full Academic Flow** (9 steps):
+```
+/research.define → /research.refine → /research.methodology → /research.validate →
+/research.tasks → /research.execute → /research.analyze → /research.synthesize → /research.publish
+```
+
+---
+
 ## General practices
 
 - Any changes to `__init__.py` for the Research CLI require a version rev in `pyproject.toml` and addition of entries to `CHANGELOG.md`.

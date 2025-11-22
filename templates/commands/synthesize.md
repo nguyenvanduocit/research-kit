@@ -1,5 +1,10 @@
 ---
 description: Synthesize findings and draw conclusions
+handoffs:
+  - label: Create Publication
+    agent: research.publish
+    prompt: Create publication-ready research outputs
+    send: true
 scripts:
   sh: scripts/bash/setup-synthesis.sh
   ps: scripts/powershell/setup-synthesis.ps1

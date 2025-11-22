@@ -112,6 +112,21 @@ Built-in enforcement of research best practices:
 
 Works seamlessly with popular AI coding agents through slash commands and structured prompts.
 
+### Research Agents
+
+In addition to slash commands, Research Kit provides **custom agents** for autonomous multi-step workflows:
+
+| Agent | Purpose | When to Use |
+|-------|---------|-------------|
+| **research-assistant** | Full SRD workflow orchestrator | Starting new research, guided workflow |
+| **research-reviewer** | Quality assurance specialist | Validating research, checking rigor |
+
+**Agents vs Slash Commands:**
+- **Agents** have isolated context and handle complex multi-step workflows autonomously
+- **Slash commands** are lightweight utilities for single-step tasks within your main conversation
+
+Agents are deployed to agent-specific locations (e.g., `.claude/agents/`, `.github/agents/`) and can be auto-invoked based on task context.
+
 ## Quick Start
 
 ### 1. Install Research CLI

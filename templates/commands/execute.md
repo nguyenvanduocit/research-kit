@@ -1,5 +1,10 @@
 ---
 description: Execute research methodology and collect data
+handoffs:
+  - label: Analyze Data
+    agent: research.analyze
+    prompt: Analyze collected data and generate insights
+    send: true
 scripts:
   sh: scripts/bash/setup-execution.sh
   ps: scripts/powershell/setup-execution.ps1

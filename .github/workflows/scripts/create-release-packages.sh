@@ -37,6 +37,61 @@ rewrite_paths() {
     -e 's@(/?)templates/@.research/templates/@g'
 }
 
+copy_agents() {
+  local agent=$1 output_dir=$2 ext=$3
+  mkdir -p "$output_dir"
+
+  # Copy agent templates if they exist
+  if [[ -d templates/agents ]]; then
+    for agent_template in templates/agents/*.md; do
+      [[ -f "$agent_template" ]] || continue
+      local name
+      name=$(basename "$agent_template" .md)
+
+      # Read the template content
+      local content
+      content=$(cat "$agent_template")
+
+      # Apply path rewrites
+      content=$(printf '%s\n' "$content" | sed -E \
+        -e 's@(/?)memory/@.research/memory/@g' \
+        -e 's@(/?)scripts/@.research/scripts/@g' \
+        -e 's@(/?)templates/@.research/templates/@g')
+
+      # Write to output with appropriate extension
+      case $ext in
+        agent.md)
+          echo "$content" > "$output_dir/${name}.agent.md" ;;
+        md)
+          echo "$content" > "$output_dir/${name}.md" ;;
+      esac
+    done
+    echo "Copied agents -> $output_dir"
+  fi
+}
+
+generate_copilot_prompts() {
+  local agents_dir=$1 prompts_dir=$2
+  mkdir -p "$prompts_dir"
+
+  # Generate a .prompt.md file for each .agent.md file
+  for agent_file in "$agents_dir"/*.agent.md; do
+    [[ -f "$agent_file" ]] || continue
+
+    local basename
+    basename=$(basename "$agent_file" .agent.md)
+    local prompt_file="$prompts_dir/${basename}.prompt.md"
+
+    # Create prompt file with agent frontmatter
+    cat > "$prompt_file" <<EOF
+---
+agent: ${basename}
+---
+EOF
+  done
+  echo "Generated Copilot prompts in $prompts_dir"
+}
+
 generate_commands() {
   local agent=$1 ext=$2 arg_format=$3 output_dir=$4 script_variant=$5
   mkdir -p "$output_dir"
@@ -154,21 +209,32 @@ build_variant() {
   case $agent in
     claude)
       mkdir -p "$base_dir/.claude/commands"
-      generate_commands claude md "\$ARGUMENTS" "$base_dir/.claude/commands" "$script" ;;
+      mkdir -p "$base_dir/.claude/agents"
+      generate_commands claude md "\$ARGUMENTS" "$base_dir/.claude/commands" "$script"
+      copy_agents claude "$base_dir/.claude/agents" md
+      ;;
     gemini)
       mkdir -p "$base_dir/.gemini/commands"
       generate_commands gemini toml "{{args}}" "$base_dir/.gemini/commands" "$script"
       [[ -f agent_templates/gemini/GEMINI.md ]] && cp agent_templates/gemini/GEMINI.md "$base_dir/GEMINI.md" ;;
     copilot)
       mkdir -p "$base_dir/.github/prompts"
+      mkdir -p "$base_dir/.github/agents"
       generate_commands copilot prompt.md "\$ARGUMENTS" "$base_dir/.github/prompts" "$script"
+      # Copy agents with .agent.md extension for Copilot
+      copy_agents copilot "$base_dir/.github/agents" agent.md
+      # Generate companion prompt files for agents
+      generate_copilot_prompts "$base_dir/.github/agents" "$base_dir/.github/prompts"
       # Create VS Code workspace settings
       mkdir -p "$base_dir/.vscode"
       [[ -f templates/vscode-settings.json ]] && cp templates/vscode-settings.json "$base_dir/.vscode/settings.json"
       ;;
     cursor-agent)
       mkdir -p "$base_dir/.cursor/commands"
-      generate_commands cursor-agent md "\$ARGUMENTS" "$base_dir/.cursor/commands" "$script" ;;
+      mkdir -p "$base_dir/.cursor/agents"
+      generate_commands cursor-agent md "\$ARGUMENTS" "$base_dir/.cursor/commands" "$script"
+      copy_agents cursor-agent "$base_dir/.cursor/agents" md
+      ;;
     qwen)
       mkdir -p "$base_dir/.qwen/commands"
       generate_commands qwen toml "{{args}}" "$base_dir/.qwen/commands" "$script"
