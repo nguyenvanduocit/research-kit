@@ -45,7 +45,9 @@ env/
 sdd-*/
 
 # Research Kit generated files (when applied to itself)
-.claude/commands/research.*.md
+# These are created when running `research init --here` for testing
+.claude/commands/
+.claude/agents/
 .research/
 research/
 principles/research-principles.md
