@@ -57,10 +57,13 @@ Here are a few things you can do that will increase the likelihood of your pull 
 
 When working on research-kit:
 
-1. Test changes with the `research` CLI commands (`/research.define`, `/research.methodology`, `/research.analyze`) in your AI research assistant of choice
+1. Test changes with the `research` CLI commands in your AI research assistant of choice:
+   - Core: `/research.define`, `/research.methodology`, `/research.tasks`, `/research.execute`, `/research.analyze`, `/research.synthesize`, `/research.publish`
+   - Optional: `/research.principles`, `/research.refine`, `/research.validate`, `/research.quality`
 2. Verify templates are working correctly in `templates/` directory
-3. Test script functionality in the `scripts/` directory
-4. Ensure principles files (`principles/research-principles.md`) are updated if major process changes are made
+3. Test agent definitions in `templates/agents/` (all agents use `agent-` prefix, e.g., `agent-research-assistant.md`)
+4. Test script functionality in the `scripts/bash/` directory
+5. Ensure principles files (`principles/research-principles.md`) are updated if major process changes are made
 
 ### Testing template and command changes locally
 
@@ -76,8 +79,12 @@ To test your templates, commands, and other changes locally, follow these steps:
 
 2. **Copy the relevant package to your test research project**
 
-   ```
-   cp -r .genreleases/srd-copilot-package-sh/. <path-to-test-research-project>/
+   ```bash
+   # For Claude Code
+   cp -r .genreleases/research-claude-package/. <path-to-test-research-project>/
+
+   # For Codex CLI
+   cp -r .genreleases/research-codex-package/. <path-to-test-research-project>/
    ```
 
 3. **Open and test the agent**

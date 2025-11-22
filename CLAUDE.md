@@ -52,7 +52,13 @@ cp -r .genreleases/research-codex-package/. ~/test-research-project/
 
 - **`templates/`**: Source templates for all generated files
   - `commands/*.md`: Slash command definitions (`/research.define`, `/research.methodology`, `/research.analyze`, `/research.publish`, etc.)
-  - `agents/*.md`: Agent definitions (`research-assistant`, `research-reviewer`)
+  - `agents/*.md`: Agent definitions (all use `agent-` prefix):
+    - `agent-research-assistant.md`: Full SRD workflow orchestrator
+    - `agent-research-reviewer.md`: Quality assurance specialist
+    - `agent-literature-specialist.md`: Literature review expert
+    - `agent-analysis-expert.md`: Data analysis specialist
+    - `agent-data-collector.md`: Data collection specialist
+    - `agent-academic-writer.md`: Academic writing specialist
   - `research-definition-template.md`, `methodology-template.md`, `analysis-template.md`: Document templates
   - `agent-file-template.md`: Agent-specific context file template
 
@@ -154,13 +160,25 @@ This allows SRD workflow in repositories without git (e.g., institutional enviro
 ## File Conventions
 
 - Slash commands: `.claude/commands/*.md`, `.codex/prompts/*.md`
-- Agents: `.claude/agents/*.md`
+- Agents: `.claude/agents/*.md` (all agent files use `agent-` prefix, e.g., `agent-research-assistant.md`)
 - Research definitions: `research/###-topic-name/definition.md`
 - Research methodologies: `research/###-topic-name/methodology.md`
 - Literature reviews: `research/###-topic-name/literature-review.md`
 - Data sources: `research/###-topic-name/data-sources.md`
+- Execution logs: `research/###-topic-name/execution.md`
 - Analysis results: `research/###-topic-name/analysis.md`
+- Synthesis: `research/###-topic-name/synthesis.md`
 - Publications: `research/###-topic-name/publications/` (papers, presentations, etc.)
+
+## Agent Invocation
+
+Agents are invoked using the `@agent-name` syntax within slash commands or conversation:
+- `@agent-research-assistant` - For guided research workflow
+- `@agent-research-reviewer` - For quality validation
+- `@agent-literature-specialist` - For literature review tasks
+- `@agent-analysis-expert` - For data analysis
+- `@agent-data-collector` - For data collection
+- `@agent-academic-writer` - For publication writing
 
 ## Key Configuration Files
 

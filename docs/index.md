@@ -77,13 +77,9 @@ Our toolkit supports diverse research needs:
 
 ### AI Research Assistants
 
-Research Kit works with multiple AI assistants:
+Research Kit works with two AI assistants:
 - Claude Code (Anthropic)
-- GitHub Copilot
-- Gemini CLI (Google)
-- Cursor
-- Windsurf
-- And 10+ more agents
+- Codex CLI (OpenAI)
 
 Each assistant receives the same structured prompts and templates, ensuring consistent research quality regardless of which tool you use.
 

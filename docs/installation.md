@@ -47,9 +47,20 @@ uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init
 
 After initialization, you should see the following commands available in your AI agent:
 
+**Core Commands:**
+- `/research.principles` - Establish research quality standards and ethical guidelines
 - `/research.define` - Define research topic and questions
 - `/research.methodology` - Design research methodology
 - `/research.tasks` - Break down into actionable tasks
+- `/research.execute` - Conduct research and collect data
+- `/research.analyze` - Analyze collected data and generate insights
+- `/research.synthesize` - Draw conclusions from findings
+- `/research.publish` - Create publication-ready outputs
+
+**Optional Commands:**
+- `/research.refine` - Clarify underspecified areas (before methodology)
+- `/research.validate` - Review methodology feasibility (after methodology)
+- `/research.quality` - Generate quality checklists
 
 The `.research/scripts/bash` directory will contain automation scripts.
 

@@ -103,11 +103,20 @@ LOGS_DIR="$RESEARCH_DIR/logs"
 NOTEBOOKS_DIR="$RESEARCH_DIR/notebooks"
 SCRIPTS_DIR="$RESEARCH_DIR/scripts"
 
+# Create sources directory for downloaded web content (markitdown)
+SOURCES_DIR="$RESEARCH_DIR/sources"
+SOURCES_WEB_DIR="$SOURCES_DIR/web"
+SOURCES_PAPERS_DIR="$SOURCES_DIR/papers"
+SOURCES_REPORTS_DIR="$SOURCES_DIR/reports"
+
 mkdir -p "$DATA_RAW_DIR"
 mkdir -p "$DATA_PROCESSED_DIR"
 mkdir -p "$LOGS_DIR"
 mkdir -p "$NOTEBOOKS_DIR"
 mkdir -p "$SCRIPTS_DIR"
+mkdir -p "$SOURCES_WEB_DIR"
+mkdir -p "$SOURCES_PAPERS_DIR"
+mkdir -p "$SOURCES_REPORTS_DIR"
 
 echo "Created execution directories:"
 echo "  - data/raw/ for raw collected data"
@@ -115,6 +124,9 @@ echo "  - data/processed/ for cleaned data"
 echo "  - logs/ for execution logs"
 echo "  - notebooks/ for analysis notebooks"
 echo "  - scripts/ for collection scripts"
+echo "  - sources/web/ for downloaded web content (markitdown)"
+echo "  - sources/papers/ for downloaded academic papers"
+echo "  - sources/reports/ for downloaded reports"
 
 # Create initial log file
 EXECUTION_LOG="$LOGS_DIR/execution_$(date +%Y%m%d_%H%M%S).log"
@@ -157,10 +169,64 @@ cat > "$DATA_INVENTORY" << 'EOF'
 EOF
 echo "Created data inventory at $DATA_INVENTORY"
 
+# Create sources index file for tracking downloaded sources
+SOURCES_INDEX="$SOURCES_DIR/SOURCES_INDEX.md"
+cat > "$SOURCES_INDEX" << 'EOF'
+# Sources Index
+
+> All web content, articles, papers, and reports MUST be downloaded locally using `markitdown` before being cited.
+> Every citation MUST reference a local file with line number: `sources/web/filename.md:123`
+
+## Source Collection Rules
+
+1. **NEVER cite a URL directly** - Always download first
+2. **Use markitdown** to convert web content to markdown: `markitdown "URL" > sources/web/filename.md`
+3. **Read the local file** after downloading, not the web
+4. **Cite with file:line** format: `sources/web/article-name.md:45`
+
+## Downloaded Sources
+
+### Web Articles (`sources/web/`)
+
+| File | Original URL | Downloaded | Lines | Status |
+|------|--------------|------------|-------|--------|
+| | | | | |
+
+### Academic Papers (`sources/papers/`)
+
+| File | DOI/URL | Downloaded | Lines | Status |
+|------|---------|------------|-------|--------|
+| | | | | |
+
+### Reports (`sources/reports/`)
+
+| File | Source | Downloaded | Lines | Status |
+|------|--------|------------|-------|--------|
+| | | | | |
+
+## Citation Format
+
+When citing evidence or insights, ALWAYS use this format:
+
+```markdown
+According to the analysis, "quoted text" (sources/web/article-name.md:45-48)
+
+Key finding from research (sources/papers/smith-2024.md:123)
+```
+
+## Verification Checklist
+
+- [ ] All URLs converted to local files
+- [ ] All citations reference local file:line
+- [ ] Sources index is up to date
+- [ ] No direct URL citations in research documents
+EOF
+echo "Created sources index at $SOURCES_INDEX"
+
 # Output results
 if $JSON_MODE; then
-    printf '{"EXECUTION_FILE":"%s","DATA_RAW_DIR":"%s","DATA_PROCESSED_DIR":"%s","LOGS_DIR":"%s","NOTEBOOKS_DIR":"%s","SCRIPTS_DIR":"%s","EXECUTION_LOG":"%s","DATA_INVENTORY":"%s","RESEARCH_DIR":"%s","BRANCH":"%s","HAS_GIT":"%s"}\n' \
-        "$EXECUTION_FILE" "$DATA_RAW_DIR" "$DATA_PROCESSED_DIR" "$LOGS_DIR" "$NOTEBOOKS_DIR" "$SCRIPTS_DIR" "$EXECUTION_LOG" "$DATA_INVENTORY" "$RESEARCH_DIR" "$CURRENT_BRANCH" "$HAS_GIT"
+    printf '{"EXECUTION_FILE":"%s","DATA_RAW_DIR":"%s","DATA_PROCESSED_DIR":"%s","LOGS_DIR":"%s","NOTEBOOKS_DIR":"%s","SCRIPTS_DIR":"%s","SOURCES_DIR":"%s","SOURCES_WEB_DIR":"%s","SOURCES_PAPERS_DIR":"%s","SOURCES_REPORTS_DIR":"%s","EXECUTION_LOG":"%s","DATA_INVENTORY":"%s","RESEARCH_DIR":"%s","BRANCH":"%s","HAS_GIT":"%s"}\n' \
+        "$EXECUTION_FILE" "$DATA_RAW_DIR" "$DATA_PROCESSED_DIR" "$LOGS_DIR" "$NOTEBOOKS_DIR" "$SCRIPTS_DIR" "$SOURCES_DIR" "$SOURCES_WEB_DIR" "$SOURCES_PAPERS_DIR" "$SOURCES_REPORTS_DIR" "$EXECUTION_LOG" "$DATA_INVENTORY" "$RESEARCH_DIR" "$CURRENT_BRANCH" "$HAS_GIT"
 else
     echo "EXECUTION_FILE: $EXECUTION_FILE"
     echo "DATA_RAW_DIR: $DATA_RAW_DIR"
@@ -168,6 +234,10 @@ else
     echo "LOGS_DIR: $LOGS_DIR"
     echo "NOTEBOOKS_DIR: $NOTEBOOKS_DIR"
     echo "SCRIPTS_DIR: $SCRIPTS_DIR"
+    echo "SOURCES_DIR: $SOURCES_DIR"
+    echo "SOURCES_WEB_DIR: $SOURCES_WEB_DIR"
+    echo "SOURCES_PAPERS_DIR: $SOURCES_PAPERS_DIR"
+    echo "SOURCES_REPORTS_DIR: $SOURCES_REPORTS_DIR"
     echo "EXECUTION_LOG: $EXECUTION_LOG"
     echo "DATA_INVENTORY: $DATA_INVENTORY"
     echo "RESEARCH_DIR: $RESEARCH_DIR"

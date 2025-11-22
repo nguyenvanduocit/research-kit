@@ -1,11 +1,18 @@
 # Research Execution Log
 
+## IMPORTANT: Source Download & Citation Rules
+
+> **All web content MUST be downloaded locally using markitdown before citing.**
+> **Citation format: `sources/path/file.md:line`**
+> **NEVER cite URLs directly.**
+
 ## Execution Overview
 - **Start Date**: [DATE]
 - **End Date**: [TBD]
 - **Status**: In Progress
 - **Principal Investigator**: [NAME]
 - **Research Topic**: [From definition.md]
+- **Sources Index**: `sources/SOURCES_INDEX.md`
 
 ## Pre-Execution Checklist
 - [ ] Research definition reviewed and approved
@@ -78,7 +85,8 @@
 - **Languages**: [English, etc.]
 
 ### Collection Statistics
-- **Papers Retrieved**: [N]
+- **Papers Found**: [N]
+- **Papers Downloaded**: [N] (to sources/papers/)
 - **Papers Screened**: [N]
 - **Papers Included**: [N]
 - **Papers Excluded**: [N]
@@ -87,6 +95,36 @@
   - Poor quality: [N]
   - Duplicate: [N]
   - No access: [N]
+
+## Downloaded Sources (markitdown)
+
+> All sources MUST be downloaded locally before citing. Use `markitdown "URL" > sources/path/file.md`
+
+### Web Articles (`sources/web/`)
+
+| File | Original URL | Downloaded | Lines | Key Findings |
+|------|--------------|------------|-------|--------------|
+| article-name.md | https://... | [DATE] | [N] | Finding (sources/web/article-name.md:45) |
+
+### Academic Papers (`sources/papers/`)
+
+| File | DOI/URL | Downloaded | Lines | Key Findings |
+|------|---------|------------|-------|--------------|
+| smith-2024-title.md | https://arxiv.org/... | [DATE] | [N] | Finding (sources/papers/smith-2024-title.md:78) |
+
+### Reports (`sources/reports/`)
+
+| File | Source | Downloaded | Lines | Key Findings |
+|------|--------|------------|-------|--------------|
+| industry-report.md | https://... | [DATE] | [N] | Finding (sources/reports/industry-report.md:123) |
+
+### Download Commands Used
+
+```bash
+# Example downloads
+markitdown "https://arxiv.org/abs/2301.00001" > sources/papers/author-2024-title.md
+markitdown "https://example.com/article" > sources/web/article-name.md
+```
 
 ## Data Quality Monitoring
 
@@ -195,6 +233,30 @@ gantt
 - **Status**: ⏳ Pending Review
 - **Comments**: [Any review comments]
 
+## Citation & Source Verification Checklist
+
+### Source Downloads
+- [ ] All web articles downloaded to `sources/web/` using markitdown
+- [ ] All papers downloaded to `sources/papers/` using markitdown
+- [ ] All reports downloaded to `sources/reports/` using markitdown
+- [ ] `sources/SOURCES_INDEX.md` updated with all downloads
+
+### Citation Format
+- [ ] All findings cite file:line format (e.g., `sources/papers/file.md:45`)
+- [ ] No direct URL citations in any document
+- [ ] All quotes have exact line number references
+- [ ] All claims are traceable to local source files
+
+### Verification Commands
+```bash
+# Check for any URL citations that should be file:line
+grep -r "https://" research/*/execution.md | grep -v "Original URL"
+grep -r "http://" research/*/execution.md | grep -v "Original URL"
+
+# Verify all cited files exist
+# (run manually for each cited source)
+```
+
 ---
 
-*This document is a living record of the research execution phase. Update regularly to maintain accurate project status.*
+*This document is a living record of the research execution phase. Update regularly to maintain accurate project status. All sources must be downloaded locally and cited with file:line format.*

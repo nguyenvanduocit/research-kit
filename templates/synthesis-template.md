@@ -1,5 +1,11 @@
 # Research Synthesis
 
+## IMPORTANT: Citation Rules
+
+> **All evidence MUST cite local source files with line numbers.**
+> **Citation format: `sources/path/file.md:line` or `data/processed/file.csv:row`**
+> **NEVER cite URLs directly - all sources must be downloaded locally first.**
+
 ## Synthesis Overview
 - **Synthesis Date**: [DATE]
 - **Lead Synthesist**: [NAME]
@@ -7,18 +13,22 @@
 - **Total Findings Analyzed**: [N]
 - **Research Questions Addressed**: [X/Y]
 - **Overall Confidence Level**: ⬜ High | ⬜ Medium | ⬜ Low
+- **Sources Index**: See `sources/SOURCES_INDEX.md`
 
 ## Research Question Synthesis
 
 ### RQ1: [Research Question from definition.md]
 
-**Answer**: [Clear, comprehensive answer based on evidence]
+**Answer**: [Clear, comprehensive answer based on evidence - cite file:line for all claims]
 
-**Evidence Synthesis**:
-| Finding | Source | Strength | Direction | Weight |
-|---------|--------|----------|-----------|--------|
-| [Finding 1] | Analysis/Literature | Strong/Moderate/Weak | Supports/Contradicts | High/Med/Low |
-| [Finding 2] | Analysis | Moderate | Supports | Medium |
+**Evidence Synthesis** (all findings must have file:line citations):
+| Finding | Source File:Line | Strength | Direction | Weight |
+|---------|------------------|----------|-----------|--------|
+| [Finding 1] | sources/papers/smith-2024.md:78 | Strong | Supports | High |
+| [Finding 2] | data/processed/results.csv:45 | Moderate | Supports | Medium |
+
+**Key Evidence**:
+> "Direct quote supporting this answer" (sources/papers/author-year.md:123-125)
 
 **Confidence Assessment**:
 - **Overall Confidence**: [High/Medium/Low]
@@ -31,39 +41,42 @@
 2. [Uncertainty 2]
 
 ### RQ2: [Research Question from definition.md]
-[Repeat structure]
+[Repeat structure with file:line citations]
 
 ### RQ3: [Research Question from definition.md]
-[Repeat structure]
+[Repeat structure with file:line citations]
 
 ## Thematic Synthesis
 
 ### Major Theme 1: [Theme Name]
 
-**Theme Description**: [Comprehensive description of what this theme represents]
+**Theme Description**: [Comprehensive description - cite file:line for claims]
 
 **Component Elements**:
-1. [Element 1]: [Description]
-2. [Element 2]: [Description]
-3. [Element 3]: [Description]
+1. [Element 1]: [Description] (sources/papers/file.md:line)
+2. [Element 2]: [Description] (sources/web/file.md:line)
+3. [Element 3]: [Description] (data/processed/file.csv:row)
 
-**Supporting Evidence**:
-- **From Analysis**: [Specific findings]
-- **From Literature**: [Supporting citations]
+**Supporting Evidence** (all with file:line citations):
+- **From Analysis**: [Specific findings] (data/processed/results.csv:45)
+- **From Literature**: Smith (2024) (sources/papers/smith-2024.md:78-85)
 - **Cross-validation**: [Multiple data sources confirming]
 
-**Theoretical Connection**: [How this relates to existing theory]
+**Key Quote**:
+> "Direct supporting quote" (sources/papers/author-year.md:123)
+
+**Theoretical Connection**: [How this relates to existing theory - cite source]
 
 **Practical Significance**: [Why this matters in practice]
 
 **Visual Representation**: `figures/theme1_model.png`
 
 ### Major Theme 2: [Theme Name]
-[Repeat structure]
+[Repeat structure with file:line citations]
 
 ### Minor Themes
-1. **[Theme]**: [Brief description and significance]
-2. **[Theme]**: [Brief description and significance]
+1. **[Theme]**: [Brief description] (sources/papers/file.md:line)
+2. **[Theme]**: [Brief description] (sources/web/file.md:line)
 
 ## Theoretical Synthesis
 
@@ -285,6 +298,16 @@
 |---------|------|---------------|--------|
 | 1.0 | [DATE] | Initial synthesis | [Name] |
 
+## Citation Verification Checklist
+
+- [ ] All research question answers cite evidence with file:line format
+- [ ] All thematic elements cite sources with file:line format
+- [ ] All literature references cite downloaded sources (sources/papers/, sources/web/)
+- [ ] All direct quotes have exact line number references
+- [ ] No direct URL citations in document
+- [ ] Sources index is current (`sources/SOURCES_INDEX.md`)
+- [ ] All claims are traceable to local source files
+
 ---
 
-*This synthesis integrates all research findings to provide comprehensive answers to research questions, develop theoretical insights, and generate practical recommendations. It represents the culmination of the research process.*
+*This synthesis integrates all research findings to provide comprehensive answers to research questions, develop theoretical insights, and generate practical recommendations. It represents the culmination of the research process. All citations reference locally downloaded sources with file:line format for full traceability.*

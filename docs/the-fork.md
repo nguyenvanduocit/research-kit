@@ -130,12 +130,16 @@ We considered extending Spec Kit with research features, but decided to fork bec
 | Spec Kit | Research Kit | Purpose |
 |----------|--------------|---------|
 | `/speckit.define` | `/research.define` | Define research questions and scope |
-| `/speckit.clarify` | `/research.clarify` | Clarify underspecified research areas |
+| `/speckit.clarify` | `/research.refine` | Refine and clarify underspecified research areas |
 | `/speckit.implement` | `/research.methodology` | Design research methodology |
-| `/speckit.test` | `/research.analyze` | Conduct analysis and validate findings |
+| (none) | `/research.tasks` | Break down research into actionable tasks |
+| (none) | `/research.execute` | Conduct research and collect data |
+| `/speckit.test` | `/research.analyze` | Analyze collected data and generate insights |
 | `/speckit.verify` | `/research.synthesize` | Synthesize findings and conclusions |
 | (none) | `/research.publish` | Prepare research outputs for publication |
 | `/speckit.principles` | `/research.principles` | Define research governance principles |
+| (none) | `/research.validate` | Validate methodology rigor (optional) |
+| (none) | `/research.quality` | Generate quality checklists |
 
 ### 3. Directory Structure
 
@@ -255,7 +259,7 @@ Understanding these differences helps explain design decisions:
 
 Spec Kit and Research Kit share common infrastructure:
 - CLI architecture and tooling
-- Multi-agent support (Claude Code, GitHub Copilot, etc.)
+- AI assistant support (Claude Code, Codex CLI)
 - Git-based workflows and branching
 - Script automation (bash/PowerShell)
 - Template systems
@@ -269,14 +273,13 @@ Spec Kit and Research Kit share common infrastructure:
 
 ### What to Sync vs. What to Ignore
 
-#### ✅ SYNC These Changes
+#### SYNC These Changes
 
 - **Script improvements**: Branch numbering logic, file operations, error handling
 - **CLI enhancements**: Better validation, UX improvements, new flags
-- **Agent support**: New AI assistants (Gemini, Cursor, Qwen, etc.)
 - **Build process**: Release automation, packaging, distribution
 - **Bug fixes**: Anything that improves reliability (e.g., CDPATH fix)
-- **Agentic features**: Handoffs, custom agents, workflow transitions
+- **Agentic features**: Custom agents, @agent mentions, workflow transitions
 
 #### ❌ DON'T Sync These Changes
 
@@ -390,40 +393,33 @@ uv run research init test-nova --ai nova
 git commit -m "feat: add Nova Code agent support (from spec-kit upstream)"
 ```
 
-#### 7. Example: Adding Agentic Features (Real Example: Handoffs & Agents)
+#### 7. Example: Adding Agentic Features (Real Example: Agents & @mentions)
 
-**Scenario**: Spec Kit added agentic modes with handoffs and custom agents for VS Code/Copilot.
+**Scenario**: Research Kit added custom agents with @agent mentions for specialized workflows.
 
 ```bash
-# 1. Reviewed spec-kit's changes in v0.0.21-v0.0.22
-# - Handoffs in command frontmatter
-# - Custom agents in .github/agents/
-# - Companion prompt files
+# 1. Created research-focused agents with agent- prefix:
+# templates/agents/agent-research-assistant.md - SRD workflow orchestrator
+# templates/agents/agent-research-reviewer.md - Quality specialist
+# templates/agents/agent-literature-specialist.md - Literature review expert
+# templates/agents/agent-analysis-expert.md - Data analysis specialist
+# templates/agents/agent-data-collector.md - Data collection specialist
+# templates/agents/agent-academic-writer.md - Publication writing specialist
 
-# 2. Created research-focused agents (not direct copy):
-# templates/agents/research-assistant.md - SRD workflow orchestrator
-# templates/agents/research-reviewer.md - Quality specialist
-
-# 3. Added handoffs to slash commands:
-# Each command now includes handoffs: metadata pointing to next workflow step
+# 2. Each command suggests relevant agents using @agent-name syntax:
 # Example in templates/commands/define.md:
-# handoffs:
-#   - label: Refine Research Scope
-#     agent: research.refine
-#     prompt: Clarify and refine research requirements
-#     send: true
+# "Next step: Use /research.methodology or ask @agent-research-reviewer to validate."
 
-# 4. Updated release script to deploy agents:
+# 3. Updated release script to deploy agents:
 # - copy_agents() function
-# - generate_copilot_prompts() function
-# - Agent paths: .claude/agents/, .github/agents/, .cursor/agents/
+# - Agent paths: .claude/agents/
 
-# 5. Test
-AGENTS=claude,copilot SCRIPTS=sh .github/workflows/scripts/create-release-packages.sh v1.0.10-test
+# 4. Test
+.github/workflows/scripts/create-release-packages.sh v1.0.14-test
 # Verify agents deployed to correct locations
 
-# 6. Commit
-git commit -m "feat: add research agents and handoffs (adapted from spec-kit)"
+# 5. Commit
+git commit -m "feat: add research agents with @agent mentions"
 ```
 
 ### Testing After Sync
@@ -558,9 +554,13 @@ research-kit/
 │   └── powershell/
 ├── templates/                 # Templates (research-specific, don't sync)
 │   ├── commands/             # Slash command definitions
-│   ├── agents/               # Custom agent templates (NEW)
-│   │   ├── research-assistant.md
-│   │   └── research-reviewer.md
+│   ├── agents/               # Custom agent templates (all use agent- prefix)
+│   │   ├── agent-research-assistant.md
+│   │   ├── agent-research-reviewer.md
+│   │   ├── agent-literature-specialist.md
+│   │   ├── agent-analysis-expert.md
+│   │   ├── agent-data-collector.md
+│   │   └── agent-academic-writer.md
 │   ├── research-definition-template.md
 │   ├── methodology-template.md
 │   └── ...
@@ -623,22 +623,22 @@ Research Kit maintains backward compatibility for projects transitioning from Sp
 
 ### Recent Updates (2025-11-22)
 
-**Synced from Spec Kit (v0.0.21-v0.0.22):**
+**Agent naming refactor:**
 
-- **CDPATH bug fix**: Fixed shell script vulnerability where `CDPATH` environment variable could break script directory resolution. Applied `CDPATH=""` inline fix to all 9 bash scripts.
-- **Handoffs**: Added workflow transition metadata to slash commands. Copilot users see handoff buttons for workflow transitions; Claude users see suggested next steps.
-- **Custom agents**: Added two research-focused agents:
-  - `research-assistant`: Full SRD workflow orchestrator (auto-delegates when user mentions research)
-  - `research-reviewer`: Quality assurance specialist for validating research rigor
-- **Agent deployment**: Updated release script to deploy agents to correct locations:
-  - Claude: `.claude/agents/*.md`
-  - Copilot: `.github/agents/*.agent.md` with companion `.prompt.md` files
-  - Cursor: `.cursor/agents/*.md`
+- **agent- prefix**: All agent names now use the `agent-` prefix for consistency (e.g., `agent-research-assistant`, `agent-research-reviewer`)
+- **@agent mentions**: Replaced frontmatter handoffs with `@agent-name` mentions in command outputs
+- **Specialized agents**: Added four new specialized agents:
+  - `agent-literature-specialist`: Literature review and source evaluation
+  - `agent-analysis-expert`: Data analysis and visualization
+  - `agent-data-collector`: Web scraping and data gathering
+  - `agent-academic-writer`: Publication-ready writing
+- **CLI simplification**: Only Claude Code and Codex CLI are now supported
+
+**Previous Updates:**
+
+- **CDPATH bug fix**: Fixed shell script vulnerability where `CDPATH` environment variable could break script directory resolution
+- **Custom agents**: Added research-focused agents (`agent-research-assistant`, `agent-research-reviewer`)
+- **Agent deployment**: Updated release script to deploy agents to `.claude/agents/`
 - **Version command**: Added `research version` command to CLI
-- **Upgrade documentation**: Created comprehensive `docs/upgrade.md` guide
-
-**Previous Updates (2025-11-12):**
-
 - **Simplified slash command prefix**: Changed from `/researchkit.` to `/research.` for better usability
 - **Repository references**: Updated all documentation to use correct repository URL (`github.com/nguyenvanduocit/research-kit`)
-- **Command naming**: All slash commands now use the simpler `/research.` prefix (e.g., `/research.define`, `/research.methodology`)

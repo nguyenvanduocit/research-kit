@@ -44,7 +44,7 @@ Research Kit is a structured research framework designed for AI agents. It trans
 - **Research type specialization** - Tailored approaches for academic, market, technical, and general research
 - **Reproducible methodologies** - Documented approaches that can be validated and replicated
 - **Citation management** - Integrated BibTeX support for proper source attribution
-- **AI agent integration** - Works with Claude Code, GitHub Copilot, Gemini, Cursor, and more
+- **AI agent integration** - Works with Claude Code and Codex CLI
 
 ## The Problem
 
@@ -118,14 +118,23 @@ In addition to slash commands, Research Kit provides **custom agents** for auton
 
 | Agent | Purpose | When to Use |
 |-------|---------|-------------|
-| **research-assistant** | Full SRD workflow orchestrator | Starting new research, guided workflow |
-| **research-reviewer** | Quality assurance specialist | Validating research, checking rigor |
+| **agent-research-assistant** | Full SRD workflow orchestrator | Starting new research, guided workflow |
+| **agent-research-reviewer** | Quality assurance specialist | Validating research, checking rigor |
+| **agent-literature-specialist** | Literature review expert | Conducting systematic literature reviews, source evaluation |
+| **agent-analysis-expert** | Data analysis specialist | Statistical analysis, visualization, pattern discovery |
+| **agent-data-collector** | Data collection specialist | Web scraping, API integration, systematic data gathering |
+| **agent-academic-writer** | Academic writing specialist | Creating publication-ready research outputs |
+
+**Agent Invocation:**
+- Use `@agent-name` syntax to invoke a specific agent (e.g., `@agent-research-reviewer`)
+- Agents have specialized knowledge and tools for their domain
+- Slash commands suggest relevant agents at completion (e.g., "ask `@agent-research-reviewer` to validate the definition")
 
 **Agents vs Slash Commands:**
 - **Agents** have isolated context and handle complex multi-step workflows autonomously
 - **Slash commands** are lightweight utilities for single-step tasks within your main conversation
 
-Agents are deployed to agent-specific locations (e.g., `.claude/agents/`, `.github/agents/`) and can be auto-invoked based on task context.
+Agents are deployed to agent-specific locations (e.g., `.claude/agents/`) and can be invoked using `@agent-name` mentions.
 
 ## Quick Start
 
@@ -636,8 +645,8 @@ High-level findings, key conclusions, actionable recommendations (2-3 paragraphs
 
 ## Documentation
 
-- **[Complete Research-Driven Development Methodology](./research-driven.md)** - Deep dive into the research process (Coming Soon)
-- **[Agent-Specific Setup Guide](./AGENTS.md)** - Integration instructions for each AI agent
+- **[Complete Research-Driven Investigation Methodology](./research-driven.md)** - Deep dive into the research process
+- **[Agent Integration Guide](./AGENTS.md)** - Integration instructions and agent development guide
 - **[Contributing Guide](./CONTRIBUTING.md)** - How to contribute to Research Kit
 - **[Support Resources](./SUPPORT.md)** - Getting help and reporting issues
 
@@ -718,7 +727,7 @@ If the CLI doesn't detect your AI agent:
 
 ```bash
 # Check if agent is in PATH
-which claude     # or gemini, code, cursor-agent, etc.
+which claude     # or codex
 
 # Skip agent check and install anyway
 research init my-project --ignore-agent-tools --ai claude

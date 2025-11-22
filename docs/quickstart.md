@@ -65,7 +65,7 @@ This research will inform research prioritization and funding decisions for an A
 
 ### Step 2: Refine the Research Definition
 
-After the initial definition is created, use `/research.clarify` to address any underspecified areas:
+After the initial definition is created, use `/research.refine` to address any underspecified areas:
 
 ```text
 For data sources, prioritize:
@@ -234,8 +234,8 @@ Create a research report suitable for the AI safety institute:
 
 ## Next Steps
 
-- Read the [complete SRD methodology guide](../research-driven.md) for in-depth guidance
-- Review the [refactoring documentation](../REFACTORING.md) to understand how Research Kit differs from Spec Kit
+- Read the [complete RDI methodology guide](../research-driven.md) for in-depth guidance
+- Review the [agent integration guide](../AGENTS.md) for agent-specific details
 - Explore the repository structure and templates
 - Join the community and contribute!
 
@@ -246,7 +246,7 @@ Create a research report suitable for the AI safety institute:
 3. **Iterate**: Don't expect perfection on the first pass; refine your definition and methodology
 4. **Document everything**: The AI assistant helps, but you should review and approve all research decisions
 5. **Maintain rigor**: The templates guide you through best practices—follow them
-6. **Ask for clarification**: Use `/research.clarify` liberally to address gaps
+6. **Ask for clarification**: Use `/research.refine` liberally to address gaps
 7. **Version control**: Commit research artifacts regularly; use branches for different research topics
 
 ## Common Pitfalls to Avoid
@@ -262,7 +262,7 @@ Create a research report suitable for the AI safety institute:
 ## Getting Help
 
 If you get stuck:
-1. Check the comprehensive review document (`COMPREHENSIVE-REVIEW.md`)
-2. Review the research-driven methodology guide
+1. Review the [Research-Driven Investigation methodology guide](../research-driven.md)
+2. Check the [agent integration guide](../AGENTS.md) for agent-specific help
 3. Open an issue on GitHub
 4. Check existing issues for similar questions

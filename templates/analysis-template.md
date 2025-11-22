@@ -1,11 +1,18 @@
 # Research Analysis
 
+## IMPORTANT: Citation Rules
+
+> **All evidence MUST cite local source files with line numbers.**
+> **Citation format: `sources/path/file.md:line` or `data/raw/file.csv:row`**
+> **NEVER cite URLs directly - all sources must be downloaded locally first.**
+
 ## Analysis Overview
 - **Analysis Start Date**: [DATE]
 - **Analysis End Date**: [TBD]
 - **Primary Analyst**: [NAME]
 - **Analysis Tools Used**: [Software/Languages]
 - **Research Questions**: [From definition.md]
+- **Sources Index**: See `sources/SOURCES_INDEX.md`
 
 ## Data Preparation
 
@@ -143,35 +150,38 @@
 
 ### Finding 1: [Clear Statement]
 - **Evidence Type**: [Statistical/Qualitative/Mixed]
-- **Supporting Data**:
-  - Statistical test: [Result]
+- **Supporting Data** (with file:line citations):
+  - Statistical test: [Result] (data/processed/analysis.csv:row)
   - Effect size: [Value]
   - Confidence interval: [CI]
+- **Source Evidence**:
+  > "Supporting quote from downloaded source" (sources/papers/author-year.md:123-125)
 - **Visualization**: `figures/finding1_plot.png`
 - **Robustness Check**: [Method and result]
 - **Interpretation**: [What this means in context]
 
 ### Finding 2: [Clear Statement]
-[Repeat structure]
+[Repeat structure with file:line citations]
 
 ### Finding 3: [Clear Statement]
-[Repeat structure]
+[Repeat structure with file:line citations]
 
 ## Comparison with Literature
 
 ### Confirmatory Findings
 1. **Finding**: [Statement]
-   - **Aligns with**: [Citation]
+   - **Aligns with**: Smith (2024) (sources/papers/smith-2024.md:78-85)
    - **Strength of alignment**: [Strong/Moderate/Weak]
+   - **Quote**: "relevant quote" (sources/papers/smith-2024.md:82)
 
 ### Contradictory Findings
 1. **Finding**: [Statement]
-   - **Contradicts**: [Citation]
+   - **Contradicts**: Jones (2023) (sources/papers/jones-2023.md:145)
    - **Possible explanations**: [List]
 
 ### Novel Findings
 1. **Finding**: [Statement]
-   - **Novelty**: [Why this is new]
+   - **Novelty**: [Why this is new - no similar findings in sources/papers/]
    - **Implications**: [What this suggests]
 
 ## Sensitivity Analysis
@@ -252,6 +262,14 @@
 |---------|------|---------|--------|
 | 1.0 | [DATE] | Initial analysis | [Name] |
 
+## Citation Verification Checklist
+
+- [ ] All findings cite source data with file:line format
+- [ ] All literature comparisons cite downloaded sources (sources/papers/)
+- [ ] No direct URL citations in document
+- [ ] All quotes have exact line number references
+- [ ] Sources index is current (`sources/SOURCES_INDEX.md`)
+
 ---
 
-*This document presents the complete analysis of research data. All findings are based on the methods described and have been validated through appropriate statistical techniques.*
+*This document presents the complete analysis of research data. All findings are based on the methods described and have been validated through appropriate statistical techniques. All citations reference locally downloaded sources with file:line format.*

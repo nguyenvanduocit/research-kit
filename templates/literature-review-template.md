@@ -1,5 +1,11 @@
 # Literature Review: [TOPIC_NAME]
 
+## IMPORTANT: Citation Rules
+
+> **All sources MUST be downloaded locally before citing.**
+> **All citations MUST use file:line format: `sources/papers/author-year.md:45`**
+> **NEVER cite URLs directly.**
+
 ## Overview
 [Brief overview of the literature review scope and approach]
 
@@ -10,7 +16,9 @@
 - **Inclusion criteria**: [what sources were included]
 - **Exclusion criteria**: [what sources were excluded]
 - **Total sources identified**: [number]
+- **Sources downloaded**: [number - all sources MUST be in sources/ folder]
 - **Sources selected for review**: [number after screening]
+- **Sources index**: See `sources/SOURCES_INDEX.md`
 
 ## Key Themes
 [Organize literature by themes, not chronologically]
@@ -18,12 +26,14 @@
 ### Theme 1: [Theme Name]
 **Overview**: [Brief description of this theme]
 
-**Key Sources**:
-- [Author Year]: [Key finding or contribution] [@citationkey1]
-- [Author Year]: [Key finding or contribution] [@citationkey2]
-- ...
+**Key Sources** (all must have file:line citations):
+- Smith (2024): [Key finding] (sources/papers/smith-2024-title.md:45-50)
+- Jones (2023): [Key finding] (sources/papers/jones-2023-methods.md:123)
 
-**Synthesis**: [How these sources relate to each other and your research]
+**Evidence with Citations**:
+> "Direct quote from the paper that supports this theme" (sources/papers/smith-2024-title.md:78-82)
+
+**Synthesis**: [How these sources relate to each other and your research - cite file:line for all claims]
 
 **Gaps identified**: [What's missing in existing research]
 
@@ -31,26 +41,28 @@
 **Overview**: [Brief description]
 
 **Key Sources**:
-- [Author Year]: [Key finding] [@citationkey]
-- ...
+- Author (Year): [Key finding] (sources/papers/file.md:line)
 
-**Synthesis**: [Synthesis of findings]
+**Evidence with Citations**:
+> "Quote" (sources/papers/file.md:line)
+
+**Synthesis**: [Synthesis of findings with file:line citations]
 
 **Gaps identified**: [Gaps]
 
 ### Theme 3: [Theme Name]
-[Repeat structure]
+[Repeat structure - all citations must be file:line format]
 
 ## Theoretical Frameworks
 [If applicable - what theoretical frameworks are used in the literature]
 
 ### Framework 1: [Name]
-- **Source**: [Key paper introducing framework] [@citationkey]
+- **Source**: [Key paper] (sources/papers/author-year.md:line)
 - **Description**: [Brief description]
 - **Application to this research**: [How it applies]
 
 ### Framework 2: [Name]
-[Repeat structure]
+[Repeat structure with file:line citations]
 
 ## Methodologies Used in Literature
 [Summary of common methodologies found in reviewed sources]
@@ -77,7 +89,23 @@
 ## Notes & Observations
 [Any additional insights, contradictions in literature, or patterns noticed]
 
+## Downloaded Sources Summary
+
+| Local File | Original URL | Type | Lines | Key Findings |
+|------------|--------------|------|-------|--------------|
+| sources/papers/smith-2024.md | https://arxiv.org/... | Paper | 450 | Main finding (sources/papers/smith-2024.md:123) |
+| sources/web/article.md | https://example.com/... | Article | 120 | Key insight (sources/web/article.md:45) |
+
+## Citation Verification Checklist
+
+- [ ] All sources downloaded locally to `sources/` folder
+- [ ] All citations use file:line format
+- [ ] No direct URL citations in document
+- [ ] Sources index updated (`sources/SOURCES_INDEX.md`)
+- [ ] All quotes have exact line number references
+
 ---
 *Sources reviewed*: [number]
+*Sources downloaded*: [number]
 *Date of last search*: [DATE]
 *Last updated*: [DATE]

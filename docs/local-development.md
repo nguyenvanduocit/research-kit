@@ -52,7 +52,7 @@ Re-running after code edits requires no reinstall because of editable mode.
 `uvx` can run from a local path (or a Git ref) to simulate user flows:
 
 ```bash
-uvx --from . research init demo-uvx --ai copilot --ignore-agent-tools --script sh
+uvx --from . research init demo-uvx --ai claude --ignore-agent-tools --script sh
 ```
 
 You can also point uvx at a specific branch without merging:
@@ -69,14 +69,14 @@ If you're in another directory, use an absolute path instead of `.`:
 
 ```bash
 uvx --from /mnt/c/GitHub/research-kit research --help
-uvx --from /mnt/c/GitHub/research-kit research init demo-anywhere --ai copilot --ignore-agent-tools --script sh
+uvx --from /mnt/c/GitHub/research-kit research init demo-anywhere --ai claude --ignore-agent-tools --script sh
 ```
 
 Set an environment variable for convenience:
 
 ```bash
 export RESEARCH_KIT_SRC=/mnt/c/GitHub/research-kit
-uvx --from "$RESEARCH_KIT_SRC" research init demo-env --ai copilot --ignore-agent-tools --script ps
+uvx --from "$RESEARCH_KIT_SRC" research init demo-env --ai codex --ignore-agent-tools --script ps
 ```
 
 (Optional) Define a shell function:
@@ -134,7 +134,7 @@ If you need to bypass TLS validation while experimenting:
 
 ```bash
 research check --skip-tls
-research init demo --skip-tls --ai gemini --ignore-agent-tools --script ps
+research init demo --skip-tls --ai codex --ignore-agent-tools --script ps
 ```
 
 (Use only for local experimentation.)

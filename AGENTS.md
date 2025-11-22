@@ -12,24 +12,30 @@ The toolkit supports multiple AI research assistants, allowing teams to use thei
 
 ## Research Kit Agents
 
-Research Kit now includes **custom agents** that provide autonomous, multi-step research workflows. These agents work alongside slash commands to offer different interaction patterns.
+Research Kit includes **custom agents** that provide autonomous, multi-step research workflows. These agents work alongside slash commands to offer different interaction patterns.
 
 ### Agents vs Slash Commands
 
 | Aspect | Agents | Slash Commands |
 |--------|--------|----------------|
-| **Location** | `.claude/agents/`, `.github/agents/` | `.claude/commands/`, `.github/prompts/` |
+| **Location** | `.claude/agents/` | `.claude/commands/`, `.codex/prompts/` |
 | **Context** | Isolated (own conversation) | Shared (main conversation) |
-| **Invocation** | Auto-delegated or explicit | Manual with `/` prefix |
+| **Invocation** | `@agent-name` mentions | Manual with `/` prefix |
 | **Use Case** | Complex multi-step workflows | Single-step utilities |
 | **State** | Maintains own context | Inline in main thread |
 
 ### Available Agents
 
+All agents use the `agent-` prefix in their names:
+
 | Agent | Description | Best For |
 |-------|-------------|----------|
-| **research-assistant** | Full SRD workflow orchestrator | Starting new research, guided workflow |
-| **research-reviewer** | Quality assurance specialist | Validating definitions, checking rigor |
+| **agent-research-assistant** | Full SRD workflow orchestrator | Starting new research, guided workflow |
+| **agent-research-reviewer** | Quality assurance specialist | Validating definitions, checking rigor |
+| **agent-literature-specialist** | Literature review expert | Systematic source discovery, evaluation, synthesis |
+| **agent-analysis-expert** | Data analysis specialist | Statistical analysis, visualization, pattern discovery |
+| **agent-data-collector** | Data collection specialist | Web scraping, API integration, data gathering |
+| **agent-academic-writer** | Academic writing specialist | Publication-ready outputs, citation management |
 
 ### Agent Locations by AI Assistant
 
@@ -40,14 +46,35 @@ Research Kit now includes **custom agents** that provide autonomous, multi-step 
 
 ### Using Agents
 
-**Claude Code:**
+**Invoking Agents with @mentions:**
+
+Agents are invoked using the `@agent-name` syntax:
+
+```
+User: "@agent-research-reviewer please review my methodology"
+→ Research reviewer agent validates methodology rigor
+
+User: "@agent-literature-specialist find sources on AI safety"
+→ Literature specialist conducts systematic source discovery
+```
+
+**Auto-suggested Agents:**
+
+Slash commands suggest relevant agents at completion:
+
+```
+After /research.define completes:
+"Next step: Use /research.methodology or ask @agent-research-reviewer to validate the definition."
+```
+
+**Claude Code Example:**
 ```
 User: "I want to research AI productivity impacts"
-→ Claude auto-delegates to research-assistant agent
+→ Use @agent-research-assistant for guided workflow
 → Agent guides through full SRD workflow
 ```
 
-**Codex CLI:**
+**Codex CLI Example:**
 ```
 User: codex "I want to research AI productivity impacts"
 → Codex uses prompts from .codex/prompts/
@@ -56,56 +83,46 @@ User: codex "I want to research AI productivity impacts"
 
 ---
 
-## The SRD Workflow with Hand-offs
+## The SRD Workflow
 
-Research Kit uses an agentic workflow where each command can hand off to the next phase. This creates a natural research progression:
+Research Kit uses a structured workflow where each command suggests the next logical step and relevant agents. This creates a natural research progression:
 
 ```
 define → refine → methodology → validate → tasks → execute → analyze → synthesize → publish
         (opt)                   (opt)
 ```
 
-### Command Hand-offs
+### Command Flow with Agent Suggestions
 
-Each research command includes hand-off metadata that defines natural next steps:
+Each research command suggests next steps and relevant agents:
 
-| Command | Hand-offs To | Description |
-|---------|--------------|-------------|
-| `/research.define` | refine, methodology | Define research topic and questions |
-| `/research.refine` | methodology | Clarify ambiguous scope (optional) |
-| `/research.methodology` | validate, tasks | Design research methodology |
-| `/research.validate` | tasks | Validate methodology rigor (optional) |
-| `/research.tasks` | execute | Generate actionable task breakdown |
-| `/research.execute` | analyze | Collect data and run research |
-| `/research.analyze` | synthesize | Analyze collected data |
-| `/research.synthesize` | publish | Draw conclusions |
-| `/research.publish` | - | Create publication outputs |
+| Command | Next Steps | Suggested Agents |
+|---------|------------|------------------|
+| `/research.define` | `/research.refine` or `/research.methodology` | `@agent-research-reviewer` for validation |
+| `/research.refine` | `/research.methodology` | - |
+| `/research.methodology` | `/research.validate` or `/research.tasks` | `@agent-research-reviewer`, `@agent-literature-specialist` |
+| `/research.validate` | `/research.tasks` | - |
+| `/research.tasks` | `/research.execute` | - |
+| `/research.execute` | `/research.analyze` | `@agent-data-collector` |
+| `/research.analyze` | `/research.synthesize` | `@agent-analysis-expert` |
+| `/research.synthesize` | `/research.publish` | - |
+| `/research.publish` | - | `@agent-academic-writer` |
 
-### Hand-off Format
+### Command Format
 
-Hand-offs are defined in command frontmatter:
+Commands are defined in markdown frontmatter with script references:
 
 ```yaml
 ---
 description: Command description
-handoffs:
-  - label: Next Step Label
-    agent: research.next-command
-    prompt: Initial prompt for next phase
-    send: true  # Auto-send to next agent
-  - label: Alternative Step
-    agent: research.alternative
-    prompt: Alternative path prompt
 scripts:
   sh: scripts/bash/script-name.sh
 ---
-```
 
-**Hand-off Fields**:
-- `label`: Button/link text shown to user
-- `agent`: Target command (e.g., `research.methodology`)
-- `prompt`: Initial prompt passed to next agent
-- `send`: If `true`, automatically transitions (default: `false`, shows as option)
+Command instructions that reference {SCRIPT} placeholder and $ARGUMENTS.
+
+Next step suggestions mention @agent-name for specialized help.
+```
 
 ### Research Flow Examples
 
@@ -135,18 +152,18 @@ This section explains how to add support for new AI agents/assistants to the Res
 Research CLI supports multiple AI agents by generating agent-specific command files and directory structures when initializing research projects. Each agent has its own conventions for:
 
 - **Command file formats** (Markdown, TOML, etc.)
-- **Directory structures** (`.claude/commands/`, `.windsurf/workflows/`, etc.)
+- **Directory structures** (`.claude/commands/`, `.codex/prompts/`, etc.)
 - **Command invocation patterns** (slash commands, CLI tools, etc.)
 - **Argument passing conventions** (`$ARGUMENTS`, `{{args}}`, etc.)
 
-### Current Supported Agents
+### Supported AI Assistants
 
-Research Kit currently supports two AI agents:
+Research Kit supports two AI assistants:
 
-| Agent | Directory | Format | CLI Tool | Description |
-|-------|-----------|---------|----------|-------------|
-| **Claude Code** | `.claude/commands/`, `.claude/agents/` | Markdown | `claude` | Anthropic's Claude Code CLI |
-| **Codex CLI** | `.codex/prompts/` | Markdown | `codex` | OpenAI's Codex CLI |
+| Assistant | Commands Directory | Agents Directory | CLI Tool | Description |
+|-----------|-------------------|------------------|----------|-------------|
+| **Claude Code** | `.claude/commands/` | `.claude/agents/` | `claude` | Anthropic's Claude Code CLI |
+| **Codex CLI** | `.codex/prompts/` | `.codex/prompts/` | `codex` | OpenAI's Codex CLI |
 
 ### Step-by-Step Integration Guide
 
@@ -189,7 +206,7 @@ This eliminates the need for special-case mappings throughout the codebase.
 Update the `--ai` parameter help text in the `init()` command to include the new agent:
 
 ```python
-ai_assistant: str = typer.Option(None, "--ai", help="AI assistant to use: claude, gemini, copilot, cursor-agent, qwen, opencode, codex, windsurf, kilocode, auggie, codebuddy, new-agent-cli, or q"),
+ai_assistant: str = typer.Option(None, "--ai", help="AI assistant to use: claude, codex, or new-agent-cli"),
 ```
 
 Also update any function docstrings, examples, and error messages that list available agents.
@@ -210,7 +227,7 @@ Modify `.github/workflows/scripts/create-release-packages.sh`:
 ##### Add to ALL_AGENTS array
 
 ```bash
-ALL_AGENTS=(claude gemini copilot cursor-agent qwen opencode windsurf q)
+ALL_AGENTS=(claude codex new-agent-cli)
 ```
 
 ##### Add case statement for directory structure
@@ -218,9 +235,9 @@ ALL_AGENTS=(claude gemini copilot cursor-agent qwen opencode windsurf q)
 ```bash
 case $agent in
   # ... existing cases ...
-  windsurf)
-    mkdir -p "$base_dir/.windsurf/workflows"
-    generate_commands windsurf md "\$ARGUMENTS" "$base_dir/.windsurf/workflows" "$script" ;;
+  new-agent-cli)
+    mkdir -p "$base_dir/.newagent/commands"
+    generate_commands new-agent-cli md "\$ARGUMENTS" "$base_dir/.newagent/commands" "$script" ;;
 esac
 ```
 
@@ -233,8 +250,7 @@ Modify `.github/workflows/scripts/create-github-release.sh` to include the new a
 ```bash
 gh release create "$VERSION" \
   # ... existing packages ...
-  .genreleases/research-kit-template-windsurf-sh-"$VERSION".zip \
-  .genreleases/research-kit-template-windsurf-ps-"$VERSION".zip \
+  .genreleases/research-kit-new-agent-cli-"$VERSION".zip \
   # Add new agent packages here
 ```
 
@@ -245,7 +261,7 @@ gh release create "$VERSION" \
 Add file variable:
 
 ```bash
-WINDSURF_FILE="$REPO_ROOT/.windsurf/rules/research-rules.md"
+NEWAGENT_FILE="$REPO_ROOT/.newagent/context/research-context.md"
 ```
 
 Add to case statement:
@@ -253,39 +269,13 @@ Add to case statement:
 ```bash
 case "$AGENT_TYPE" in
   # ... existing cases ...
-  windsurf) update_agent_file "$WINDSURF_FILE" "Windsurf" ;;
+  new-agent-cli) update_agent_file "$NEWAGENT_FILE" "NewAgent" ;;
   "")
     # ... existing checks ...
-    [ -f "$WINDSURF_FILE" ] && update_agent_file "$WINDSURF_FILE" "Windsurf";
+    [ -f "$NEWAGENT_FILE" ] && update_agent_file "$NEWAGENT_FILE" "NewAgent";
     # Update default creation condition
     ;;
 esac
-```
-
-##### PowerShell script (`scripts/powershell/update-agent-context.ps1`)
-
-Add file variable:
-
-```powershell
-$windsurfFile = Join-Path $repoRoot '.windsurf/rules/research-rules.md'
-```
-
-Add to switch statement:
-
-```powershell
-switch ($AgentType) {
-    # ... existing cases ...
-    'windsurf' { Update-AgentFile $windsurfFile 'Windsurf' }
-    '' {
-        foreach ($pair in @(
-            # ... existing pairs ...
-            @{file=$windsurfFile; name='Windsurf'}
-        )) {
-            if (Test-Path $pair.file) { Update-AgentFile $pair.file $pair.name }
-        }
-        # Update default creation condition
-    }
-}
 ```
 
 #### 6. Update CLI Tool Checks (Optional)
@@ -294,14 +284,8 @@ For agents that require CLI tools, add checks in the `check()` command and agent
 
 ```python
 # In check() command
-tracker.add("windsurf", "Windsurf IDE (optional)")
-windsurf_ok = check_tool_for_tracker("windsurf", "https://windsurf.com/", tracker)
-
-# In init validation (only if CLI tool required)
-elif selected_ai == "windsurf":
-    if not check_tool("windsurf", "Install from: https://windsurf.com/"):
-        console.print("[red]Error:[/red] Windsurf CLI is required for Windsurf research projects")
-        agent_tool_missing = True
+tracker.add("new-agent-cli", "New Agent CLI (optional)")
+newagent_ok = check_tool("new-agent-cli", tracker=tracker)
 ```
 
 **Note**: CLI tool checks are now handled automatically based on the `requires_cli` field in AGENT_CONFIG. No additional code changes needed in the `check()` or `init()` commands - they automatically loop through AGENT_CONFIG and check tools as needed.
@@ -401,14 +385,14 @@ echo "✅ Done"
 - **Hybrid agents**: May require both extension and CLI installation
 - **Test thoroughly**: Ensure installations work in the devcontainer environment
 
-## Agent Categories
+## AI Assistant Categories
 
-### CLI-Based Agents
+### CLI-Based Assistants
 
-Require a command-line tool to be installed:
+Both supported assistants require a command-line tool to be installed:
 
-- **Claude Code**: `claude` CLI
-- **Codex CLI**: `codex` CLI
+- **Claude Code**: `claude` CLI (install from https://docs.anthropic.com/en/docs/claude-code/setup)
+- **Codex CLI**: `codex` CLI (install from https://github.com/openai/codex)
 
 ## Command File Formats
 
@@ -419,10 +403,14 @@ Used by: Claude Code, Codex CLI
 ```markdown
 ---
 description: "Command description"
+scripts:
+  sh: scripts/bash/script-name.sh
 ---
 
 Research command content with {SCRIPT} and $ARGUMENTS placeholders.
 Example: /research.define, /research.methodology, /research.analyze
+
+Next step: Use /research.next-command or ask @agent-name for help.
 ```
 
 ## Directory Conventions
@@ -434,6 +422,7 @@ Example: /research.define, /research.methodology, /research.analyze
 
 - **Markdown/prompt-based**: `$ARGUMENTS`
 - **Script placeholders**: `{SCRIPT}` (replaced with actual script path)
+- **Agent mentions**: `@agent-name` for invoking specialized agents
 
 ## Testing New Agent Integration
 
