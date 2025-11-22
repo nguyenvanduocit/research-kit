@@ -559,7 +559,7 @@ def download_template_from_github(ai_assistant: str, download_dir: Path, *, scri
         raise typer.Exit(1)
 
     assets = release_data.get("assets", [])
-    pattern = f"research-kit-template-{ai_assistant}-{script_type}"
+    pattern = f"research-kit-{ai_assistant}-"
     matching_assets = [
         asset for asset in assets
         if pattern in asset["name"] and asset["name"].endswith(".zip")
@@ -937,9 +937,9 @@ def init(
         # Create options dict for selection (agent_key: display_name)
         ai_choices = {key: config["name"] for key, config in AGENT_CONFIG.items()}
         selected_ai = select_with_arrows(
-            ai_choices, 
-            "Choose your AI assistant:", 
-            "copilot"
+            ai_choices,
+            "Choose your AI assistant:",
+            "claude"
         )
 
     if not ignore_agent_tools:

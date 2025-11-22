@@ -8,7 +8,6 @@
         "research.publish": true
     },
     "chat.tools.terminal.autoApprove": {
-        ".research/scripts/bash/": true,
-        ".research/scripts/powershell/": true
+        ".research/scripts/bash/": true
     }
 }

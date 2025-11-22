@@ -2,23 +2,16 @@
 
 This guide will help you get started with Systematic Research Development using Research Kit.
 
-> NEW: All automation scripts now provide both Bash (`.sh`) and PowerShell (`.ps1`) variants. The `research` CLI auto-selects based on OS unless you pass `--script sh|ps`.
-
 ## The Research Workflow
 
 ### 1. Install Research Kit
 
-Initialize your project depending on the AI assistant you're using:
+Initialize your project with your preferred AI assistant (Claude Code or Codex CLI):
 
 ```bash
 uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init <PROJECT_NAME>
-```
-
-Pick script type explicitly (optional):
-
-```bash
-uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init <PROJECT_NAME> --script ps  # Force PowerShell
-uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init <PROJECT_NAME> --script sh  # Force POSIX shell
+# or specify agent explicitly
+uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init <PROJECT_NAME> --ai claude
 ```
 
 ### 2. Define Your Research

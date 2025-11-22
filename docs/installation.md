@@ -2,8 +2,8 @@
 
 ## Prerequisites
 
-- **Linux/macOS** (or Windows; PowerShell scripts now supported without WSL)
-- AI coding agent: [Claude Code](https://www.anthropic.com/claude-code), [GitHub Copilot](https://code.visualstudio.com/), [Codebuddy CLI](https://www.codebuddy.ai/cli) or [Gemini CLI](https://github.com/google-gemini/gemini-cli)
+- **Linux/macOS** (Windows users should use WSL2 or Git Bash)
+- AI coding agent: [Claude Code](https://www.anthropic.com/claude-code) or [Codex CLI](https://github.com/openai/codex)
 - [uv](https://docs.astral.sh/uv/) for package management
 - [Python 3.11+](https://www.python.org/downloads/)
 - [Git](https://git-scm.com/downloads)
@@ -32,26 +32,7 @@ You can proactively specify your AI agent during initialization:
 
 ```bash
 uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init <project_name> --ai claude
-uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init <project_name> --ai gemini
-uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init <project_name> --ai copilot
-uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init <project_name> --ai codebuddy
-```
-
-### Specify Script Type (Shell vs PowerShell)
-
-All automation scripts now have both Bash (`.sh`) and PowerShell (`.ps1`) variants.
-
-Auto behavior:
-
-- Windows default: `ps`
-- Other OS default: `sh`
-- Interactive mode: you'll be prompted unless you pass `--script`
-
-Force a specific script type:
-
-```bash
-uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init <project_name> --script sh
-uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init <project_name> --script ps
+uvx --from git+https://github.com/nguyenvanduocit/research-kit.git research init <project_name> --ai codex
 ```
 
 ### Ignore Agent Tools Check
@@ -70,7 +51,7 @@ After initialization, you should see the following commands available in your AI
 - `/research.methodology` - Design research methodology
 - `/research.tasks` - Break down into actionable tasks
 
-The `.research/scripts` directory will contain both `.sh` and `.ps1` scripts.
+The `.research/scripts/bash` directory will contain automation scripts.
 
 ## Troubleshooting
 

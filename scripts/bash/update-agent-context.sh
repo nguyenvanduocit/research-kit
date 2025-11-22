@@ -30,12 +30,12 @@
 #
 # 5. Multi-Agent Support
 #    - Handles agent-specific file paths and naming conventions
-#    - Supports: Claude, Gemini, Copilot, Cursor, Qwen, opencode, Codex, Windsurf, Kilo Code, Auggie CLI, Roo Code, CodeBuddy CLI, Amp, or Amazon Q Developer CLI
+#    - Supports: Claude Code, Codex CLI
 #    - Can update single agents or all existing agent files
 #    - Creates default Claude file if no agent files exist
 #
 # Usage: ./update-agent-context.sh [agent_type]
-# Agent types: claude|gemini|copilot|cursor-agent|qwen|opencode|codex|windsurf|kilocode|auggie|q
+# Agent types: claude|codex
 # Leave empty to update all existing agent files
 
 set -e
@@ -58,20 +58,9 @@ eval $(get_feature_paths)
 NEW_METHODOLOGY="$IMPL_PLAN"  # Alias for compatibility with existing code
 AGENT_TYPE="${1:-}"
 
-# Agent-specific file paths
+# Agent-specific file paths (only claude and codex supported)
 CLAUDE_FILE="$REPO_ROOT/CLAUDE.md"
-GEMINI_FILE="$REPO_ROOT/GEMINI.md"
-COPILOT_FILE="$REPO_ROOT/.github/copilot-instructions.md"
-CURSOR_FILE="$REPO_ROOT/.cursor/rules/research-rules.mdc"
-QWEN_FILE="$REPO_ROOT/QWEN.md"
-AGENTS_FILE="$REPO_ROOT/AGENTS.md"
-WINDSURF_FILE="$REPO_ROOT/.windsurf/rules/research-rules.md"
-KILOCODE_FILE="$REPO_ROOT/.kilocode/rules/research-rules.md"
-AUGGIE_FILE="$REPO_ROOT/.augment/rules/research-rules.md"
-ROO_FILE="$REPO_ROOT/.roo/rules/research-rules.md"
-CODEBUDDY_FILE="$REPO_ROOT/CODEBUDDY.md"
-AMP_FILE="$REPO_ROOT/AGENTS.md"
-Q_FILE="$REPO_ROOT/AGENTS.md"
+CODEX_FILE="$REPO_ROOT/AGENTS.md"
 
 # Template file
 TEMPLATE_FILE="$REPO_ROOT/.research/templates/agent-file-template.md"
@@ -573,48 +562,12 @@ update_specific_agent() {
         claude)
             update_agent_file "$CLAUDE_FILE" "Claude Code"
             ;;
-        gemini)
-            update_agent_file "$GEMINI_FILE" "Gemini CLI"
-            ;;
-        copilot)
-            update_agent_file "$COPILOT_FILE" "GitHub Copilot"
-            ;;
-        cursor-agent)
-            update_agent_file "$CURSOR_FILE" "Cursor IDE"
-            ;;
-        qwen)
-            update_agent_file "$QWEN_FILE" "Qwen Code"
-            ;;
-        opencode)
-            update_agent_file "$AGENTS_FILE" "opencode"
-            ;;
         codex)
-            update_agent_file "$AGENTS_FILE" "Codex CLI"
-            ;;
-        windsurf)
-            update_agent_file "$WINDSURF_FILE" "Windsurf"
-            ;;
-        kilocode)
-            update_agent_file "$KILOCODE_FILE" "Kilo Code"
-            ;;
-        auggie)
-            update_agent_file "$AUGGIE_FILE" "Auggie CLI"
-            ;;
-        roo)
-            update_agent_file "$ROO_FILE" "Roo Code"
-            ;;
-        codebuddy)
-            update_agent_file "$CODEBUDDY_FILE" "CodeBuddy CLI"
-            ;;
-        amp)
-            update_agent_file "$AMP_FILE" "Amp"
-            ;;
-        q)
-            update_agent_file "$Q_FILE" "Amazon Q Developer CLI"
+            update_agent_file "$CODEX_FILE" "Codex CLI"
             ;;
         *)
             log_error "Unknown agent type '$agent_type'"
-            log_error "Expected: claude|gemini|copilot|cursor-agent|qwen|opencode|codex|windsurf|kilocode|auggie|roo|amp|q"
+            log_error "Expected: claude|codex"
             exit 1
             ;;
     esac
@@ -629,58 +582,8 @@ update_all_existing_agents() {
         found_agent=true
     fi
 
-    if [[ -f "$GEMINI_FILE" ]]; then
-        update_agent_file "$GEMINI_FILE" "Gemini CLI"
-        found_agent=true
-    fi
-
-    if [[ -f "$COPILOT_FILE" ]]; then
-        update_agent_file "$COPILOT_FILE" "GitHub Copilot"
-        found_agent=true
-    fi
-
-    if [[ -f "$CURSOR_FILE" ]]; then
-        update_agent_file "$CURSOR_FILE" "Cursor IDE"
-        found_agent=true
-    fi
-
-    if [[ -f "$QWEN_FILE" ]]; then
-        update_agent_file "$QWEN_FILE" "Qwen Code"
-        found_agent=true
-    fi
-
-    if [[ -f "$AGENTS_FILE" ]]; then
-        update_agent_file "$AGENTS_FILE" "Codex/opencode"
-        found_agent=true
-    fi
-
-    if [[ -f "$WINDSURF_FILE" ]]; then
-        update_agent_file "$WINDSURF_FILE" "Windsurf"
-        found_agent=true
-    fi
-
-    if [[ -f "$KILOCODE_FILE" ]]; then
-        update_agent_file "$KILOCODE_FILE" "Kilo Code"
-        found_agent=true
-    fi
-
-    if [[ -f "$AUGGIE_FILE" ]]; then
-        update_agent_file "$AUGGIE_FILE" "Auggie CLI"
-        found_agent=true
-    fi
-
-    if [[ -f "$ROO_FILE" ]]; then
-        update_agent_file "$ROO_FILE" "Roo Code"
-        found_agent=true
-    fi
-
-    if [[ -f "$CODEBUDDY_FILE" ]]; then
-        update_agent_file "$CODEBUDDY_FILE" "CodeBuddy CLI"
-        found_agent=true
-    fi
-
-    if [[ -f "$Q_FILE" ]]; then
-        update_agent_file "$Q_FILE" "Amazon Q Developer CLI"
+    if [[ -f "$CODEX_FILE" ]]; then
+        update_agent_file "$CODEX_FILE" "Codex CLI"
         found_agent=true
     fi
 
@@ -714,7 +617,7 @@ print_summary() {
     log_info "Agent context files updated with current research information"
     echo
 
-    log_info "Usage: $0 [claude|gemini|copilot|cursor-agent|qwen|opencode|codex|windsurf|kilocode|auggie|codebuddy|q]"
+    log_info "Usage: $0 [claude|codex]"
 }
 
 #==============================================================================
