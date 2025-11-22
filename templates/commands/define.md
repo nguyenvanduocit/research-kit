@@ -1,13 +1,5 @@
 ---
 description: Create or update the research definition from a natural language research topic description.
-handoffs:
-  - label: Refine Research Scope
-    agent: research.refine
-    prompt: Clarify and refine research requirements
-    send: true
-  - label: Design Methodology
-    agent: research.methodology
-    prompt: Create a methodology for this research
 scripts:
   sh: scripts/bash/create-new-research.sh --json "{ARGS}"
 ---
@@ -131,7 +123,7 @@ Given that research topic description, do this:
    - Research type identified
    - Number of research questions defined
    - Key scope boundaries
-   - Next step: Use `/research.refine` if clarifications needed, otherwise proceed to `/research.methodology`
+   - **Next step**: Use `/research.refine` if clarifications needed, otherwise proceed to `/research.methodology`. For quality review, ask `@research-reviewer` to validate the definition.
 
 **Research Type Guidance**:
 

@@ -1,10 +1,5 @@
 ---
 description: Interactively refine research scope through structured questions to clarify ambiguous areas before methodology design
-handoffs:
-  - label: Design Methodology
-    agent: research.methodology
-    prompt: Create a methodology for this research
-    send: true
 ---
 
 ## User Input
@@ -48,7 +43,7 @@ This command helps refine the research definition by asking targeted questions t
    - Number of clarifications addressed
    - Updated sections in definition
    - Key decisions documented
-   - Next step: Proceed to `/research.methodology`
+   - **Next step**: Proceed to `/research.methodology` to design the research approach
 
 **Question Types**:
 - **Scope Boundaries**: "Should this research cover X or is that out of scope?"

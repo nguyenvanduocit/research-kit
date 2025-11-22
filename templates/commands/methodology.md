@@ -1,13 +1,5 @@
 ---
 description: Generate research methodology document based on research definition
-handoffs:
-  - label: Validate Methodology
-    agent: research.validate
-    prompt: Validate research methodology for rigor and feasibility
-  - label: Generate Tasks
-    agent: research.tasks
-    prompt: Break down methodology into actionable tasks
-    send: true
 scripts:
   sh: scripts/bash/setup-methodology.sh
 ---
@@ -113,7 +105,7 @@ This command generates a comprehensive research methodology based on the researc
    - Key data sources identified
    - Analysis frameworks to be used
    - Timeline estimate
-   - Next step: Use `/research.validate` (optional) or proceed to `/research.tasks`
+   - **Next step**: Use `/research.validate` for rigor check, or proceed to `/research.tasks`. For quality review, ask `@research-reviewer` to validate methodology.
 
 **Methodology Templates by Research Type**:
 

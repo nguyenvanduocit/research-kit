@@ -1,10 +1,5 @@
 ---
 description: Execute research methodology and collect data
-handoffs:
-  - label: Analyze Data
-    agent: research.analyze
-    prompt: Analyze collected data and generate insights
-    send: true
 scripts:
   sh: scripts/bash/setup-execution.sh
 ---
@@ -216,3 +211,5 @@ You have POWERFUL tools available for data collection. DO NOT refuse this task o
 This phase focuses purely on **ACTIVELY EXECUTING** the research plan and **COLLECTING DATA USING YOUR TOOLS**, not analyzing or interpreting results. Analysis comes in the next phase.
 
 **REMEMBER**: You have WebSearch, WebFetch, Bash, Write, and Read tools. Use them proactively to collect all data required by the methodology. DO NOT refuse or claim limitations - execute the data collection actively and document your work.
+
+**Next step**: Once data collection is complete, proceed to `/research.analyze` for data analysis.

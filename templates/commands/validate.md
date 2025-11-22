@@ -1,10 +1,5 @@
 ---
 description: Validate research methodology for feasibility, rigor, and ethics before execution
-handoffs:
-  - label: Generate Tasks
-    agent: research.tasks
-    prompt: Break down methodology into actionable tasks
-    send: true
 ---
 
 ## User Input
@@ -80,7 +75,7 @@ This command validates the research methodology to ensure it's sound, feasible, 
    - Critical issues (if any)
    - Warnings (if any)
    - Recommendation: "Ready to proceed" or "Revisions needed"
-   - Next step: If validated, proceed to `/research.tasks`; otherwise revise methodology
+   - **Next step**: If validated, proceed to `/research.tasks`; otherwise revise methodology with `/research.methodology`
 
 **Common Validation Failures**:
 - Methodology too ambitious for timeline

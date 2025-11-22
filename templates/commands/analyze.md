@@ -1,10 +1,5 @@
 ---
 description: Analyze collected data and generate insights
-handoffs:
-  - label: Synthesize Findings
-    agent: research.synthesize
-    prompt: Synthesize analysis findings and draw conclusions
-    send: true
 scripts:
   sh: scripts/bash/setup-analysis.sh
 ---
@@ -215,3 +210,5 @@ This command guides the systematic analysis of collected data to generate insigh
 - Provide clear README files
 
 This phase focuses on ANALYZING data to generate findings, not drawing final conclusions. Synthesis and interpretation come in the next phase.
+
+**Next step**: Once analysis is complete, proceed to `/research.synthesize` to draw conclusions. For quality review, ask `@research-reviewer` to validate analysis.

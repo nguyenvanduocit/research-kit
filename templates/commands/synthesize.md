@@ -1,10 +1,5 @@
 ---
 description: Synthesize findings and draw conclusions
-handoffs:
-  - label: Create Publication
-    agent: research.publish
-    prompt: Create publication-ready research outputs
-    send: true
 scripts:
   sh: scripts/bash/setup-synthesis.sh
 ---
@@ -241,3 +236,5 @@ This command guides the synthesis of analysis findings to draw conclusions and a
 - Synthesis tells coherent story
 
 This phase focuses on SYNTHESIZING findings into conclusions and implications, not on writing the final publication. Publication formatting comes in the next phase.
+
+**Next step**: Once synthesis is complete, proceed to `/research.publish` to create publication-ready outputs.
