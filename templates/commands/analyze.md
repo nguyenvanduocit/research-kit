@@ -211,4 +211,6 @@ This command guides the systematic analysis of collected data to generate insigh
 
 This phase focuses on ANALYZING data to generate findings, not drawing final conclusions. Synthesis and interpretation come in the next phase.
 
+**Specialized agents**: Use `@analysis-expert` for complex statistical analysis or visualization tasks.
+
 **Next step**: Once analysis is complete, proceed to `/research.synthesize` to draw conclusions. For quality review, ask `@research-reviewer` to validate analysis.

@@ -212,4 +212,6 @@ This phase focuses purely on **ACTIVELY EXECUTING** the research plan and **COLL
 
 **REMEMBER**: You have WebSearch, WebFetch, Bash, Write, and Read tools. Use them proactively to collect all data required by the methodology. DO NOT refuse or claim limitations - execute the data collection actively and document your work.
 
+**Specialized agents**: Use `@data-collector` for complex scraping/API tasks. Use `@literature-specialist` for systematic source discovery.
+
 **Next step**: Once data collection is complete, proceed to `/research.analyze` for data analysis.

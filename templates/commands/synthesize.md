@@ -237,4 +237,6 @@ This command guides the synthesis of analysis findings to draw conclusions and a
 
 This phase focuses on SYNTHESIZING findings into conclusions and implications, not on writing the final publication. Publication formatting comes in the next phase.
 
-**Next step**: Once synthesis is complete, proceed to `/research.publish` to create publication-ready outputs.
+**Specialized agents**: Use `@analysis-expert` for additional statistical validation or `@research-reviewer` to validate synthesis quality.
+
+**Next step**: Once synthesis is complete, proceed to `/research.publish` to create publication-ready outputs. Use `@academic-writer` for professional formatting and citation management.
