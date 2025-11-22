@@ -1,5 +1,5 @@
 ---
-name: literature-specialist
+name: agent-literature-specialist
 description: Literature review specialist for systematic source discovery, evaluation, and synthesis. Use when conducting literature reviews, finding academic sources, evaluating source credibility, or synthesizing research findings from multiple papers.
 tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch
 model: inherit

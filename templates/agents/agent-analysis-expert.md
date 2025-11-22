@@ -1,5 +1,5 @@
 ---
-name: analysis-expert
+name: agent-analysis-expert
 description: Data analysis specialist for statistical analysis, visualization, and pattern discovery. Use when analyzing collected data, running statistical tests, creating visualizations, or interpreting research findings.
 tools: Read, Write, Edit, Bash, Glob, Grep
 model: inherit

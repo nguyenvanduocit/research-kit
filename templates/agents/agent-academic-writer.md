@@ -1,5 +1,5 @@
 ---
-name: academic-writer
+name: agent-academic-writer
 description: Academic writing specialist for creating publication-ready research outputs. Use when writing research papers, reports, executive summaries, or any formal research documentation. Handles citations, formatting, and academic style.
 tools: Read, Write, Edit, Glob, Grep
 model: inherit

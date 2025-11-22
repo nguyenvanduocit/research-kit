@@ -90,7 +90,7 @@ This command breaks down the research methodology into specific, actionable task
    - Number of phases
    - Estimated duration (if calculated)
    - Tasks that can be parallelized
-   - **Next step**: Proceed to `/research.execute` to begin data collection. Use `@research-assistant` for guided workflow.
+   - **Next step**: Proceed to `/research.execute` to begin data collection. Use `@agent-research-assistant` for guided workflow.
 
 **Task Granularity Guidelines**:
 - Each task should be completable in one work session (2-4 hours max)

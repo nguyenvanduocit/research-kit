@@ -342,6 +342,6 @@ This command guides the creation of publication-ready research outputs including
 
 This phase creates PUBLICATION-READY outputs, transforming the research into formats suitable for different audiences and purposes.
 
-**Specialized agents**: Use `@academic-writer` for professional publication formatting, citation management, and academic style guidance.
+**Specialized agents**: Use `@agent-academic-writer` for professional publication formatting, citation management, and academic style guidance.
 
-**Research complete**: This is the final phase of the SRD workflow. For quality review before submission, ask `@research-reviewer` to validate the publication.
+**Research complete**: This is the final phase of the SRD workflow. For quality review before submission, ask `@agent-research-reviewer` to validate the publication.

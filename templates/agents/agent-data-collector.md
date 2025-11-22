@@ -1,5 +1,5 @@
 ---
-name: data-collector
+name: agent-data-collector
 description: Data collection specialist for web scraping, API integration, and systematic data gathering. Use when collecting data from websites, APIs, databases, or any external sources. Proactively executes data collection tasks.
 tools: Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch
 model: inherit

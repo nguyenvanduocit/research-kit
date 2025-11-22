@@ -123,7 +123,7 @@ Given that research topic description, do this:
    - Research type identified
    - Number of research questions defined
    - Key scope boundaries
-   - **Next step**: Use `/research.refine` if clarifications needed, otherwise proceed to `/research.methodology`. For quality review, ask `@research-reviewer` to validate the definition.
+   - **Next step**: Use `/research.refine` if clarifications needed, otherwise proceed to `/research.methodology`. For quality review, ask `@agent-research-reviewer` to validate the definition.
 
 **Research Type Guidance**:
 

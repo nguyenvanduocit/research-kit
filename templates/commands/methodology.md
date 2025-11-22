@@ -105,7 +105,7 @@ This command generates a comprehensive research methodology based on the researc
    - Key data sources identified
    - Analysis frameworks to be used
    - Timeline estimate
-   - **Next step**: Use `/research.validate` for rigor check, or proceed to `/research.tasks`. For quality review, ask `@research-reviewer`. For literature review planning, consult `@literature-specialist`.
+   - **Next step**: Use `/research.validate` for rigor check, or proceed to `/research.tasks`. For quality review, ask `@agent-research-reviewer`. For literature review planning, consult `@agent-literature-specialist`.
 
 **Methodology Templates by Research Type**:
 
