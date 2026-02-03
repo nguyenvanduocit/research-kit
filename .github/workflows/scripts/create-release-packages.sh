@@ -50,6 +50,22 @@ copy_agents() {
   fi
 }
 
+copy_skills() {
+  local output_dir=$1
+  mkdir -p "$output_dir"
+
+  if [[ -d templates/skills ]]; then
+    for skill_template in templates/skills/*.md; do
+      [[ -f "$skill_template" ]] || continue
+      local name content
+      name=$(basename "$skill_template" .md)
+      content=$(cat "$skill_template" | rewrite_paths)
+      echo "$content" > "$output_dir/${name}.md"
+    done
+    echo "Copied skills -> $output_dir"
+  fi
+}
+
 generate_commands() {
   local output_dir=$1
   mkdir -p "$output_dir"
@@ -103,10 +119,10 @@ build_package() {
     echo "Copied scripts/bash -> .research/scripts"
   fi
 
-  # Copy templates (excluding commands/ and agents/)
+  # Copy templates (excluding commands/, agents/, and skills/)
   if [[ -d templates ]]; then
     mkdir -p "$SPEC_DIR/templates"
-    rsync -a templates/ "$SPEC_DIR/templates/" --exclude='commands/' --exclude='agents/' --exclude='vscode-settings.json'
+    rsync -a templates/ "$SPEC_DIR/templates/" --exclude='commands/' --exclude='agents/' --exclude='skills/' --exclude='vscode-settings.json'
     echo "Copied templates -> .research/templates"
   fi
 
@@ -114,8 +130,10 @@ build_package() {
     claude)
       mkdir -p "$base_dir/.claude/commands"
       mkdir -p "$base_dir/.claude/agents"
+      mkdir -p "$base_dir/.claude/skills"
       generate_commands "$base_dir/.claude/commands"
       copy_agents "$base_dir/.claude/agents"
+      copy_skills "$base_dir/.claude/skills"
       ;;
     codex)
       mkdir -p "$base_dir/.codex/prompts"

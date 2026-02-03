@@ -59,6 +59,8 @@ cp -r .genreleases/research-codex-package/. ~/test-research-project/
     - `agent-analysis-expert.md`: Data analysis specialist
     - `agent-data-collector.md`: Data collection specialist
     - `agent-academic-writer.md`: Academic writing specialist
+  - `skills/*.md`: Claude Code skills (auto-loaded, orchestrate commands and agents):
+    - `research.md`: SRD workflow orchestrator skill - auto-detects research state and drives workflow forward
   - `research-definition-template.md`, `methodology-template.md`, `analysis-template.md`: Document templates
   - `agent-file-template.md`: Agent-specific context file template
 
@@ -160,6 +162,7 @@ This allows SRD workflow in repositories without git (e.g., institutional enviro
 ## File Conventions
 
 - Slash commands: `.claude/commands/*.md`, `.codex/prompts/*.md`
+- Skills: `.claude/skills/*.md` (auto-loaded orchestrator skills, e.g., `research.md`)
 - Agents: `.claude/agents/*.md` (all agent files use `agent-` prefix, e.g., `agent-research-assistant.md`)
 - Research definitions: `research/###-topic-name/definition.md`
 - Research methodologies: `research/###-topic-name/methodology.md`
