@@ -147,7 +147,7 @@ Choose your preferred installation method:
 Install once and use everywhere:
 
 ```bash
-uv tool install research-cli --from git+https://github.com/nguyenvanduocit/research-kit.git
+uv tool install research-cli --force --from git+https://github.com/nguyenvanduocit/research-kit.git
 ```
 
 Then use the tool directly:
@@ -445,7 +445,7 @@ Research Kit is optimized for CLI-based AI agents:
 
 ```bash
 # Persistent installation
-uv tool install research-cli --from git+https://github.com/nguyenvanduocit/research-kit.git
+uv tool install research-cli --force --from git+https://github.com/nguyenvanduocit/research-kit.git
 
 # Verify installation
 research check
@@ -791,5 +791,5 @@ Research Kit builds on ideas from systematic review methodologies, evidence-base
 
 <p align="center">
     <strong>Start conducting rigorous, reproducible research with AI agents today.</strong><br/>
-    <code>uv tool install research-cli --from git+https://github.com/nguyenvanduocit/research-kit.git</code>
+    <code>uv tool install research-cli --force --from git+https://github.com/nguyenvanduocit/research-kit.git</code>
 </p>

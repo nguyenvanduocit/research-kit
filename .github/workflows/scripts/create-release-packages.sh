@@ -55,12 +55,17 @@ copy_skills() {
   mkdir -p "$output_dir"
 
   if [[ -d templates/skills ]]; then
-    for skill_template in templates/skills/*.md; do
-      [[ -f "$skill_template" ]] || continue
-      local name content
-      name=$(basename "$skill_template" .md)
-      content=$(cat "$skill_template" | rewrite_paths)
-      echo "$content" > "$output_dir/${name}.md"
+    for skill_dir in templates/skills/*/; do
+      [[ -d "$skill_dir" ]] || continue
+      local name="$(basename "$skill_dir")"
+      local skill_out="$output_dir/$name"
+      mkdir -p "$skill_out"
+      for md_file in "$skill_dir"*.md; do
+        [[ -f "$md_file" ]] || continue
+        local content
+        content=$(cat "$md_file" | rewrite_paths)
+        echo "$content" > "$skill_out/$(basename "$md_file")"
+      done
     done
     echo "Copied skills -> $output_dir"
   fi

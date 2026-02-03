@@ -50,4 +50,5 @@ sdd-*/
 .claude/agents/
 .research/
 research/
+!templates/skills/research/
 principles/research-principles.md
