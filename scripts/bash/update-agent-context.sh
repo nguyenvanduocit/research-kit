@@ -53,9 +53,9 @@ SCRIPT_DIR="$(CDPATH="" cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/common.sh"
 
 # Get all paths and variables from common functions
-eval $(get_feature_paths)
+eval $(get_research_paths)
 
-NEW_METHODOLOGY="$IMPL_PLAN"  # Alias for compatibility with existing code
+NEW_METHODOLOGY="$RESEARCH_METHODOLOGY"
 AGENT_TYPE="${1:-}"
 
 # Agent-specific file paths (only claude and codex supported)

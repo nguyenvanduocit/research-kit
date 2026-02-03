@@ -52,7 +52,7 @@ if [[ ! -f "$DEFINITION_FILE" ]]; then
     exit 1
 fi
 
-# Define methodology file path (uses IMPL_PLAN from common.sh for now)
+# Define methodology file path
 METHODOLOGY_FILE="$RESEARCH_DIR/methodology.md"
 
 # Copy methodology template if it exists
@@ -163,9 +163,9 @@ echo "  - analysis/ for analysis outputs"
 # Output results
 if $JSON_MODE; then
     printf '{"DEFINITION_FILE":"%s","METHODOLOGY_FILE":"%s","LITERATURE_REVIEW":"%s","DATA_SOURCES":"%s","FINDINGS":"%s","REFERENCES":"%s","RESEARCH_DIR":"%s","PROTOCOLS_DIR":"%s","DATA_DIR":"%s","ANALYSIS_DIR":"%s","BRANCH":"%s","HAS_GIT":"%s"}\n' \
-        "$FEATURE_SPEC" "$METHODOLOGY_FILE" "$LITERATURE_REVIEW_FILE" "$DATA_SOURCES_FILE" "$FINDINGS_FILE" "$REFERENCES_FILE" "$RESEARCH_DIR" "$PROTOCOLS_DIR" "$DATA_DIR" "$ANALYSIS_DIR" "$CURRENT_BRANCH" "$HAS_GIT"
+        "$DEFINITION_FILE" "$METHODOLOGY_FILE" "$LITERATURE_REVIEW_FILE" "$DATA_SOURCES_FILE" "$FINDINGS_FILE" "$REFERENCES_FILE" "$RESEARCH_DIR" "$PROTOCOLS_DIR" "$DATA_DIR" "$ANALYSIS_DIR" "$CURRENT_BRANCH" "$HAS_GIT"
 else
-    echo "DEFINITION_FILE: $FEATURE_SPEC"
+    echo "DEFINITION_FILE: $DEFINITION_FILE"
     echo "METHODOLOGY_FILE: $METHODOLOGY_FILE"
     echo "LITERATURE_REVIEW: $LITERATURE_REVIEW_FILE"
     echo "DATA_SOURCES: $DATA_SOURCES_FILE"

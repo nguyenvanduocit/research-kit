@@ -80,32 +80,70 @@ find_repo_root() {
     return 1
 }
 
+# Function to get highest number from research directory
+get_highest_from_research_dirs() {
+    local research_dir="$1"
+    local highest=0
+
+    if [ -d "$research_dir" ]; then
+        for dir in "$research_dir"/*; do
+            [ -d "$dir" ] || continue
+            dirname=$(basename "$dir")
+            number=$(echo "$dirname" | grep -o '^[0-9]\+' || echo "0")
+            number=$((10#$number))
+            if [ "$number" -gt "$highest" ]; then
+                highest=$number
+            fi
+        done
+    fi
+
+    echo "$highest"
+}
+
+# Function to get highest number from git branches
+get_highest_from_branches() {
+    local highest=0
+
+    # Get all branches (local and remote)
+    branches=$(git branch -a 2>/dev/null || echo "")
+
+    if [ -n "$branches" ]; then
+        while IFS= read -r branch; do
+            # Clean branch name: remove leading markers and remote prefixes
+            clean_branch=$(echo "$branch" | sed 's/^[* ]*//; s|^remotes/[^/]*/||')
+
+            # Extract number if branch matches pattern ###-*
+            if echo "$clean_branch" | grep -q '^[0-9]\{3\}-'; then
+                number=$(echo "$clean_branch" | grep -o '^[0-9]\{3\}' || echo "0")
+                number=$((10#$number))
+                if [ "$number" -gt "$highest" ]; then
+                    highest=$number
+                fi
+            fi
+        done <<< "$branches"
+    fi
+
+    echo "$highest"
+}
+
 # Function to check existing branches (local and remote) and return next available number
 check_existing_branches() {
-    local short_name="$1"
+    local research_dir="$1"
 
     # Fetch all remotes to get latest branch info (suppress errors if no remotes)
     git fetch --all --prune 2>/dev/null || true
 
-    # Find all branches matching the pattern using git ls-remote (more reliable)
-    local remote_branches=$(git ls-remote --heads origin 2>/dev/null | grep -E "refs/heads/[0-9]+-${short_name}$" | sed 's/.*\/\([0-9]*\)-.*/\1/' | sort -n)
+    # Get highest number from ALL branches (not filtered by short name)
+    local highest_branch=$(get_highest_from_branches)
 
-    # Also check local branches
-    local local_branches=$(git branch 2>/dev/null | grep -E "^[* ]*[0-9]+-${short_name}$" | sed 's/^[* ]*//' | sed 's/-.*//' | sort -n)
+    # Get highest number from ALL research dirs (not filtered by short name)
+    local highest_research=$(get_highest_from_research_dirs "$research_dir")
 
-    # Check research directory as well
-    local research_dirs=""
-    if [ -d "$RESEARCH_DIR" ]; then
-        research_dirs=$(find "$RESEARCH_DIR" -maxdepth 1 -type d -name "[0-9]*-${short_name}" 2>/dev/null | xargs -n1 basename 2>/dev/null | sed 's/-.*//' | sort -n)
+    # Take the maximum of both
+    local max_num=$highest_branch
+    if [ "$highest_research" -gt "$max_num" ]; then
+        max_num=$highest_research
     fi
-
-    # Combine all sources and get the highest number
-    local max_num=0
-    for num in $remote_branches $local_branches $research_dirs; do
-        if [ "$num" -gt "$max_num" ]; then
-            max_num=$num
-        fi
-    done
 
     # Return next number
     echo $((max_num + 1))
@@ -132,6 +170,12 @@ cd "$REPO_ROOT"
 
 RESEARCH_DIR="$REPO_ROOT/research"
 mkdir -p "$RESEARCH_DIR"
+
+# Function to clean and format a branch name
+clean_branch_name() {
+    local name="$1"
+    echo "$name" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//' | sed 's/-$//'
+}
 
 # Function to generate branch name with stop word filtering and length filtering
 generate_branch_name() {
@@ -176,14 +220,15 @@ generate_branch_name() {
         echo "$result"
     else
         # Fallback to original logic if no meaningful words found
-        echo "$description" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//' | sed 's/-$//' | tr '-' '\n' | grep -v '^$' | head -3 | tr '\n' '-' | sed 's/-$//'
+        local cleaned=$(clean_branch_name "$description")
+        echo "$cleaned" | tr '-' '\n' | grep -v '^$' | head -3 | tr '\n' '-' | sed 's/-$//'
     fi
 }
 
 # Generate branch name
 if [ -n "$SHORT_NAME" ]; then
     # Use provided short name, just clean it up
-    BRANCH_SUFFIX=$(echo "$SHORT_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//' | sed 's/-$//')
+    BRANCH_SUFFIX=$(clean_branch_name "$SHORT_NAME")
 else
     # Generate from description with smart filtering
     BRANCH_SUFFIX=$(generate_branch_name "$RESEARCH_DESCRIPTION")
@@ -193,7 +238,7 @@ fi
 if [ -z "$BRANCH_NUMBER" ]; then
     if [ "$HAS_GIT" = true ]; then
         # Check existing branches on remotes
-        BRANCH_NUMBER=$(check_existing_branches "$BRANCH_SUFFIX")
+        BRANCH_NUMBER=$(check_existing_branches "$RESEARCH_DIR")
     else
         # Fall back to local directory check
         HIGHEST=0
@@ -210,7 +255,8 @@ if [ -z "$BRANCH_NUMBER" ]; then
     fi
 fi
 
-RESEARCH_NUM=$(printf "%03d" "$BRANCH_NUMBER")
+# Force base-10 interpretation to prevent octal conversion (e.g., 008 is invalid octal)
+RESEARCH_NUM=$(printf "%03d" "$((10#$BRANCH_NUMBER))")
 BRANCH_NAME="${RESEARCH_NUM}-${BRANCH_SUFFIX}"
 
 # GitHub enforces a 244-byte limit on branch names
