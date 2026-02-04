@@ -69,15 +69,14 @@ Wait for user confirmation, then invoke the slash command. After completion, sug
 
 ## Quality gates
 
-Before transitioning phases, verify:
+Every phase transition is enforced by quality gates at two layers:
 
-- **After Define**: Research question clear, scoped, feasible?
-- **After Methodology**: Methodology aligns with questions?
-- **After Execute**: Data sufficient to answer questions?
-- **After Analyze**: Findings address original questions?
-- **After Synthesize**: Conclusions supported by evidence?
+1. **Shell scripts** check structural requirements (file existence, sections, content size, source counts). Failures block the setup script with clear error messages.
+2. **Commands** instruct AI to verify content quality (specificity, coverage, evidence standards). AI outputs gate results and stops if REQUIRED checks fail.
 
-Use `@agent-research-reviewer` for substantial research.
+Gates cannot be skipped. CRITICAL failures (missing files, missing sections) block unconditionally. REQUIRED failures block but can be overridden with `--force` flag (logged to `gate-log.md`). User can also say "skip gate" to bypass AI-level REQUIRED checks.
+
+See each command's "Quality Gate: AI Verification" section for specific criteria per transition.
 
 ## Edge cases
 
