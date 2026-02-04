@@ -16,8 +16,9 @@ for arg in "$@"; do
             FORCE_MODE=true
             ;;
         --help|-h)
-            echo "Usage: $0 [--json]"
+            echo "Usage: $0 [--json] [--force]"
             echo "  --json    Output results in JSON format"
+            echo "  --force   Bypass REQUIRED quality gate checks (logged)"
             echo "  --help    Show this help message"
             exit 0
             ;;

@@ -20,8 +20,9 @@ for arg in "$@"; do
             PUBLICATION_TYPE="${arg#*=}"
             ;;
         --help|-h)
-            echo "Usage: $0 [--json] [--type=TYPE]"
+            echo "Usage: $0 [--json] [--force] [--type=TYPE]"
             echo "  --json    Output results in JSON format"
+            echo "  --force   Bypass REQUIRED quality gate checks (logged)"
             echo "  --type    Publication type (report|paper|presentation|brief)"
             echo "  --help    Show this help message"
             exit 0

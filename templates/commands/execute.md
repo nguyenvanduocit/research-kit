@@ -12,7 +12,7 @@ $ARGUMENTS
 
 ## Outline
 
-This command guides the systematic execution of the research methodology to collect data and generate raw results. Run this **after** `/research.methodology`.
+This command guides the systematic execution of the research methodology to collect data and generate raw results. Run this **after** `/research.tasks`.
 
 **CRITICAL: YOU MUST ACTIVELY EXECUTE DATA COLLECTION**
 
@@ -75,9 +75,9 @@ markitdown "https://example.com/article" > sources/web/article-name.md
 
 1. **Quality Gate: AI Verification** (after script gate passes)
 
-   Read `tasks.md`, `methodology.md`, and `definition.md`. Verify ALL of the following.
+   Read `tasks.md`, `methodology.md`, and `definition.md`. Verify ALL of the following. If any REQUIRED check fails, STOP and report to user. User can say "skip gate" to override (log bypass in output).
 
-   **REQUIRED checks**:
+   **REQUIRED checks** (block unless user says "skip gate"):
    - [ ] Every research question in definition.md has at least 2 related tasks in tasks.md
    - [ ] At least 15 tasks total defined
    - [ ] Each phase (Literature Review, Data Collection, Analysis, Synthesis) has at least 3 tasks

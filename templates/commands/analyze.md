@@ -24,9 +24,9 @@ This command guides the systematic analysis of collected data to generate insigh
 
 1. **Quality Gate: AI Verification** (after script gate passes)
 
-   Read `execution.md`, `sources/SOURCES_INDEX.md`, and scan `sources/` directory. Verify ALL of the following.
+   Read `execution.md`, `sources/SOURCES_INDEX.md`, and scan `sources/` directory. Verify ALL of the following. If any REQUIRED check fails, STOP and report to user. User can say "skip gate" to override (log bypass in output).
 
-   **REQUIRED checks**:
+   **REQUIRED checks** (block unless user says "skip gate"):
    - [ ] At least 20 sources downloaded locally and indexed in SOURCES_INDEX.md
    - [ ] At least 30% of sources are Tier 1 (peer-reviewed journals, official statistics, primary data)
    - [ ] Zero URL-only citations in execution.md (all citations use file:line format)

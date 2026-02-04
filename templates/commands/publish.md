@@ -25,9 +25,9 @@ This command guides the creation of publication-ready research outputs including
 
 1. **Quality Gate: AI Verification** (after script gate passes)
 
-   Read `synthesis.md` and `definition.md`. Verify ALL of the following.
+   Read `synthesis.md` and `definition.md`. Verify ALL of the following. If any REQUIRED check fails, STOP and report to user. User can say "skip gate" to override (log bypass in output).
 
-   **REQUIRED checks**:
+   **REQUIRED checks** (block unless user says "skip gate"):
    - [ ] 100% of research questions from definition.md addressed with explicit answers in synthesis.md
    - [ ] Confidence level assigned for every research question (High/Medium/Low)
    - [ ] At least 70% of research questions have confidence High or Medium

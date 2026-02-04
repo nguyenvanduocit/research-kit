@@ -231,10 +231,10 @@ gate_tasks_to_execute() {
     gate_check_critical "tasks.md exists and has >15 lines" \
         "$(check_file_min_lines "$tasks" 15)"
 
-    # REQUIRED: at least 3 phases
+    # REQUIRED: at least 3 phases (count phase headings, not word occurrences)
     local phase_count=0
     if [[ -f "$tasks" ]]; then
-        phase_count=$(grep -ci "phase" "$tasks" 2>/dev/null | head -1)
+        phase_count=$(grep -cE "^##.*[Pp]hase" "$tasks" 2>/dev/null || echo "0")
     fi
     local phases_ok="fail"
     [[ "$phase_count" -ge 3 ]] && phases_ok="pass"
@@ -243,7 +243,7 @@ gate_tasks_to_execute() {
     # REQUIRED: at least 15 tasks
     local task_count=0
     if [[ -f "$tasks" ]]; then
-        task_count=$(grep -c '\- \[ \]' "$tasks" 2>/dev/null || echo "0")
+        task_count=$(grep -c '^\- \[ \]' "$tasks" 2>/dev/null || echo "0")
     fi
     local tasks_ok="fail"
     [[ "$task_count" -ge 15 ]] && tasks_ok="pass"
@@ -292,9 +292,9 @@ gate_execute_to_analyze() {
     gate_check_required "SOURCES_INDEX.md exists and has >10 lines" \
         "$(check_file_min_lines "$sources_index" 10)"
 
-    # REQUIRED: no URL-only citations in execution.md
+    # REQUIRED: no URL-only citations in execution.md (prose citations like "According to https://...")
     local url_only="pass"
-    if [[ -f "$exec_file" ]] && grep -qE '^\s*https?://' "$exec_file" 2>/dev/null; then
+    if [[ -f "$exec_file" ]] && grep -qEi "(according to|based on|from|see|source:) https?://" "$exec_file" 2>/dev/null; then
         url_only="fail"
     fi
     gate_check_required "No URL-only citations in execution.md" "$url_only"
@@ -342,10 +342,10 @@ gate_analyze_to_synthesize() {
     fi
     gate_check_critical "'Statistical Results' or 'Pattern Analysis' section present" "$stats_or_pattern"
 
-    # REQUIRED: at least 8 findings documented
+    # REQUIRED: at least 8 findings documented (count finding headings, not word occurrences)
     local finding_count=0
     if [[ -f "$analysis" ]]; then
-        finding_count=$(grep -ci "finding" "$analysis" 2>/dev/null || echo "0")
+        finding_count=$(grep -cE "^###.*[Ff]inding" "$analysis" 2>/dev/null || echo "0")
     fi
     local findings_ok="fail"
     [[ "$finding_count" -ge 8 ]] && findings_ok="pass"

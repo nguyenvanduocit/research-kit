@@ -24,9 +24,9 @@ This command guides the synthesis of analysis findings to draw conclusions and a
 
 1. **Quality Gate: AI Verification** (after script gate passes)
 
-   Read `analysis.md` and scan `figures/` directory. Verify ALL of the following.
+   Read `analysis.md` and scan `figures/` directory. Verify ALL of the following. If any REQUIRED check fails, STOP and report to user. User can say "skip gate" to override (log bypass in output).
 
-   **REQUIRED checks**:
+   **REQUIRED checks** (block unless user says "skip gate"):
    - [ ] At least 8 key findings documented in analysis.md
    - [ ] Every finding has: supporting evidence, file:line citation, interpretation
    - [ ] At least 70% of findings have evidence strength rating (statistical significance or qualitative strength)
