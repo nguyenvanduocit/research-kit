@@ -159,3 +159,19 @@ EOF
 
 check_file() { [[ -f "$1" ]] && echo "  ✓ $2" || echo "  ✗ $2"; }
 check_dir() { [[ -d "$1" && -n $(ls -A "$1" 2>/dev/null) ]] && echo "  ✓ $2" || echo "  ✗ $2"; }
+
+# Source quality gate functions
+_COMMON_DIR="$(CDPATH="" cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$_COMMON_DIR/quality-gate.sh"
+
+# Check if --force flag is present in args
+# Usage: FORCE_MODE=$(parse_force_flag "$@")
+parse_force_flag() {
+    for arg in "$@"; do
+        if [[ "$arg" == "--force" ]]; then
+            echo "true"
+            return
+        fi
+    done
+    echo "false"
+}
