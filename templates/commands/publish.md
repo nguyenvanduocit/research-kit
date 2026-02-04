@@ -23,13 +23,37 @@ This command guides the creation of publication-ready research outputs including
 
 **DO NOT manually create these directories or files - let the script handle it!**
 
-1. **Load complete research materials**:
+1. **Quality Gate: AI Verification** (after script gate passes)
+
+   Read `synthesis.md` and `definition.md`. Verify ALL of the following.
+
+   **REQUIRED checks**:
+   - [ ] 100% of research questions from definition.md addressed with explicit answers in synthesis.md
+   - [ ] Confidence level assigned for every research question (High/Medium/Low)
+   - [ ] At least 70% of research questions have confidence High or Medium
+   - [ ] Every answer has at least 3 supporting evidence items
+   - [ ] Contradicting evidence acknowledged for every RQ that has contradictions
+   - [ ] At least 3 emergent themes identified and documented
+   - [ ] At least 5 practical implications/recommendations
+   - [ ] Limitations section has at least 5 items with impact assessment
+   - [ ] At least 3 future research directions, each justified by evidence gap
+
+   **Output format:**
+   ```
+   QUALITY GATE: synthesize → publish (AI Verification)
+   REQUIRED: ✓/✗ [check]
+   RESULT: PASSED / BLOCKED
+   ```
+
+   If BLOCKED: Tell user which checks failed, suggest continuing `/research.synthesize`.
+
+2. **Load complete research materials**:
    - Definition, methodology, execution log
    - Analysis results and synthesis
    - All figures, tables, and references
    - Determine publication format from user input
 
-2. **Initialize publication structure**:
+3. **Initialize publication structure**:
    - Create `research/###-topic-name/publications/` directory
    - Set up format-specific subdirectories:
      - `publications/report/` - comprehensive research report
@@ -37,7 +61,7 @@ This command guides the creation of publication-ready research outputs including
      - `publications/presentation/` - slide deck
      - `publications/brief/` - executive summary
 
-3. **Determine publication format**:
+4. **Determine publication format**:
 
    Based on user input or ask:
    - **Research Report**: Comprehensive documentation
@@ -47,7 +71,7 @@ This command guides the creation of publication-ready research outputs including
    - **Blog Post**: Public-facing article
    - **Policy Brief**: Government/organization focus
 
-4. **Generate Research Report** (if selected):
+5. **Generate Research Report** (if selected):
 
    Create `publications/report/research_report.md`:
    ```markdown
@@ -118,7 +142,7 @@ This command guides the creation of publication-ready research outputs including
    - D. Research Instruments
    ```
 
-5. **Generate Academic Paper** (if selected):
+6. **Generate Academic Paper** (if selected):
 
    Create `publications/paper/manuscript.md`:
    - Follow target journal format
@@ -130,7 +154,7 @@ This command guides the creation of publication-ready research outputs including
      - `highlights.md`
      - `supplementary_materials.md`
 
-6. **Generate Presentation** (if selected):
+7. **Generate Presentation** (if selected):
 
    Create `publications/presentation/` with **Sli.dev** format:
 
@@ -221,7 +245,7 @@ This command guides the creation of publication-ready research outputs including
    - Dark mode toggle
    - Responsive layouts
 
-7. **Generate Executive Brief** (if selected):
+8. **Generate Executive Brief** (if selected):
 
    Create `publications/brief/executive_brief.md`:
    - 2-3 pages maximum
@@ -230,7 +254,7 @@ This command guides the creation of publication-ready research outputs including
    - Clear recommendations
    - Visual summary if helpful
 
-8. **Prepare publication assets**:
+9. **Prepare publication assets**:
 
    **Figures and Tables**:
    - Copy all figures to `publications/[format]/figures/`
@@ -245,7 +269,7 @@ This command guides the creation of publication-ready research outputs including
    - Ensure DOIs included
    - Verify author names and years
 
-9. **Apply publication standards**:
+10. **Apply publication standards**:
 
    **Quality checks**:
    - Grammar and spelling
@@ -262,7 +286,7 @@ This command guides the creation of publication-ready research outputs including
    - Appropriate tone for audience
    - Technical accuracy
 
-10. **Generate metadata and supplementary files**:
+11. **Generate metadata and supplementary files**:
 
     Create publication metadata:
     ```yaml
@@ -277,7 +301,7 @@ This command guides the creation of publication-ready research outputs including
     license: [CC-BY, etc.]
     ```
 
-11. **Create submission package** (if applicable):
+12. **Create submission package** (if applicable):
 
     For journal submissions:
     - Main manuscript (blinded if required)
@@ -287,7 +311,7 @@ This command guides the creation of publication-ready research outputs including
     - Supplementary materials
     - Data availability statement
 
-12. **Output publication summary**:
+13. **Output publication summary**:
     - Publication type created
     - Total length (words/pages)
     - Number of figures/tables

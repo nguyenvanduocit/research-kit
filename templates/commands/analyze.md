@@ -22,19 +22,41 @@ This command guides the systematic analysis of collected data to generate insigh
 
 **DO NOT manually create these directories or files - let the script handle it!**
 
-1. **Load research context**:
+1. **Quality Gate: AI Verification** (after script gate passes)
+
+   Read `execution.md`, `sources/SOURCES_INDEX.md`, and scan `sources/` directory. Verify ALL of the following.
+
+   **REQUIRED checks**:
+   - [ ] At least 20 sources downloaded locally and indexed in SOURCES_INDEX.md
+   - [ ] At least 30% of sources are Tier 1 (peer-reviewed journals, official statistics, primary data)
+   - [ ] Zero URL-only citations in execution.md (all citations use file:line format)
+   - [ ] Data collection status documented for every source listed in methodology.md
+   - [ ] Every research question has at least 3 relevant sources collected
+   - [ ] Quality score documented for at least 1 dataset
+   - [ ] Failed/unavailable sources documented with reasons
+
+   **Output format:**
+   ```
+   QUALITY GATE: execute → analyze (AI Verification)
+   REQUIRED: ✓/✗ [check]
+   RESULT: PASSED / BLOCKED
+   ```
+
+   If BLOCKED: Tell user which checks failed, suggest continuing `/research.execute` to collect more data.
+
+2. **Load research context**:
    - Research definition from `research/###-topic-name/definition.md`
    - Methodology from `research/###-topic-name/methodology.md`
    - Execution log from `research/###-topic-name/execution.md`
    - Data inventory from execution phase
 
-2. **Initialize analysis environment**:
+3. **Initialize analysis environment**:
    - Create/update `research/###-topic-name/analysis.md`
    - Set up analysis notebooks in `notebooks/`
    - Load data from `data/raw/` and `data/processed/`
    - Prepare visualization directory `figures/`
 
-3. **Data preparation and cleaning**:
+4. **Data preparation and cleaning**:
 
    **For each data source**:
    - Load raw data
@@ -44,7 +66,7 @@ This command guides the systematic analysis of collected data to generate insigh
    - Transform and normalize as needed
    - Save processed data with documentation
 
-4. **Exploratory data analysis (EDA)**:
+5. **Exploratory data analysis (EDA)**:
 
    **Generate initial insights**:
    - Descriptive statistics for all variables
@@ -54,7 +76,7 @@ This command guides the systematic analysis of collected data to generate insigh
    - Anomaly detection
    - Initial hypothesis testing
 
-5. **Statistical analysis** (as per methodology):
+6. **Statistical analysis** (as per methodology):
 
    **Apply planned analyses**:
    - Run specified statistical tests
@@ -64,7 +86,7 @@ This command guides the systematic analysis of collected data to generate insigh
    - Apply machine learning models if planned
    - Validate all statistical assumptions
 
-6. **Literature integration**:
+7. **Literature integration**:
 
    **Compare with existing research**:
    - Map findings to literature review
@@ -74,7 +96,7 @@ This command guides the systematic analysis of collected data to generate insigh
    - Update theoretical framework
    - Strengthen evidence chains
 
-7. **Generate visualizations**:
+8. **Generate visualizations**:
 
    Create figures for:
    - Key data distributions
@@ -86,7 +108,7 @@ This command guides the systematic analysis of collected data to generate insigh
 
    Save all to `figures/` with naming convention: `fig_XX_description.png`
 
-8. **Document analysis results**:
+9. **Document analysis results**:
 
    Update `analysis.md` with:
    ```markdown
@@ -149,7 +171,7 @@ This command guides the systematic analysis of collected data to generate insigh
    ## Next Steps for Synthesis
    ```
 
-9. **Create analysis notebooks**:
+10. **Create analysis notebooks**:
 
    Generate Jupyter notebooks for:
    - `01_data_preparation.ipynb` - cleaning and processing
@@ -157,7 +179,7 @@ This command guides the systematic analysis of collected data to generate insigh
    - `03_statistical_analysis.ipynb` - hypothesis testing
    - `04_findings_validation.ipynb` - robustness checks
 
-10. **Quality validation**:
+11. **Quality validation**:
 
     Check analysis for:
     - Statistical validity
@@ -167,13 +189,13 @@ This command guides the systematic analysis of collected data to generate insigh
     - Replication potential
     - Code reproducibility
 
-11. **Generate analysis artifacts**:
+12. **Generate analysis artifacts**:
     - Statistical summary tables (`tables/`)
     - Analysis scripts (`scripts/analyze_*.py`)
     - Results datasets (`data/results/`)
     - Validation reports (`logs/analysis_validation.log`)
 
-12. **Output analysis summary**:
+13. **Output analysis summary**:
     - Number of findings identified
     - Statistical tests performed
     - Visualizations created

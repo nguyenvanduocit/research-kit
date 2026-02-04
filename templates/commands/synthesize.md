@@ -22,20 +22,43 @@ This command guides the synthesis of analysis findings to draw conclusions and a
 
 **DO NOT manually create these directories or files - let the script handle it!**
 
-1. **Load complete research context**:
+1. **Quality Gate: AI Verification** (after script gate passes)
+
+   Read `analysis.md` and scan `figures/` directory. Verify ALL of the following.
+
+   **REQUIRED checks**:
+   - [ ] At least 8 key findings documented in analysis.md
+   - [ ] Every finding has: supporting evidence, file:line citation, interpretation
+   - [ ] At least 70% of findings have evidence strength rating (statistical significance or qualitative strength)
+   - [ ] Data quality assessment completed with quality score for every dataset analyzed
+   - [ ] Comparison with literature documented for at least 5 findings
+   - [ ] Contradictory findings explicitly addressed (not ignored)
+   - [ ] At least 3 visualizations created in figures/
+   - [ ] Analysis methods documented sufficiently for replication
+
+   **Output format:**
+   ```
+   QUALITY GATE: analyze → synthesize (AI Verification)
+   REQUIRED: ✓/✗ [check]
+   RESULT: PASSED / BLOCKED
+   ```
+
+   If BLOCKED: Tell user which checks failed, suggest continuing `/research.analyze`.
+
+2. **Load complete research context**:
    - Research definition and questions from `definition.md`
    - Methodology framework from `methodology.md`
    - Execution outcomes from `execution.md`
    - Analysis findings from `analysis.md`
    - Literature review insights
 
-2. **Initialize synthesis framework**:
+3. **Initialize synthesis framework**:
    - Create/update `research/###-topic-name/synthesis.md`
    - Map findings to research questions
    - Identify cross-cutting themes
    - Prepare conclusion structure
 
-3. **Connect findings to research questions**:
+4. **Connect findings to research questions**:
 
    **For each research question**:
    - Gather all relevant findings
@@ -44,7 +67,7 @@ This command guides the synthesis of analysis findings to draw conclusions and a
    - Determine confidence level in answer
    - Note any gaps or limitations
 
-4. **Identify emergent themes**:
+5. **Identify emergent themes**:
 
    **Thematic synthesis**:
    - Group related findings
@@ -54,7 +77,7 @@ This command guides the synthesis of analysis findings to draw conclusions and a
    - Create theme hierarchy
    - Document theme evidence
 
-5. **Build theoretical contributions**:
+6. **Build theoretical contributions**:
 
    **Theory development**:
    - Compare findings with existing theories
@@ -64,7 +87,7 @@ This command guides the synthesis of analysis findings to draw conclusions and a
    - Create conceptual models
    - Define new constructs if applicable
 
-6. **Develop practical implications**:
+7. **Develop practical implications**:
 
    **Application synthesis**:
    - Translate findings to practice
@@ -74,7 +97,7 @@ This command guides the synthesis of analysis findings to draw conclusions and a
    - Prioritize recommendations
    - Link to stakeholder needs
 
-7. **Assess research impact**:
+8. **Assess research impact**:
 
    **Contribution assessment**:
    - Scientific contributions
@@ -84,7 +107,7 @@ This command guides the synthesis of analysis findings to draw conclusions and a
    - Future research directions
    - Knowledge gaps addressed
 
-8. **Document synthesis**:
+9. **Document synthesis**:
 
    Update `synthesis.md` with:
    ```markdown
@@ -173,7 +196,7 @@ This command guides the synthesis of analysis findings to draw conclusions and a
    - **What Remains Unknown**: [Persistent gaps]
    ```
 
-9. **Create synthesis visualizations**:
+10. **Create synthesis visualizations**:
 
    Generate conceptual diagrams for:
    - Research question answer map
@@ -182,7 +205,7 @@ This command guides the synthesis of analysis findings to draw conclusions and a
    - Evidence strength matrix
    - Implication priority matrix
 
-10. **Validate synthesis logic**:
+11. **Validate synthesis logic**:
 
     Check for:
     - Logical consistency
@@ -192,14 +215,14 @@ This command guides the synthesis of analysis findings to draw conclusions and a
     - Clear causal claims
     - Balanced interpretation
 
-11. **Generate synthesis artifacts**:
+12. **Generate synthesis artifacts**:
     - Conceptual models (`models/`)
     - Summary tables (`tables/synthesis_*.csv`)
     - Integration diagrams (`figures/synthesis_*.png`)
     - Executive summary document
     - Stakeholder briefs
 
-12. **Output synthesis summary**:
+13. **Output synthesis summary**:
     - Research questions answered: X/Y
     - Confidence in conclusions: [Level]
     - Key themes identified: [Count]

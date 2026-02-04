@@ -12,11 +12,39 @@ $ARGUMENTS
 
 This command breaks down the research methodology into specific, actionable tasks organized by phase. Run this **after** `/research.methodology` (and optionally `/research.validate`).
 
-1. **Load methodology** from `research/###-topic-name/methodology.md`
+1. **Quality Gate: AI Verification**
 
-2. **Load research definition** from `research/###-topic-name/definition.md`
+   This command has no setup script, so the quality gate runs entirely here. Read `methodology.md` and `definition.md`, then verify ALL of the following. If any REQUIRED check fails, STOP.
 
-3. **Generate task breakdown** organized by research phases:
+   **CRITICAL checks** (cannot bypass):
+   - [ ] `methodology.md` exists and has substantial content (not just template placeholders)
+   - [ ] `definition.md` exists
+
+   **REQUIRED checks** (block unless user says "skip gate"):
+   - [ ] Research design type specified AND justified (reason given)
+   - [ ] At least 5 data sources identified, across at least 2 source types (academic, industry, government, etc.)
+   - [ ] Source quality criteria defined with tier system or CRAAP framework
+   - [ ] Credibility assessment framework documented
+   - [ ] Recency requirements specified (core literature timeframe + recent developments timeframe)
+   - [ ] Analysis approach matches research design type
+   - [ ] At least 2 bias mitigation strategies documented
+   - [ ] Limitations section has at least 3 acknowledged limitations
+
+   **Output format:**
+   ```
+   QUALITY GATE: methodology → tasks (AI Verification)
+   CRITICAL: ✓/✗ [check]
+   REQUIRED: ✓/✗ [check]
+   RESULT: PASSED / BLOCKED
+   ```
+
+   If BLOCKED: Tell user which checks failed, suggest `/research.methodology` to fix.
+
+2. **Load methodology** from `research/###-topic-name/methodology.md`
+
+3. **Load research definition** from `research/###-topic-name/definition.md`
+
+4. **Generate task breakdown** organized by research phases:
 
    **Phase 1: Setup & Preparation**
    - [ ] T001: Set up research directory structure
@@ -73,19 +101,19 @@ This command breaks down the research methodology into specific, actionable task
    - [ ] T060: Review and edit full report
    - [ ] T061: Final quality check against principles
 
-4. **Task Dependencies & Parallelization**:
+5. **Task Dependencies & Parallelization**:
    - Mark tasks that can be done in parallel with [P]
    - Indicate dependencies (e.g., "T012 depends on T011")
    - Suggest optimal order of execution
 
-5. **Add estimates** (optional):
+6. **Add estimates** (optional):
    - Rough time estimates per task
    - Total estimated duration
    - Milestones/checkpoints
 
-6. **Write tasks** to `research/###-topic-name/tasks.md`
+7. **Write tasks** to `research/###-topic-name/tasks.md`
 
-7. **Output summary**:
+8. **Output summary**:
    - Total number of tasks
    - Number of phases
    - Estimated duration (if calculated)

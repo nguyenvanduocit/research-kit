@@ -73,12 +73,33 @@ markitdown "https://example.com/article" > sources/web/article-name.md
 
 **DO NOT manually create these directories or files - let the script handle it!**
 
-1. **Load research context**:
+1. **Quality Gate: AI Verification** (after script gate passes)
+
+   Read `tasks.md`, `methodology.md`, and `definition.md`. Verify ALL of the following.
+
+   **REQUIRED checks**:
+   - [ ] Every research question in definition.md has at least 2 related tasks in tasks.md
+   - [ ] At least 15 tasks total defined
+   - [ ] Each phase (Literature Review, Data Collection, Analysis, Synthesis) has at least 3 tasks
+   - [ ] Dependencies documented for tasks that have dependencies
+   - [ ] Data collection method specified for every data source listed in methodology.md
+   - [ ] Inclusion/exclusion criteria defined for literature search
+
+   **Output format:**
+   ```
+   QUALITY GATE: tasks → execute (AI Verification)
+   REQUIRED: ✓/✗ [check]
+   RESULT: PASSED / BLOCKED
+   ```
+
+   If BLOCKED: Tell user which checks failed, suggest `/research.tasks` to fix.
+
+2. **Load research context**:
    - Research definition from `research/###-topic-name/definition.md`
    - Methodology from `research/###-topic-name/methodology.md`
    - Existing execution log if present
 
-2. **Initialize execution tracking**:
+3. **Initialize execution tracking**:
    - Create/update `research/###-topic-name/execution.md`
    - Set up data collection directories:
      - `research/###-topic-name/data/raw/` - raw collected data
@@ -89,7 +110,7 @@ markitdown "https://example.com/article" > sources/web/article-name.md
      - `research/###-topic-name/sources/papers/` - downloaded academic papers
      - `research/###-topic-name/sources/reports/` - downloaded reports
 
-3. **Execute data collection plan** (from methodology):
+4. **Execute data collection plan** (from methodology):
 
    **For each data source - ACTIVELY COLLECT THE DATA**:
    - Review collection requirements from methodology
@@ -107,7 +128,7 @@ markitdown "https://example.com/article" > sources/web/article-name.md
    - Document any deviations from plan in execution.md
    - **Cite all findings with file:line format**: `sources/web/article.md:45`
 
-4. **Conduct experiments/studies** (if applicable):
+5. **Conduct experiments/studies** (if applicable):
 
    **For each experiment**:
    - Set up experimental conditions
@@ -117,7 +138,7 @@ markitdown "https://example.com/article" > sources/web/article-name.md
    - Document environmental factors
    - Store results with full context
 
-5. **Perform literature collection - DOWNLOAD BEFORE CITING**:
+6. **Perform literature collection - DOWNLOAD BEFORE CITING**:
    - **WebSearch** to find papers, articles, technical reports
    - **Download ALL sources locally with markitdown**:
      ```bash
@@ -137,7 +158,7 @@ markitdown "https://example.com/article" > sources/web/article-name.md
    - Create literature matrix showing key findings with file:line citations
    - Document search queries and databases used
 
-6. **Quality control during execution**:
+7. **Quality control during execution**:
    - Verify data completeness
    - Check for collection errors
    - Validate against methodology requirements
@@ -145,7 +166,7 @@ markitdown "https://example.com/article" > sources/web/article-name.md
    - Monitor resource usage
    - Track time expenditure
 
-7. **Document execution progress**:
+8. **Document execution progress**:
 
    Update `execution.md` with:
    ```markdown
@@ -199,14 +220,14 @@ markitdown "https://example.com/article" > sources/web/article-name.md
    ## Next Steps
    ```
 
-8. **Generate execution artifacts**:
+9. **Generate execution artifacts**:
    - Data collection scripts (`scripts/collect_*.py`)
    - Data validation reports (`logs/validation_*.log`)
    - Execution timeline (`logs/timeline.md`)
    - Resource usage report
    - Issue tracking log
 
-9. **Prepare for analysis phase**:
+10. **Prepare for analysis phase**:
    - Organize raw data by type
    - Create data inventory
    - Document data formats
@@ -214,7 +235,7 @@ markitdown "https://example.com/article" > sources/web/article-name.md
    - Prepare analysis environment
    - Create initial notebooks
 
-10. **Output execution summary**:
+11. **Output execution summary**:
     - Total data points collected
     - Experiments completed
     - Literature items gathered

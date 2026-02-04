@@ -26,7 +26,34 @@ This command generates a comprehensive research methodology based on the researc
 
 2. **Load research definition** from `research/###-topic-name/definition.md`
 
-3. **Design research methodology** covering:
+3. **Quality Gate: AI Verification** (after script gate passes)
+
+   Read `definition.md` and verify ALL of the following. Output each check result. If any REQUIRED check fails, STOP and report to user. User can say "skip gate" to override (log bypass in output).
+
+   **REQUIRED checks** (block workflow):
+   - [ ] At least 1 primary research question + 3 sub-questions defined
+   - [ ] Scope has both "included" and "excluded" items, each with at least 3 items
+   - [ ] At least 5 success criteria with measurable metrics
+   - [ ] Zero unresolved `[NEEDS CLARIFICATION]` markers
+   - [ ] Research type is justified (not just selected, but reason explained)
+
+   **RECOMMENDED checks** (warn only):
+   - [ ] Ethical considerations section present with content
+   - [ ] Expected deliverables listed
+   - [ ] Time boundaries defined
+
+   **Output format:**
+   ```
+   QUALITY GATE: define → methodology (AI Verification)
+   REQUIRED: ✓/✗ [check description]
+   ...
+   RECOMMENDED: ✓/⚠ [check description]
+   RESULT: PASSED / BLOCKED (N REQUIRED failed)
+   ```
+
+   If BLOCKED: Tell user which checks failed, suggest `/research.define` or `/research.refine` to fix. Do NOT proceed.
+
+4. **Design research methodology** covering:
 
    **A. Research Design**:
    - Type: Qualitative / Quantitative / Mixed Methods
@@ -93,14 +120,14 @@ This command generates a comprehensive research methodology based on the researc
    - Resource limitations
    - Methodological limitations
 
-4. **Create supporting files**:
+5. **Create supporting files**:
    - `literature-review.md`: Initialize with structure
    - `data-sources.md`: Document identified sources
    - `references.bib`: Initialize BibTeX file
 
-5. **Write methodology** to `research/###-topic-name/methodology.md`
+6. **Write methodology** to `research/###-topic-name/methodology.md`
 
-6. **Output summary**:
+7. **Output summary**:
    - Methodology type and approach
    - Key data sources identified
    - Analysis frameworks to be used
