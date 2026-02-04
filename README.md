@@ -16,8 +16,24 @@
 
 ---
 
+## Origin & Motivation
+
+Research Kit is a fork of [Spec Kit](https://github.com/github/spec-kit) by GitHub, originally built as a personal project to adapt the Specification-Driven Development (SDD) workflow for systematic research.
+
+The deeper motivation behind this project is to demonstrate a simple but powerful idea: **AI agents perform significantly better when guided by multiple structured phases and template constraints**. Instead of asking an AI to "do research" in a single open-ended prompt, Research Kit breaks the process into 10 distinct phases, each with its own template, quality standards, and output expectations. This structured approach:
+
+- **Reduces hallucination** by constraining AI output to specific, well-defined templates at each phase
+- **Improves consistency** by enforcing the same methodology across different research topics
+- **Enables quality control** by making each phase reviewable before proceeding to the next
+- **Produces better results** by giving the AI clear context boundaries instead of unbounded instructions
+
+If you've ever noticed that AI gives better answers when you break a complex question into smaller parts, Research Kit applies that principle systematically to the entire research workflow.
+
+For details on what changed from the upstream Spec Kit, see [The Fork](./docs/the-fork.md).
+
 ## Table of Contents
 
+- [Origin & Motivation](#origin--motivation)
 - [What is Research Kit?](#what-is-research-kit)
 - [The Problem](#the-problem)
 - [Who It's For](#who-its-for)
@@ -785,7 +801,9 @@ This project is licensed under the terms of the MIT open source license. Please 
 
 ## Acknowledgements
 
-Research Kit builds on ideas from systematic review methodologies, evidence-based practice, and structured research frameworks. Special thanks to the open source community and the AI agent ecosystem that makes this toolkit possible.
+Research Kit is a fork of [Spec Kit](https://github.com/github/spec-kit) by GitHub. The original project focuses on Specification-Driven Development (SDD) for software engineering. Research Kit adapts the same multi-phase, template-constrained approach for systematic research workflows.
+
+Special thanks to the GitHub team for creating Spec Kit and demonstrating that structured constraints make AI agents dramatically more effective.
 
 ---
 
