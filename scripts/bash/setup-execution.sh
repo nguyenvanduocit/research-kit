@@ -4,12 +4,16 @@ set -e
 
 # Parse command line arguments
 JSON_MODE=false
+FORCE_MODE=false
 ARGS=()
 
 for arg in "$@"; do
     case "$arg" in
         --json)
             JSON_MODE=true
+            ;;
+        --force)
+            FORCE_MODE=true
             ;;
         --help|-h)
             echo "Usage: $0 [--json]"
@@ -35,6 +39,9 @@ check_research_branch "$CURRENT_BRANCH" "$HAS_GIT" || exit 1
 
 # Ensure the research directory exists
 mkdir -p "$RESEARCH_DIR"
+
+# Run quality gate: tasks → execute
+run_quality_gate "tasks_to_execute" "$RESEARCH_DIR" "$FORCE_MODE" || exit $?
 
 # Define execution file path
 EXECUTION_FILE="$RESEARCH_DIR/execution.md"

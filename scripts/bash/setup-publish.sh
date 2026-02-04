@@ -4,6 +4,7 @@ set -e
 
 # Parse command line arguments
 JSON_MODE=false
+FORCE_MODE=false
 PUBLICATION_TYPE="report"
 ARGS=()
 
@@ -11,6 +12,9 @@ for arg in "$@"; do
     case "$arg" in
         --json)
             JSON_MODE=true
+            ;;
+        --force)
+            FORCE_MODE=true
             ;;
         --type=*)
             PUBLICATION_TYPE="${arg#*=}"
@@ -41,31 +45,8 @@ check_research_branch "$CURRENT_BRANCH" "$HAS_GIT" || exit 1
 # Ensure the research directory exists
 mkdir -p "$RESEARCH_DIR"
 
-# Check phase dependencies - publish requires synthesis to be completed first
-SYNTHESIS_FILE="$RESEARCH_DIR/synthesis.md"
-if [[ ! -f "$SYNTHESIS_FILE" ]]; then
-    echo "Error: synthesis.md not found in $RESEARCH_DIR"
-    echo "Please run /research.synthesize before running /research.publish"
-    echo ""
-    echo "The research workflow phases must be completed in order:"
-    echo "  1. /research.define - Define research question"
-    echo "  2. /research.methodology - Design methodology"
-    echo "  3. /research.execute - Collect data"
-    echo "  4. /research.analyze - Analyze data"
-    echo "  5. /research.synthesize - Draw conclusions"
-    echo "  6. /research.publish - Create outputs (current step)"
-    exit 1
-fi
-
-# Also check for critical prerequisite files
-DEFINITION_FILE="$RESEARCH_DIR/definition.md"
-ANALYSIS_FILE="$RESEARCH_DIR/analysis.md"
-if [[ ! -f "$DEFINITION_FILE" ]] || [[ ! -f "$ANALYSIS_FILE" ]]; then
-    echo "Warning: Missing critical files for publication"
-    [[ ! -f "$DEFINITION_FILE" ]] && echo "  - definition.md not found"
-    [[ ! -f "$ANALYSIS_FILE" ]] && echo "  - analysis.md not found"
-    echo "Publication quality may be affected"
-fi
+# Run quality gate: synthesize → publish
+run_quality_gate "synthesize_to_publish" "$RESEARCH_DIR" "$FORCE_MODE" || exit $?
 
 # Create publications directory structure
 PUBLICATIONS_DIR="$RESEARCH_DIR/publications"

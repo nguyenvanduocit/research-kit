@@ -4,12 +4,16 @@ set -e
 
 # Parse command line arguments
 JSON_MODE=false
+FORCE_MODE=false
 ARGS=()
 
 for arg in "$@"; do
     case "$arg" in
         --json)
             JSON_MODE=true
+            ;;
+        --force)
+            FORCE_MODE=true
             ;;
         --help|-h)
             echo "Usage: $0 [--json]"
@@ -36,27 +40,8 @@ check_research_branch "$CURRENT_BRANCH" "$HAS_GIT" || exit 1
 # Ensure the research directory exists
 mkdir -p "$RESEARCH_DIR"
 
-# Check phase dependencies - synthesis requires analysis to be completed first
-ANALYSIS_FILE="$RESEARCH_DIR/analysis.md"
-if [[ ! -f "$ANALYSIS_FILE" ]]; then
-    echo "Error: analysis.md not found in $RESEARCH_DIR"
-    echo "Please run /research.analyze before running /research.synthesize"
-    echo ""
-    echo "The research workflow phases must be completed in order:"
-    echo "  1. /research.define - Define research question"
-    echo "  2. /research.methodology - Design methodology"
-    echo "  3. /research.execute - Collect data"
-    echo "  4. /research.analyze - Analyze data"
-    echo "  5. /research.synthesize - Draw conclusions (current step)"
-    echo "  6. /research.publish - Create outputs"
-    exit 1
-fi
-
-# Also check for execution.md to ensure proper workflow
-EXECUTION_FILE="$RESEARCH_DIR/execution.md"
-if [[ ! -f "$EXECUTION_FILE" ]]; then
-    echo "Warning: execution.md not found - workflow may be incomplete"
-fi
+# Run quality gate: analyze → synthesize
+run_quality_gate "analyze_to_synthesize" "$RESEARCH_DIR" "$FORCE_MODE" || exit $?
 
 # Define synthesis file path
 SYNTHESIS_FILE="$RESEARCH_DIR/synthesis.md"

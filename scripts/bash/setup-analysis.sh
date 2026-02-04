@@ -4,12 +4,16 @@ set -e
 
 # Parse command line arguments
 JSON_MODE=false
+FORCE_MODE=false
 ARGS=()
 
 for arg in "$@"; do
     case "$arg" in
         --json)
             JSON_MODE=true
+            ;;
+        --force)
+            FORCE_MODE=true
             ;;
         --help|-h)
             echo "Usage: $0 [--json]"
@@ -36,29 +40,8 @@ check_research_branch "$CURRENT_BRANCH" "$HAS_GIT" || exit 1
 # Ensure the research directory exists
 mkdir -p "$RESEARCH_DIR"
 
-# Check phase dependencies - analysis requires execution to be completed first
-EXECUTION_FILE="$RESEARCH_DIR/execution.md"
-if [[ ! -f "$EXECUTION_FILE" ]]; then
-    echo "Error: execution.md not found in $RESEARCH_DIR"
-    echo "Please run /research.execute before running /research.analyze"
-    echo ""
-    echo "The research workflow phases must be completed in order:"
-    echo "  1. /research.define - Define research question"
-    echo "  2. /research.methodology - Design methodology"
-    echo "  3. /research.execute - Collect data"
-    echo "  4. /research.analyze - Analyze data (current step)"
-    echo "  5. /research.synthesize - Draw conclusions"
-    echo "  6. /research.publish - Create outputs"
-    exit 1
-fi
-
-# Also check if data directory exists with some data
-DATA_DIR="$RESEARCH_DIR/data"
-if [[ ! -d "$DATA_DIR" ]] || [[ -z "$(ls -A "$DATA_DIR" 2>/dev/null)" ]]; then
-    echo "Warning: No data directory or data files found"
-    echo "The execution phase should have created data in: $DATA_DIR"
-    echo "Continuing anyway, but analysis may be limited..."
-fi
+# Run quality gate: execute → analyze
+run_quality_gate "execute_to_analyze" "$RESEARCH_DIR" "$FORCE_MODE" || exit $?
 
 # Define analysis file path
 ANALYSIS_FILE="$RESEARCH_DIR/analysis.md"

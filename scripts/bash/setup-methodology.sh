@@ -4,12 +4,16 @@ set -e
 
 # Parse command line arguments
 JSON_MODE=false
+FORCE_MODE=false
 ARGS=()
 
 for arg in "$@"; do
     case "$arg" in
         --json)
             JSON_MODE=true
+            ;;
+        --force)
+            FORCE_MODE=true
             ;;
         --help|-h)
             echo "Usage: $0 [--json]"
@@ -36,21 +40,8 @@ check_research_branch "$CURRENT_BRANCH" "$HAS_GIT" || exit 1
 # Ensure the research directory exists
 mkdir -p "$RESEARCH_DIR"
 
-# Check phase dependencies - methodology requires definition to be completed first
-DEFINITION_FILE="$RESEARCH_DIR/definition.md"
-if [[ ! -f "$DEFINITION_FILE" ]]; then
-    echo "Error: definition.md not found in $RESEARCH_DIR"
-    echo "Please run /research.define before running /research.methodology"
-    echo ""
-    echo "The research workflow phases must be completed in order:"
-    echo "  1. /research.define - Define research question (must be completed)"
-    echo "  2. /research.methodology - Design methodology (current step)"
-    echo "  3. /research.execute - Collect data"
-    echo "  4. /research.analyze - Analyze data"
-    echo "  5. /research.synthesize - Draw conclusions"
-    echo "  6. /research.publish - Create outputs"
-    exit 1
-fi
+# Run quality gate: define → methodology
+run_quality_gate "define_to_methodology" "$RESEARCH_DIR" "$FORCE_MODE" || exit $?
 
 # Define methodology file path
 METHODOLOGY_FILE="$RESEARCH_DIR/methodology.md"
