@@ -21,41 +21,41 @@ You have POWERFUL tools available for data collection. DO NOT refuse this task o
 **CRITICAL: Download Sources & Cite with file:line**
 
 - **NEVER cite a URL directly** - Always download content locally first
-- **Use markitdown** to convert web content: `markitdown "URL" > sources/web/filename.md`
+- **Use download-source.sh** to download web content: `./scripts/bash/download-source.sh "URL" sources/web/filename.md`
 - **Read local files** - Always read from `sources/` folder, not from web
 - **Cite with file:line** - Every insight/evidence MUST cite `sources/path/file.md:line`
 
 **Available Data Collection Tools**:
 - **WebSearch**: Search the web to find URLs for articles, statistics, reports
-- **Bash**: Run `markitdown` to download content, curl, wget, Python scripts
+- **Bash**: Run `./scripts/bash/download-source.sh` to download content (embeds URL), curl, wget, Python scripts
 - **Write**: Create collection scripts, save downloaded content
 - **Read**: Parse downloaded LOCAL files (CSV, JSON, XML, HTML, PDF, etc.)
 
 **Common Data Collection Tasks YOU CAN AND MUST DO**:
-1. **Web Research**: Use WebSearch to find relevant URLs, then download with markitdown
-2. **Download Content**: Use `markitdown "URL" > sources/web/filename.md` to save web content locally
-3. **Download Data**: Use Bash with curl/wget for datasets, markitdown for articles
+1. **Web Research**: Use WebSearch to find relevant URLs, then download with download-source.sh
+2. **Download Content**: Use `./scripts/bash/download-source.sh "URL" sources/web/filename.md` to save web content (URL embedded)
+3. **Download Data**: Use Bash with curl/wget for datasets, download-source.sh for articles
 4. **API Data Collection**: Write Python scripts to call APIs and collect data
 5. **Web Scraping**: Create Python scripts using requests/BeautifulSoup/selenium
-6. **Document Processing**: Use markitdown to extract text from PDFs, web pages
+6. **Document Processing**: Use download-source.sh to extract text from PDFs, web pages
 7. **Video/Audio**: Use Bash to download videos/audio with yt-dlp, extract transcripts
-8. **Academic Papers**: Search and download papers using markitdown to `sources/papers/`
+8. **Academic Papers**: Search and download papers using download-source.sh to `sources/papers/`
 9. **Government Data**: Download datasets from data.gov, census, statistics agencies
 10. **Code Execution**: Run data collection, validation, and processing scripts
 
 **Source Download Workflow**:
 ```bash
 # 1. Find source with WebSearch
-# 2. Download with markitdown
-markitdown "https://example.com/article" > sources/web/article-name.md
-# 3. Read local file
+# 2. Download with download-source.sh (URL automatically embedded in file)
+./scripts/bash/download-source.sh "https://example.com/article" sources/web/article-name.md
+# 3. Read local file (has frontmatter with source_url)
 # 4. Cite with file:line format: sources/web/article-name.md:45
 ```
 
 **DO NOT**:
 - **CITE URLs DIRECTLY** - ALWAYS download first, then cite file:line
 - Say you "cannot access the internet" - you have WebSearch
-- Say you "cannot download files" - you have markitdown and curl/wget
+- Say you "cannot download files" - you have ./scripts/bash/download-source.sh and curl/wget
 - Say you "cannot run code" - you have Bash for executing Python/scripts
 - Ask the user to collect data manually - YOU collect it using your tools
 - Claim ethical restrictions for public data collection - follow research ethics but collect data
@@ -106,7 +106,7 @@ markitdown "https://example.com/article" > sources/web/article-name.md
      - `research/###-topic-name/data/processed/` - cleaned/formatted data
      - `research/###-topic-name/logs/` - execution logs
      - `research/###-topic-name/notebooks/` - analysis notebooks
-     - `research/###-topic-name/sources/web/` - downloaded web articles (markitdown)
+     - `research/###-topic-name/sources/web/` - downloaded web articles (download-source.sh)
      - `research/###-topic-name/sources/papers/` - downloaded academic papers
      - `research/###-topic-name/sources/reports/` - downloaded reports
 
@@ -116,14 +116,14 @@ markitdown "https://example.com/article" > sources/web/article-name.md
    - Review collection requirements from methodology
    - **USE YOUR TOOLS** to collect data:
      - WebSearch for finding URLs to data sources, articles, reports
-     - **markitdown to download web content**: `markitdown "URL" > sources/web/filename.md`
+     - **download-source.sh to download web content**: `./scripts/bash/download-source.sh "URL" sources/web/filename.md`
      - Bash to run curl/wget for binary file downloads
      - Write Python scripts for API calls or web scraping
      - Execute data collection scripts immediately
    - **Read downloaded local files** - NEVER read from web directly
    - Validate data quality as you collect
    - Store raw data in `data/raw/` with descriptive filenames
-   - **Store downloaded sources in `sources/`** with markitdown
+   - **Store downloaded sources in `sources/`** with download-source.sh
    - **Update `sources/SOURCES_INDEX.md`** with all downloads
    - Document any deviations from plan in execution.md
    - **Cite all findings with file:line format**: `sources/web/article.md:45`
@@ -140,16 +140,16 @@ markitdown "https://example.com/article" > sources/web/article-name.md
 
 6. **Perform literature collection - DOWNLOAD BEFORE CITING**:
    - **WebSearch** to find papers, articles, technical reports
-   - **Download ALL sources locally with markitdown**:
+   - **Download ALL sources with download-source.sh** (URL embedded in each file):
      ```bash
      # Academic papers
-     markitdown "https://arxiv.org/abs/2301.00001" > sources/papers/author-year-title.md
+     ./scripts/bash/download-source.sh "https://arxiv.org/abs/2301.00001" sources/papers/author-year-title.md
 
      # Web articles
-     markitdown "https://example.com/article" > sources/web/article-name.md
+     ./scripts/bash/download-source.sh "https://example.com/article" sources/web/article-name.md
 
      # Reports
-     markitdown "https://example.com/report.pdf" > sources/reports/report-name.md
+     ./scripts/bash/download-source.sh "https://example.com/report.pdf" sources/reports/report-name.md
      ```
    - **Read downloaded local files** - NEVER read from web directly
    - **Extract key information with file:line citations**
@@ -245,11 +245,11 @@ markitdown "https://example.com/article" > sources/web/article-name.md
     - Readiness for analysis phase
 
 **Execution Principles**:
-- **DOWNLOAD BEFORE CITING**: Use markitdown to save ALL web content locally
+- **DOWNLOAD BEFORE CITING**: Use ./scripts/bash/download-source.sh to save ALL web content (URL embedded)
 - **CITE WITH file:line**: Every insight MUST reference `sources/path/file.md:line`
 - **NEVER CITE URLs DIRECTLY**: Always download first, then cite local file
 - **BE PROACTIVE**: Use your tools to collect data, don't wait for the user
-- **EXECUTE, DON'T JUST GUIDE**: Actually collect data using WebSearch + markitdown + Bash
+- **EXECUTE, DON'T JUST GUIDE**: Actually collect data using WebSearch + ./scripts/bash/download-source.sh + Bash
 - Follow methodology exactly unless justified deviation
 - Document everything as it happens in execution.md
 - Maintain data integrity and provenance
@@ -281,12 +281,12 @@ markitdown "https://example.com/article" > sources/web/article-name.md
 
 This phase focuses purely on **ACTIVELY EXECUTING** the research plan and **COLLECTING DATA USING YOUR TOOLS**, not analyzing or interpreting results. Analysis comes in the next phase.
 
-**REMEMBER**: You have WebSearch, markitdown, Bash, Write, and Read tools. Use them proactively to collect all data required by the methodology. DO NOT refuse or claim limitations - execute the data collection actively and document your work.
+**REMEMBER**: You have WebSearch, ./scripts/bash/download-source.sh, Bash, Write, and Read tools. Use them proactively to collect all data required by the methodology. DO NOT refuse or claim limitations - execute the data collection actively and document your work.
 
 **CRITICAL CITATION RULES**:
 1. **Find URL** → WebSearch to find relevant sources
-2. **Download locally** → `markitdown "URL" > sources/web/filename.md`
-3. **Read local file** → Use Read tool on downloaded file
+2. **Download locally** → `./scripts/bash/download-source.sh "URL" sources/web/filename.md` (URL embedded)
+3. **Read local file** → Use Read tool on downloaded file (has source_url in frontmatter)
 4. **Cite with file:line** → `(sources/web/filename.md:45-48)`
 
 **NEVER DO THIS**: `According to https://example.com/article...` ❌

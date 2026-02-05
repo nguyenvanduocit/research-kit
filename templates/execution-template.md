@@ -2,7 +2,7 @@
 
 ## IMPORTANT: Source Download & Citation Rules
 
-> **All web content MUST be downloaded locally using markitdown before citing.**
+> **All web content MUST be downloaded locally using download-source.sh before citing.**
 > **Citation format: `sources/path/file.md:line`**
 > **NEVER cite URLs directly.**
 
@@ -96,9 +96,10 @@
   - Duplicate: [N]
   - No access: [N]
 
-## Downloaded Sources (markitdown)
+## Downloaded Sources (download-source.sh)
 
-> All sources MUST be downloaded locally before citing. Use `markitdown "URL" > sources/path/file.md`
+> All sources MUST be downloaded locally before citing. Use `./scripts/bash/download-source.sh "URL" sources/path/file.md`
+> Each downloaded file contains frontmatter with `source_url`, `downloaded_at`, and `title`.
 
 ### Web Articles (`sources/web/`)
 
@@ -121,9 +122,9 @@
 ### Download Commands Used
 
 ```bash
-# Example downloads
-markitdown "https://arxiv.org/abs/2301.00001" > sources/papers/author-2024-title.md
-markitdown "https://example.com/article" > sources/web/article-name.md
+# Example downloads (URL automatically embedded in each file)
+./scripts/bash/download-source.sh "https://arxiv.org/abs/2301.00001" sources/papers/author-2024-title.md
+./scripts/bash/download-source.sh "https://example.com/article" sources/web/article-name.md
 ```
 
 ## Data Quality Monitoring
@@ -236,10 +237,11 @@ gantt
 ## Citation & Source Verification Checklist
 
 ### Source Downloads
-- [ ] All web articles downloaded to `sources/web/` using markitdown
-- [ ] All papers downloaded to `sources/papers/` using markitdown
-- [ ] All reports downloaded to `sources/reports/` using markitdown
-- [ ] `sources/SOURCES_INDEX.md` updated with all downloads
+- [ ] All web articles downloaded to `sources/web/` using `./scripts/bash/download-source.sh`
+- [ ] All papers downloaded to `sources/papers/` using `./scripts/bash/download-source.sh`
+- [ ] All reports downloaded to `sources/reports/` using `./scripts/bash/download-source.sh`
+- [ ] Each downloaded file has frontmatter with `source_url` embedded
+- [ ] `sources/SOURCES_INDEX.md` updated with all downloads (auto-updated by script)
 
 ### Citation Format
 - [ ] All findings cite file:line format (e.g., `sources/papers/file.md:45`)
