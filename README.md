@@ -805,6 +805,59 @@ Research Kit is a fork of [Spec Kit](https://github.com/github/spec-kit) by GitH
 
 Special thanks to the GitHub team for creating Spec Kit and demonstrating that structured constraints make AI agents dramatically more effective.
 
+## CLI Usage
+
+In addition to the MCP server, `research-kit` ships a standalone CLI binary (`research-cli`) for direct terminal use — no MCP client needed.
+
+### Installation
+
+```bash
+just install-cli
+# or
+go install github.com/nguyenvanduocit/research-kit/cmd/cli@latest
+```
+
+### Quick Start
+
+```bash
+export DEEPSEEK_API_KEY=your-deepseek-key
+# or for Gemini
+export GOOGLE_AI_API_KEY=your-gemini-key
+# or
+research-cli --env .env <command> [flags]
+```
+
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `deepseek-reason` | Advanced reasoning with DeepSeek R1 |
+| `gemini-reason` | AI reasoning with Google Gemini |
+| `sequential-thinking` | Multi-step sequential thinking |
+
+### Examples
+
+```bash
+# Reason with DeepSeek
+research-cli deepseek-reason --prompt "Explain quantum entanglement simply"
+
+# Reason with Gemini
+research-cli gemini-reason --prompt "What are the trade-offs of microservices?"
+
+# Sequential thinking
+research-cli sequential-thinking --prompt "Plan a mobile app architecture"
+
+# JSON output
+research-cli deepseek-reason --prompt "2+2?" --output json
+```
+
+### Flags
+
+Every command accepts:
+- `--env string` — Path to `.env` file
+- `--output string` — Output format: `text` (default) or `json`
+
+
 ---
 
 <p align="center">
